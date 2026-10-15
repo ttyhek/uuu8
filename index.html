@@ -5,85 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的个人主页</title>
   <style>
-    /* 首页左右布局 */
-.hero {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 60px;
-  max-width: 900px;
-  flex-wrap: wrap;
-}
-
-/* 头像 */
-.avatar {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 5px solid #1e6fd9;
-  box-shadow: 0 8px 24px rgba(30,111,217,0.25);
-  transition: transform 0.3s;
-}
-.avatar:hover {
-  transform: scale(1.05);
-}
-
-/* 右侧文字 */
-.hero-text {
-  text-align: left;
-  max-width: 480px;
-}
-
-.hero-text h1 {
-  margin-bottom: 16px;
-}
-
-.hero-text p {
-  margin: 0;
-}
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
       color: #1e3a5f;
       line-height: 1.9;
-      overflow: hidden;
       background: #ffffff;
     }
 
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      background: rgba(255,255,255,0.94);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 20px rgba(30,58,95,0.08);
-      display: flex;
-      justify-content: center;
-      gap: 36px;
-      padding: 18px;
-      z-index: 100;
-    }
-    nav a {
-      text-decoration: none;
-      color: #5a7a9a;
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 0.5px;
-      transition: color 0.25s;
-    }
-    nav a:hover { color: #1e6fd9; }
-
-    .page-container {
-      height: 100vh;
-      overflow-y: scroll;
-      scroll-snap-type: y mandatory;
-      scroll-behavior: smooth;
-    }
-
     section {
-      height: 100vh;
-      scroll-snap-align: start;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -137,103 +69,151 @@
     }
     .tag:hover { transform: translateY(-3px); }
 
-    .arrows {
-      position: fixed;
-      right: 30px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      z-index: 100;
+    /* 首页互动弹窗 */
+    .popup-box {
+      background: #ffffff;
+      border: 2px solid #1e6fd9;
+      border-radius: 20px;
+      padding: 48px 40px;
+      box-shadow: 0 12px 40px rgba(30,111,217,0.15);
+      max-width: 520px;
     }
-    .arrow {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.95);
-      box-shadow: 0 2px 12px rgba(30,58,95,0.15);
+    .popup-box h1 {
+      font-size: 32px;
+      margin-bottom: 32px;
+    }
+    .popup-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .popup-btns button {
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 30px;
+      border: 2px solid #1e6fd9;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .btn-yes {
+      background: #1e6fd9;
+      color: #fff;
+    }
+    .btn-yes:hover {
+      background: #1558b0;
+      transform: translateY(-2px);
+    }
+    .btn-no {
+      background: #fff;
+      color: #1e6fd9;
+    }
+    .btn-no:hover {
+      background: #eef5fd;
+      transform: translateY(-2px);
+    }
+    .popup-result {
+      margin-top: 28px;
+      font-size: 17px;
+      color: #1e6fd9;
+      font-weight: 600;
+      min-height: 28px;
+    }
+
+    /* 自我介绍：左头像右文字 */
+    .hero {
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
+      gap: 60px;
+      max-width: 900px;
+      flex-wrap: wrap;
+    }
+    .avatar {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid #1e6fd9;
+      box-shadow: 0 8px 24px rgba(30,111,217,0.25);
+      transition: transform 0.3s;
+    }
+    .avatar:hover { transform: scale(1.05); }
+    .hero-text { text-align: left; max-width: 520px; }
+
+    /* 放大后的名字 */
+    .hero-title {
+      font-size: 56px;
+      font-weight: 800;
+      color: #1e3a5f;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    /* 名字下面的信息 */
+    .hero-sub {
       font-size: 20px;
       color: #1e6fd9;
-      user-select: none;
-      transition: all 0.25s;
-    }
-    .arrow:hover {
-      background: #1e6fd9;
-      color: #fff;
-      transform: scale(1.1);
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin: 0;
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <a href="#home">首页</a>
-    <a href="#about">关于我</a>
-    <a href="#skills">技能</a>
-    <a href="#contact">联系</a>
-  </nav>
-
-  <div class="page-container" id="pageContainer">
-
-    <section id="home">
-  <div class="hero">
-    <img src="avatar.jpg" alt="我的头像" class="avatar">
-    <div class="hero-text">
-      <h1>你好，我是 ___</h1>
-      <p>一个正在学习编程的新手，正在用 GitHub 搭建自己的第一个网站。</p>
-    </div>
-  </div>
-</section>
-    <section id="about">
-      <h2>关于我</h2>
-      <p>这里写你的自我介绍。比如你的爱好、正在学的东西、或者任何你想说的话。</p>
-    </section>
-
-    <section id="skills">
-      <h2>我的标签</h2>
-      <div>
-        <span class="tag">爱学习</span>
-        <span class="tag">爱折腾</span>
-        <span class="tag">GitHub 新手</span>
+  <!-- 第一页：互动弹窗 -->
+  <section id="home">
+    <div class="popup-box">
+      <h1>听说我是坏女人，你觉得呢</h1>
+      <div class="popup-btns">
+        <button class="btn-yes" onclick="chooseYes()">没我坏</button>
+        <button class="btn-no" onclick="chooseNo()">让我看看多坏</button>
       </div>
-    </section>
+      <div class="popup-result" id="popupResult"></div>
+    </div>
+  </section>
 
-    <section id="contact">
-      <h2>联系我</h2>
-      <p>邮箱：你的邮箱@example.com</p>
-    </section>
+  <!-- 第二页：自我介绍 -->
+  <section id="about">
+    <div class="hero">
+      <img src="avatar.jpg" alt="我的头像" class="avatar">
+      <div class="hero-text">
+        <h1 class="hero-title">你好小姐，我是琥珀</h1>
+        <p class="hero-sub">23T 天秤 INTJ</p>
+      </div>
+    </div>
+  </section>
 
-  </div>
+  <!-- 第三页：标签 -->
+  <section id="skills">
+    <h2>我的标签</h2>
+    <div>
+      <span class="tag">爱学习</span>
+      <span class="tag">爱折腾</span>
+      <span class="tag">GitHub 新手</span>
+    </div>
+  </section>
 
-  <div class="arrows">
-    <div class="arrow" onclick="scrollUp()">↑</div>
-    <div class="arrow" onclick="scrollDown()">↓</div>
-  </div>
+  <!-- 第四页：联系 -->
+  <section id="contact">
+    <h2>联系我</h2>
+    <p>邮箱：你的邮箱@example.com</p>
+  </section>
 
   <script>
-    const container = document.getElementById('pageContainer');
-    const pageHeight = window.innerHeight;
-
-    function scrollDown() {
-      container.scrollBy({ top: pageHeight, behavior: 'smooth' });
+    function chooseYes() {
+      document.getElementById('popupResult').textContent = '哈哈，看来你比我更坏一点 😏';
     }
-    function scrollUp() {
-      container.scrollBy({ top: -pageHeight, behavior: 'smooth' });
+    function chooseNo() {
+      document.getElementById('popupResult').textContent = '那就慢慢看吧，别被吓到 😈';
     }
-
-    document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(link.getAttribute('href'));
-        container.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
-      });
-    });
   </script>
+
+</body>
+</html>
 
 </body>
 </html>
