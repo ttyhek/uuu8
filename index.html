@@ -5,6 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的个人主页</title>
   <style>
+    /* 首页左右布局 */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  max-width: 900px;
+  flex-wrap: wrap;
+}
+
+/* 头像 */
+.avatar {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid #1e6fd9;
+  box-shadow: 0 8px 24px rgba(30,111,217,0.25);
+  transition: transform 0.3s;
+}
+.avatar:hover {
+  transform: scale(1.05);
+}
+
+/* 右侧文字 */
+.hero-text {
+  text-align: left;
+  max-width: 480px;
+}
+
+.hero-text h1 {
+  margin-bottom: 16px;
+}
+
+.hero-text p {
+  margin: 0;
+}
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -144,10 +181,14 @@
   <div class="page-container" id="pageContainer">
 
     <section id="home">
+  <div class="hero">
+    <img src="avatar.jpg" alt="我的头像" class="avatar">
+    <div class="hero-text">
       <h1>你好，我是 ___</h1>
       <p>一个正在学习编程的新手，正在用 GitHub 搭建自己的第一个网站。</p>
-    </section>
-
+    </div>
+  </div>
+</section>
     <section id="about">
       <h2>关于我</h2>
       <p>这里写你的自我介绍。比如你的爱好、正在学的东西、或者任何你想说的话。</p>
