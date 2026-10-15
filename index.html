@@ -5,52 +5,99 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的个人主页</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: "Microsoft YaHei", sans-serif;
-      background: #f5f7fa;
       color: #333;
-      max-width: 700px;
-      margin: 60px auto;
-      padding: 0 20px;
       line-height: 1.8;
     }
-    h1 {
+
+    /* 顶部导航栏 */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px;
+      z-index: 100;
+    }
+    nav a {
+      text-decoration: none;
       color: #2c3e50;
-      border-bottom: 3px solid #3498db;
-      padding-bottom: 10px;
+      font-weight: bold;
+      transition: color 0.2s;
     }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    nav a:hover { color: #3498db; }
+
+    /* 每个区块 */
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px 20px;
+      text-align: center;
     }
+    section:nth-child(odd) { background: #f5f7fa; }
+    section:nth-child(even) { background: #ffffff; }
+
+    h1 { font-size: 42px; color: #2c3e50; margin-bottom: 20px; }
+    h2 { font-size: 32px; color: #2c3e50; margin-bottom: 20px; }
+    p { font-size: 18px; max-width: 600px; }
+
     .tag {
       display: inline-block;
       background: #eaf4fd;
       color: #2980b9;
-      padding: 4px 12px;
+      padding: 6px 16px;
       border-radius: 20px;
-      margin: 4px 6px 4px 0;
-      font-size: 14px;
+      margin: 6px;
+      font-size: 15px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>你好，我是 琥珀</h1>
-    <p>这里写一句自我介绍，比如：一个正在学习编程的新手。<最喜欢生蚝>
 
-    <h3>关于我</h3>
-    <p>这里可以写你的爱好、正在学的东西、或者任何你想说的话。<我有点饿>
+  <!-- 导航栏 -->
+  <nav>
+    <a href="#home">首页</a>
+    <a href="#about">关于我</a>
+    <a href="#skills">技能</a>
+    <a href="#contact">联系</a>
+  </nav>
 
-    <h3>我的标签</h3>
-    <span class="tag">爱学习</span>
-    <span class="tag">爱折腾</span>
-    <span class="tag">GitHub 新手</span>
+  <!-- 首页 -->
+  <section id="home">
+    <h1>你好，我是琥珀 </h1>
+    <p>一个黑长直御姐。</p>
+  </section>
 
-    <h3>联系我</h3>
-    <p>邮箱：22222222@example.com</p>
-  </div>
+  <!-- 关于我 -->
+  <section id="about">
+    <h2>关于我</h2>
+    <p>我喜欢吃生蚝。</p>
+  </section>
+
+  <!-- 技能 -->
+  <section id="skills">
+    <h2>我的标签</h2>
+    <div>
+      <span class="tag">爱老婆</span>
+      <span class="tag">爱折腾</span>
+      <span class="tag">爱睡觉</span>
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section id="contact">
+    <h2>联系我</h2>
+    <p>邮箱：233333@example.com</p>
+  </section>
+
 </body>
 </html>
