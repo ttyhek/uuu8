@@ -2,41 +2,41 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>我的个人主页</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
     body {
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-      color: #1e3a5f;
+      color: #4a1520;
       line-height: 1.9;
       background: #ffffff;
     }
 
     section {
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 100px 24px;
+      padding: 80px 20px;
       text-align: center;
+      scroll-snap-align: start;
     }
     section:nth-child(odd) { background: #ffffff; }
-    section:nth-child(even) { background: #eef5fd; }
+    section:nth-child(even) { background: #fdf2f4; }
 
-    h1 {
-      font-size: 48px;
-      font-weight: 800;
-      color: #1e3a5f;
-      margin-bottom: 24px;
-      letter-spacing: -1px;
-    }
     h2 {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 700;
-      color: #1e3a5f;
+      color: #6b1f2e;
       margin-bottom: 24px;
       position: relative;
       padding-bottom: 16px;
@@ -47,41 +47,50 @@
       bottom: 0; left: 50%;
       transform: translateX(-50%);
       width: 50px; height: 3px;
-      background: #1e6fd9;
+      background: #8b1e3f;
       border-radius: 2px;
     }
     p {
-      font-size: 18px;
+      font-size: 17px;
       max-width: 620px;
-      color: #5a7a9a;
+      color: #7a4a55;
+    }
+
+    /* 页面滑动容器：适配手机上下滑动 */
+    .page-wrap {
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-snap-type: y proximity;
+      -webkit-overflow-scrolling: touch;
     }
 
     .tag {
       display: inline-block;
-      background: #1e6fd9;
+      background: #8b1e3f;
       color: #fff;
       padding: 8px 20px;
       border-radius: 24px;
-      margin: 8px;
+      margin: 6px;
       font-size: 15px;
       font-weight: 500;
-      transition: transform 0.2s;
     }
-    .tag:hover { transform: translateY(-3px); }
 
-    /* 首页互动弹窗：水滴玻璃质感 */
+    /* 首页互动弹窗：酒红水滴玻璃质感 */
     .popup-box {
       position: relative;
-      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(238,245,253,0.85));
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: linear-gradient(135deg, rgba(139,30,63,0.92), rgba(107,31,46,0.85));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: 40% 40% 40% 40% / 30% 30% 30% 30%;
-      padding: 70px 60px;
+      padding: 60px 32px;
       box-shadow:
-        0 8px 32px rgba(30,111,217,0.18),
-        inset 0 0 40px rgba(255,255,255,0.6);
-      max-width: 560px;
-      border: 1px solid rgba(30,111,217,0.15);
+        0 8px 32px rgba(139,30,63,0.35),
+        inset 0 0 40px rgba(255,255,255,0.12);
+      max-width: 520px;
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.2);
       overflow: hidden;
     }
     .popup-box::before {
@@ -89,18 +98,27 @@
       position: absolute;
       top: -50%; left: -50%;
       width: 200%; height: 200%;
-      background: radial-gradient(circle at 30% 30%, rgba(30,111,217,0.08), transparent 60%);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 60%);
       pointer-events: none;
     }
+    .popup-emoji {
+      position: absolute;
+      top: 20px;
+      left: 28px;
+      font-size: 30px;
+      z-index: 2;
+    }
     .popup-box h1 {
-      font-size: 32px;
+      font-size: 26px;
+      color: #fff;
       margin-bottom: 32px;
       position: relative;
       z-index: 1;
+      line-height: 1.6;
     }
     .popup-btns {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       justify-content: center;
       flex-wrap: wrap;
       position: relative;
@@ -108,110 +126,210 @@
     }
     .popup-btns button {
       font-family: inherit;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
-      padding: 12px 28px;
+      padding: 12px 26px;
       border-radius: 30px;
-      border: 2px solid #1e6fd9;
+      border: 2px solid rgba(255,255,255,0.8);
       cursor: pointer;
       transition: all 0.25s;
+      touch-action: manipulation;
     }
     .btn-yes {
-      background: #1e6fd9;
-      color: #fff;
+      background: #fff;
+      color: #8b1e3f;
     }
-    .btn-yes:hover {
-      background: #1558b0;
-      transform: translateY(-2px);
+    .btn-yes:active {
+      background: #fdf2f4;
+      transform: scale(0.97);
     }
     .btn-no {
-      background: #fff;
-      color: #1e6fd9;
+      background: transparent;
+      color: #fff;
     }
-    .btn-no:hover {
-      background: #eef5fd;
-      transform: translateY(-2px);
+    .btn-no:active {
+      background: rgba(255,255,255,0.15);
+      transform: scale(0.97);
     }
 
-    /* 自我介绍：左头像右文字 */
-    .hero {
+    /* 第二页：占页面三分之二，靠左 */
+    #about {
+      align-items: flex-start;
+      padding-left: 8vw;
+      padding-right: 8vw;
+    }
+    .about-wrap {
+      width: 66%;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+    }
+
+    /* 每个版块卡片 */
+    .about-card {
+      background: #fff;
+      border: 1px solid rgba(139,30,63,0.15);
+      border-left: 4px solid #8b1e3f;
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 0 6px 20px rgba(139,30,63,0.08);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .about-card h3 {
+      font-size: 18px;
+      color: #8b1e3f;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    .about-card p {
+      font-size: 16px;
+      color: #7a4a55;
+      max-width: none;
+      margin: 0;
+    }
+
+    /* 头像 + 名字卡片：横向排列 */
+    .profile-card {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 60px;
-      max-width: 900px;
+      gap: 28px;
       flex-wrap: wrap;
     }
+    .profile-text { text-align: left; }
+
     .avatar {
-      width: 200px;
-      height: 200px;
+      width: 160px;
+      height: 160px;
       object-fit: cover;
       border-radius: 50%;
-      border: 5px solid #1e6fd9;
-      box-shadow: 0 8px 24px rgba(30,111,217,0.25);
+      border: 5px solid #8b1e3f;
+      box-shadow: 0 8px 24px rgba(139,30,63,0.3);
       transition: transform 0.3s;
     }
-    .avatar:hover { transform: scale(1.05); }
-    .hero-text { text-align: left; max-width: 520px; }
+    .avatar:active { transform: scale(1.03); }
 
-    /* 放大后的名字 */
     .hero-title {
-      font-size: 56px;
+      font-size: 38px;
       font-weight: 800;
-      color: #1e3a5f;
+      color: #6b1f2e;
       letter-spacing: -1px;
       margin-bottom: 12px;
       line-height: 1.3;
     }
-    /* 名字下面的信息 */
     .hero-sub {
-      font-size: 20px;
-      color: #1e6fd9;
+      font-size: 18px;
+      color: #8b1e3f;
       font-weight: 600;
       letter-spacing: 2px;
       margin: 0;
+    }
+
+    /* 手机端适配 */
+    @media (max-width: 600px) {
+      section { padding: 60px 16px; }
+      .popup-box {
+        padding: 48px 22px;
+        border-radius: 36% 36% 36% 36% / 28% 28% 28% 28%;
+      }
+      .popup-emoji {
+        top: 14px;
+        left: 20px;
+        font-size: 26px;
+      }
+      .popup-box h1 { font-size: 22px; }
+      .popup-btns button {
+        font-size: 14px;
+        padding: 11px 20px;
+      }
+      h2 { font-size: 26px; }
+      p { font-size: 16px; }
+
+      /* 第二页手机端：占满宽度，居中竖排 */
+      #about {
+        align-items: center;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .about-wrap { width: 100%; }
+      .profile-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      .profile-text { text-align: center; }
+      .avatar { width: 130px; height: 130px; }
+      .hero-title { font-size: 30px; }
+      .hero-sub { font-size: 16px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 第一页：互动弹窗 -->
-  <section id="home">
-    <div class="popup-box">
-      <h1>听说我是坏女人，你觉得呢</h1>
-      <div class="popup-btns">
-        <button class="btn-yes" onclick="chooseYes()">没我坏</button>
-        <button class="btn-no" onclick="chooseNo()">让我看看多坏</button>
+  <div class="page-wrap">
+
+    <!-- 第一页：互动弹窗 -->
+    <section id="home">
+      <div class="popup-box">
+        <div class="popup-emoji">🍷</div>
+        <h1>听说我是坏女人，你觉得呢</h1>
+        <div class="popup-btns">
+          <button class="btn-yes" onclick="chooseYes()">没我坏</button>
+          <button class="btn-no" onclick="chooseNo()">让我看看多坏</button>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 第二页：自我介绍 -->
-  <section id="about">
-    <div class="hero">
-      <img src="avatar.jpg" alt="我的头像" class="avatar">
-      <div class="hero-text">
-        <h1 class="hero-title">你好小姐，我是琥珀</h1>
-        <p class="hero-sub">23T 天秤 INTJ</p>
+    <!-- 第二页：自我介绍（占页面三分之二，靠左，分版块） -->
+    <section id="about">
+      <div class="about-wrap">
+        <div class="about-card profile-card">
+          <img src="avatar.jpg" alt="我的头像" class="avatar">
+          <div class="profile-text">
+            <h1 class="hero-title">你好小姐，我是琥珀</h1>
+            <p class="hero-sub">23T · 天秤 · INTJ</p>
+          </div>
+        </div>
+
+        <div class="about-card">
+          <h3>关于我</h3>
+          <p>这里写一段自我介绍，比如你正在学什么、喜欢做什么。</p>
+        </div>
+
+        <div class="about-card">
+          <h3>我的标签</h3>
+          <div>
+            <span class="tag">爱学习</span>
+            <span class="tag">爱折腾</span>
+            <span class="tag">GitHub 新手</span>
+          </div>
+        </div>
+
+        <div class="about-card">
+          <h3>联系我</h3>
+          <p>邮箱：你的邮箱@example.com</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 第三页：标签 -->
-  <section id="skills">
-    <h2>我的标签</h2>
-    <div>
-      <span class="tag">爱学习</span>
-      <span class="tag">爱折腾</span>
-      <span class="tag">GitHub 新手</span>
-    </div>
-  </section>
+    <!-- 第三页：标签 -->
+    <section id="skills">
+      <h2>我的标签</h2>
+      <div>
+        <span class="tag">爱学习</span>
+        <span class="tag">爱折腾</span>
+        <span class="tag">GitHub 新手</span>
+      </div>
+    </section>
 
-  <!-- 第四页：联系 -->
-  <section id="contact">
-    <h2>联系我</h2>
-    <p>邮箱：你的邮箱@example.com</p>
-  </section>
+    <!-- 第四页：联系 -->
+    <section id="contact">
+      <h2>联系我</h2>
+      <p>邮箱：你的邮箱@example.com</p>
+    </section>
+
+  </div>
 
   <script>
     function chooseYes() {
@@ -223,7 +341,6 @@
   </script>
 
 </body>
-</html>
 </html>
 
 </body>
