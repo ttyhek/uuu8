@@ -9,7 +9,6 @@
   html,body{width:100%;overflow-x:hidden;scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
   body{font-family:"FangSong","仿宋","FangSong_GB2312","华文仿宋","STFangsong",serif;color:#4a3b45;line-height:1.9;background:#fdf6f8;}
 
-  /* 物理画布 */
   #physics-bg{
     position:fixed;
     inset:0;
@@ -43,7 +42,6 @@
 
   .tag{display:inline-block;background:#c98da8;color:#fff;padding:8px 20px;border-radius:24px;margin:6px;font-size:15px;font-weight:500;}
 
-  /* 第一页光晕 */
   #home{background:rgba(253,246,248,.82);overflow:hidden;}
   .glow{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55;pointer-events:none;z-index:0;}
   .glow-1{width:320px;height:320px;background:#e8a8c0;top:-80px;left:-60px;animation:floatGlow1 18s ease-in-out infinite;}
@@ -53,21 +51,25 @@
   @keyframes floatGlow2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-50px,-30px) scale(1.2);}}
   @keyframes floatGlow3{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-40%,-60%) scale(1.1);}}
 
-  /* ===== 弹窗 ===== */
+  /* ===== 弹窗：左右边距扩大 3 倍 ===== */
   .popup-box{
     position:relative;z-index:2;
     background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(249,232,239,.9));
     backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    border-radius:20px;padding:56px 44px;
+    border-radius:20px;
+    padding:56px 44px;
     box-shadow:0 12px 40px rgba(201,141,168,.25),inset 0 0 30px rgba(255,255,255,.5);
-    max-width:480px;width:100%;border:1px solid rgba(201,141,168,.25);
+    /* 左右边距 3 倍：用 margin 控制，桌面 max-width 440px，移动端 calc 留 72px 边距 */
+    max-width:440px;
+    width:calc(100% - 72px);
+    margin:0 36px;
+    border:1px solid rgba(201,141,168,.25);
     opacity:0;transform:scale(.85) translateY(20px);
     animation:popupIn .9s ease-out 1s forwards;
     overflow:hidden;
   }
   @keyframes popupIn{to{opacity:1;transform:scale(1) translateY(0);}}
 
-  /* ===== 弹幕水印层 ===== */
   .watermark-stage{
     position:absolute;
     inset:0;
@@ -75,8 +77,6 @@
     z-index:0;
     overflow:hidden;
   }
-
-  /* 每行弹幕：从右向左滚动 */
   .danmaku-line{
     position:absolute;
     white-space:nowrap;
@@ -89,13 +89,11 @@
     animation:danmakuMove linear infinite;
     will-change:transform;
   }
-
   @keyframes danmakuMove{
     0%{transform:translateX(100%);}
     100%{transform:translateX(-100%);}
   }
 
-  /* 内容层 */
   .popup-box > *:not(.watermark-stage){position:relative;z-index:1;}
 
   .popup-box h1{font-size:24px;color:#6b4a58;margin-bottom:32px;line-height:1.7;font-weight:700;min-height:2em;}
@@ -114,7 +112,6 @@
   .btn-no{background:transparent;color:#c98da8;position:relative;}
   .btn-no:active{background:rgba(201,141,168,.12);}
 
-  /* 第二页 */
   #about{background:rgba(255,245,248,.82);padding:60px 20px;justify-content:flex-start;}
   .about-page{width:100%;max-width:520px;display:flex;flex-direction:column;gap:28px;text-align:left;}
   .part-one{display:flex;align-items:flex-end;gap:20px;}
@@ -144,7 +141,13 @@
 
   @media (max-width:600px){
     section{padding:50px 16px;}
-    .popup-box{padding:44px 24px;border-radius:18px;}
+    /* 移动端弹窗左右边距 3 倍：72px */
+    .popup-box{
+      padding:44px 24px;
+      border-radius:18px;
+      width:calc(100% - 72px);
+      margin:0 36px;
+    }
     .popup-box h1{font-size:20px;}
     .popup-btns button{font-size:14px;padding:11px 22px;}
     h2{font-size:26px;}
@@ -175,7 +178,6 @@
     <div class="glow glow-2"></div>
     <div class="glow glow-3"></div>
     <div class="popup-box" id="popupBox">
-      <!-- 弹幕水印层（JS 动态生成） -->
       <div class="watermark-stage" id="danmakuStage" aria-hidden="true"></div>
 
       <h1><span id="typeText"></span><span class="cursor" id="typeCursor"></span></h1>
@@ -226,7 +228,7 @@
 
 <script>
   /* ============================================================
-     一、物理引擎：英文字符下落 + 堆砌 + 重力感应
+     一、物理引擎
      ============================================================ */
   (function initPhysics(){
     const canvas = document.getElementById('physics-bg');
@@ -241,7 +243,7 @@
 
     const engine = Engine.create();
     engine.gravity.x = 0;
-    engine.gravity.y = 1;
+    engine.gravity.y = 0.75;
 
     const world = engine.world;
 
@@ -254,9 +256,7 @@
     World.add(world, walls);
 
     const LETTERS = ['L','O','V','E','Y','O','U','M','I','S','S','H','E','R','T','W','A','N','C','F','D','G','B','K','P','R','S','U','V','X','Z'];
-
-    // ===== 颜色加深 =====
-    const colors = ['#b07a94','#c98da8','#a86988','#8f5775','#b5809c','#9d6380','#7d4a63'];
+    const colors = ['#722f37','#8b3a44','#5c1f2a','#a04a55','#6b2530','#8e3540','#4f1a24'];
 
     const bodies = [];
     function makeLetter(x, y){
@@ -280,18 +280,21 @@
       return body;
     }
 
-    const INITIAL_COUNT = 45;
+    const INITIAL_COUNT = 180;
     for (let i = 0; i < INITIAL_COUNT; i++) {
       const x = 40 + Math.random() * (W - 80);
-      const y = -100 - Math.random() * 800;
+      const y = -100 - Math.random() * 2000;
       World.add(world, makeLetter(x, y));
     }
 
     setInterval(() => {
-      if (bodies.length > 80) return;
-      const x = 40 + Math.random() * (W - 80);
-      const y = -60;
-      World.add(world, makeLetter(x, y));
+      if (bodies.length > 320) return;
+      const batch = 3 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < batch; i++) {
+        const x = 40 + Math.random() * (W - 80);
+        const y = -60 - Math.random() * 120;
+        World.add(world, makeLetter(x, y));
+      }
     }, 1200);
 
     function renderLetters(){
@@ -336,14 +339,13 @@
       World.add(world, walls);
     });
 
-    /* 重力感应 */
     function handleOrientation(e){
       const gamma = e.gamma || 0;
       const beta  = e.beta  || 0;
       const gx = Math.max(-1, Math.min(1, gamma / 45));
       const gy = Math.max(-1, Math.min(1, beta  / 90)) + 1;
-      engine.gravity.x = gx * 0.8;
-      engine.gravity.y = Math.max(0.2, gy);
+      engine.gravity.x = gx * 0.8 * 0.75;
+      engine.gravity.y = Math.max(0.15, gy * 0.75);
     }
 
     function requestOrientationPermission(){
@@ -367,39 +369,23 @@
   })();
 
   /* ============================================================
-     二、弹窗弹幕水印：英文暧昧短语，从右到左滚动
+     二、弹幕水印（保持不变）
      ============================================================ */
   (function initDanmaku(){
     const stage = document.getElementById('danmakuStage');
 
-    // 英文暧昧短语池
     const phrases = [
-      'Stay with me',
-      'Hold me tight',
-      'You and I',
-      'Just tonight',
-      'Don\'t let go',
-      'Come closer',
-      'Only us',
-      'Be mine',
-      'Say it again',
-      'One more time',
-      'I\'m yours',
-      'Stay a little',
-      'Look at me',
-      'Don\'t look away',
-      'Just us two',
-      'Almost there'
+      'Stay with me','Hold me tight','You and I','Just tonight',
+      'Don\'t let go','Come closer','Only us','Be mine',
+      'Say it again','One more time','I\'m yours','Stay a little',
+      'Look at me','Don\'t look away','Just us two','Almost there'
     ];
 
-    // 生成多行弹幕，垂直均布，速度/延迟各不相同
     const LINE_COUNT = 6;
-    const stageH = 100; // 百分比单位
     for (let i = 0; i < LINE_COUNT; i++){
       const line = document.createElement('div');
       line.className = 'danmaku-line';
 
-      // 随机短语，拼接 2~3 个
       const count = 2 + Math.floor(Math.random() * 2);
       let text = '';
       for (let k = 0; k < count; k++){
@@ -408,17 +394,11 @@
       }
       line.textContent = text;
 
-      // 垂直位置均布
       line.style.top = (8 + i * 15) + '%';
 
-      // 滚动时长（速度）随机
       const dur = 14 + Math.random() * 12;
       line.style.animationDuration = dur + 's';
-
-      // 延迟随机，错开
       line.style.animationDelay = (-Math.random() * dur) + 's';
-
-      // 透明度随机
       line.style.opacity = (0.35 + Math.random() * 0.25).toFixed(2);
 
       stage.appendChild(line);
@@ -426,7 +406,7 @@
   })();
 
   /* ============================================================
-     三、打字机开场
+     三、打字机（保持不变）
      ============================================================ */
   const fullText='“如果我是坏女人怎么办”';
   const typeEl=document.getElementById('typeText');
@@ -446,7 +426,7 @@
   })();
 
   /* ============================================================
-     四、“我怕了”按钮躲避
+     四、按钮躲避（保持不变）
      ============================================================ */
   const btnNo=document.getElementById('btnNo');
   let dodgeCount=0;
@@ -466,7 +446,7 @@
   function chooseNo(){document.getElementById('about').scrollIntoView({behavior:'smooth'});}
 
   /* ============================================================
-     五、点击冒爱心
+     五、点击冒爱心（保持不变）
      ============================================================ */
   const morandiPinks=['#d9a7b0','#e3b8c0','#cfa3b5','#e8c4cc','#d4a5b8','#f0d0d8'];
   const clickHeartChars=['❤','♡','💗'];
