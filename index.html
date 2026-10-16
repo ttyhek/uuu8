@@ -131,7 +131,6 @@
   .dialog-box:nth-child(4){animation-delay:.9s;}
   @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
 
-  /* ===== 猫爪印记：淡淡的 ===== */
   .click-paw{
     position:fixed;
     pointer-events:none;
@@ -142,20 +141,11 @@
     opacity:.35;
   }
   @keyframes clickPawFly{
-    0%{
-      opacity:.4;
-      transform:translate(-50%,-50%) scale(0.4) rotate(var(--rot,0deg));
-    }
-    60%{
-      opacity:.3;
-    }
-    100%{
-      opacity:0;
-      transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1.3) rotate(var(--rot,0deg));
-    }
+    0%{opacity:.4;transform:translate(-50%,-50%) scale(0.4) rotate(var(--rot,0deg));}
+    60%{opacity:.3;}
+    100%{opacity:0;transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1.3) rotate(var(--rot,0deg));}
   }
 
-  /* ===== 音乐播放按钮 ===== */
   #musicToggle{
     position:fixed;
     right:20px;
@@ -179,28 +169,13 @@
     user-select:none;
     -webkit-tap-highlight-color:transparent;
   }
-  #musicToggle:hover{
-    background:#b00020;
-    color:#fff;
-    transform:scale(1.08);
-  }
-  #musicToggle.playing .icon{
-    animation:musicSpin 3s linear infinite;
-    display:inline-block;
-  }
-  @keyframes musicSpin{
-    0%{transform:rotate(0deg);}
-    100%{transform:rotate(360deg);}
-  }
+  #musicToggle:hover{background:#b00020;color:#fff;transform:scale(1.08);}
+  #musicToggle.playing .icon{animation:musicSpin 3s linear infinite;display:inline-block;}
+  @keyframes musicSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 
   @media (max-width:600px){
     section{padding:50px 16px;}
-    .popup-box{
-      padding:44px 24px;
-      border-radius:18px;
-      width:calc(100% - 72px);
-      margin:0 36px;
-    }
+    .popup-box{padding:44px 24px;border-radius:18px;width:calc(100% - 72px);margin:0 36px;}
     .popup-box h1{font-size:20px;}
     .popup-btns button{font-size:14px;padding:11px 22px;}
     h2{font-size:26px;}
@@ -225,7 +200,6 @@
 
 <canvas id="physics-bg"></canvas>
 
-<!-- 网易云外链播放器（自动播放） -->
 <iframe
   id="musicPlayer"
   frameborder="no"
@@ -238,7 +212,6 @@
   style="position:fixed;width:0;height:0;border:0;visibility:hidden;">
 </iframe>
 
-<!-- 音乐播放按钮 -->
 <button id="musicToggle" class="playing" aria-label="播放/暂停音乐">
   <span class="icon">❚❚</span>
 </button>
@@ -300,7 +273,7 @@
 
 <script>
   /* ============================================================
-     一、物理引擎：仅 3 组 LOVE + 普通字符
+     一、物理引擎：最终完整掉落 ≈ 屏幕面积一半
      ============================================================ */
   (function initPhysics(){
     const canvas = document.getElementById('physics-bg');
@@ -328,8 +301,12 @@
     World.add(world, walls);
 
     const LETTERS = ['Y','U','M','I','S','H','R','T','W','N','C','F','D','G','B','K','P','A','X','Z'];
+
+    /* 普通字符：暗酒红 */
     const normalColors = ['#722f37','#8b3a44','#5c1f2a','#6b2530','#8e3540','#4f1a24','#5a2028'];
-    const loveColors = ['#b00020','#c1002a','#d40030','#a3001e','#e00035'];
+
+    /* LOVE 字符：深黑红 */
+    const LOVE_COLOR = '#2b0000';
 
     const bodies = [];
 
@@ -357,7 +334,6 @@
 
     function makeLoveLetter(x, y, ch){
       const size = 44 + Math.random() * 10;
-      const color = loveColors[Math.floor(Math.random() * loveColors.length)];
 
       const body = Bodies.circle(x, y, size / 2, {
         restitution: 0.35,
@@ -366,7 +342,7 @@
         render: { visible: false }
       });
       body.customChar = ch;
-      body.customColor = color;
+      body.customColor = LOVE_COLOR;
       body.customSize = size;
       body.customIsLove = true;
       body.customAngle = (Math.random() - 0.5) * 0.4;
@@ -376,13 +352,34 @@
       return body;
     }
 
-    const INITIAL_COUNT = 180;
-    for (let i = 0; i < INITIAL_COUNT; i++) {
-      const x = 40 + Math.random() * (W - 80);
-      const y = -100 - Math.random() * 2000;
+    /* ============================================================
+       精确计算：全部落定后字符总覆盖面积 ≈ 屏幕面积 × 0.5
+       - 每个字符在平面上近似占一个 边长 = 字号 × 0.9 的方块
+       - 该方块面积 = (字号 × 0.9)²
+       - 目标总字符数 = 屏幕面积 × 0.5 / 单字面积
+       ============================================================ */
+    function computeTotalCount(){
+      const screenArea = W * H;
+      const avgFontSize = 33;                        // 普通字符平均字号
+      const charBox = avgFontSize * 0.9;             // 单字占位边长
+      const charArea = charBox * charBox;            // 单字占位面积
+      const targetArea = screenArea * 0.5;           // 目标 = 屏幕一半
+      let count = Math.round(targetArea / charArea);
+      /* 硬性最小/最大，避免极端屏幕下失控 */
+      count = Math.max(60, Math.min(count, 900));
+      return count;
+    }
+
+    let TOTAL_COUNT = computeTotalCount();
+
+    /* 初始先撒下 TOTAL_COUNT 个字符，覆盖屏幕及上方 */
+    for (let i = 0; i < TOTAL_COUNT; i++) {
+      const x = 30 + Math.random() * (W - 60);
+      const y = -50 - Math.random() * (TOTAL_COUNT * 8);
       World.add(world, makeNormalLetter(x, y));
     }
 
+    /* 仅 3 组 LOVE */
     const LOVE_GROUPS = 3;
     for (let g = 0; g < LOVE_GROUPS; g++) {
       const baseX = 60 + Math.random() * (W - 120);
@@ -395,15 +392,16 @@
       }
     }
 
+    /* 不再持续补充：总数固定为 TOTAL_COUNT，落定后正好覆盖一半 */
+    /* （如果你想让它慢慢补充，可以取消下面注释） */
+    /*
     setInterval(() => {
-      if (bodies.length > 320) return;
-      const batch = 3 + Math.floor(Math.random() * 2);
-      for (let i = 0; i < batch; i++) {
-        const x = 40 + Math.random() * (W - 80);
-        const y = -60 - Math.random() * 120;
-        World.add(world, makeNormalLetter(x, y));
-      }
+      if (bodies.length > TOTAL_COUNT + 12) return;
+      const x = 40 + Math.random() * (W - 80);
+      const y = -60 - Math.random() * 120;
+      World.add(world, makeNormalLetter(x, y));
     }, 1200);
+    */
 
     function renderLetters(){
       ctx.clearRect(0, 0, W, H);
@@ -421,22 +419,9 @@
           ctx.font = `italic 900 ${size}px Georgia, serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-
-          ctx.shadowColor = b.customColor;
-          ctx.shadowBlur = 16;
-
-          ctx.lineWidth = 2.5;
-          ctx.strokeStyle = '#3d0008';
-          ctx.strokeText(b.customChar, 0, 0);
-
           ctx.fillStyle = b.customColor;
           ctx.globalAlpha = 1;
           ctx.fillText(b.customChar, 0, 0);
-
-          ctx.shadowBlur = 0;
-          ctx.globalAlpha = 0.5;
-          ctx.fillStyle = '#ff4d6d';
-          ctx.fillText(b.customChar, -0.6, -0.6);
         } else {
           ctx.font = `italic bold ${size}px Georgia, serif`;
           ctx.textAlign = 'center';
@@ -462,6 +447,8 @@
       H = window.innerHeight;
       canvas.width = W;
       canvas.height = H;
+
+      TOTAL_COUNT = computeTotalCount();
 
       World.remove(world, walls);
       walls = [
@@ -579,7 +566,7 @@
   function chooseNo(){document.getElementById('about').scrollIntoView({behavior:'smooth'});}
 
   /* ============================================================
-     五、点击特效：淡淡的猫爪印记（一次多个）
+     五、点击特效：淡淡的猫爪印记
      ============================================================ */
   const pawColors = ['#722f37','#8b3a44','#a04a55','#6b2530','#8e3540'];
 
@@ -598,39 +585,32 @@
   }
 
   document.addEventListener('click', function (e) {
-    /* 一次点击生成 3~5 个猫爪 */
     const num = 3 + Math.floor(Math.random() * 3);
 
     for (let i = 0; i < num; i++) {
       const paw = document.createElement('span');
       paw.className = 'click-paw';
 
-      /* 每个猫爪颜色随机，透明度随机淡淡 */
       const color = pawColors[Math.floor(Math.random() * pawColors.length)];
-      const svgOpacity = 0.25 + Math.random() * 0.25; // 0.25~0.5
+      const svgOpacity = 0.25 + Math.random() * 0.25;
       paw.innerHTML = pawSVG(color, svgOpacity);
 
-      /* 在点击位置周围散开 */
       const offsetX = (Math.random() - 0.5) * 80;
       const offsetY = (Math.random() - 0.5) * 80;
 
       paw.style.left = (e.clientX + offsetX) + 'px';
       paw.style.top  = (e.clientY + offsetY) + 'px';
 
-      /* 随机旋转 */
       const rot = (Math.random() - 0.5) * 70;
       paw.style.setProperty('--rot', rot + 'deg');
 
-      /* 随机飘动 */
       paw.style.setProperty('--tx', (Math.random() - 0.5) * 80 + 'px');
       paw.style.setProperty('--ty', (-10 - Math.random() * 50) + 'px');
 
-      /* 随机大小 */
-      const scale = 0.6 + Math.random() * 0.5; // 0.6~1.1
+      const scale = 0.6 + Math.random() * 0.5;
       paw.style.width  = (40 * scale) + 'px';
       paw.style.height = (40 * scale) + 'px';
 
-      /* 随机动画时长 */
       paw.style.animationDuration = (0.9 + Math.random() * 0.6) + 's';
 
       document.body.appendChild(paw);
@@ -639,15 +619,14 @@
   });
 
   /* ============================================================
-     六、音乐播放按钮（自动播放）
+     六、音乐播放按钮
      ============================================================ */
   (function initMusicToggle(){
     const btn = document.getElementById('musicToggle');
     const player = document.getElementById('musicPlayer');
     const icon = btn.querySelector('.icon');
-    let playing = true; // 默认自动播放
+    let playing = true;
 
-    /* 尝试自动播放 */
     function tryAutoPlay(){
       player.src = "//music.163.com/outchain/player?type=2&id=1890530686&auto=1&height=0";
     }
