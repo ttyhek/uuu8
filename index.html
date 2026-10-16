@@ -2,1631 +2,320 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>幽暗城堡 · 假面舞会</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>幽暗城堡 · 抽签</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500;1,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500;1,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;position:fixed;overscroll-behavior:none;background:#050303;color:#e8dcc8;font-family:'Noto Serif SC',serif}
 
-  html,body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    position:fixed;
-    background:#050303;
-    font-family:'Noto Serif SC',serif;
-    color:#e8dcc8;
-    cursor:crosshair;
-    overscroll-behavior:none;
-  }
+/* 背景 */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(ellipse at 30% 20%,rgba(180,140,60,.25),transparent 45%),
+  radial-gradient(ellipse at 75% 15%,rgba(120,80,40,.2),transparent 50%),
+  radial-gradient(ellipse at 50% 50%,rgba(100,60,60,.15),transparent 60%),
+  linear-gradient(160deg,#0e0705,#1a0e08 30%,#0e0608 70%,#050303)}
+.glow{position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(224,176,96,.1),transparent 70%);z-index:1;pointer-events:none;filter:blur(20px);animation:gp 8s ease-in-out infinite alternate}
+@keyframes gp{from{opacity:.6}to{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
+.dust{position:fixed;inset:0;z-index:2;pointer-events:none}
+.dust span{position:absolute;border-radius:50%;background:#e0b060;opacity:.4;animation:fd linear infinite;box-shadow:0 0 6px rgba(224,176,96,.6)}
+@keyframes fd{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.5}90%{opacity:.5}100%{transform:translateY(-10vh) scale(1);opacity:0}}
 
-  .painting-bg{
-    position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:
-      radial-gradient(ellipse at 30% 20%, rgba(180,140,60,.25), transparent 45%),
-      radial-gradient(ellipse at 75% 15%, rgba(120,80,40,.2), transparent 50%),
-      radial-gradient(ellipse at 20% 75%, rgba(80,50,100,.25), transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(140,90,40,.2), transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(100,60,60,.15), transparent 60%),
-      linear-gradient(160deg, #0e0705 0%, #1a0e08 30%, #0e0608 70%, #050303 100%);
-  }
-  .painting-glow{
-    position:fixed;top:30%;left:50%;
-    transform:translate(-50%,-50%);
-    width:900px;height:900px;border-radius:50%;
-    background:radial-gradient(circle, rgba(224,176,96,.10), rgba(180,100,60,.05) 40%, transparent 70%);
-    z-index:1;pointer-events:none;filter:blur(20px);
-    animation:paintingPulse 8s ease-in-out infinite alternate;
-  }
-  @keyframes paintingPulse{
-    from{opacity:.6;transform:translate(-50%,-50%) scale(1);}
-    to{opacity:1;transform:translate(-50%,-50%) scale(1.06);}
-  }
-  .dust{position:fixed;inset:0;z-index:2;pointer-events:none;}
-  .dust span{
-    position:absolute;border-radius:50%;
-    background:#e0b060;opacity:.4;
-    animation:floatDust linear infinite;
-    box-shadow:0 0 6px rgba(224,176,96,.6);
-  }
-  @keyframes floatDust{
-    0%{transform:translateY(100vh) scale(0);opacity:0;}
-    10%{opacity:.5;}
-    90%{opacity:.5;}
-    100%{transform:translateY(-10vh) scale(1);opacity:0;}
-  }
-  .rose-float{
-    position:fixed;pointer-events:none;z-index:1;opacity:.2;
-    animation:roseFloatBg linear infinite;
-  }
-  @keyframes roseFloatBg{
-    0%{transform:translateY(100vh) rotate(0deg);opacity:0;}
-    10%{opacity:.3;}
-    90%{opacity:.3;}
-    100%{transform:translateY(-15vh) rotate(360deg);opacity:0;}
-  }
-  .whisper-marquee{
-    position:fixed;z-index:1;pointer-events:none;white-space:nowrap;
-    font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:1.1rem;letter-spacing:.3em;
-    color:rgba(224,176,96,.05);
-    animation:marqueeSlide linear infinite;user-select:none;
-  }
-  @keyframes marqueeSlide{
-    0%{transform:translateX(-100%);}
-    100%{transform:translateX(100vw);}
-  }
-  .whisper-marquee.w1{top:12%;animation-duration:38s;}
-  .whisper-marquee.w2{top:28%;animation-duration:46s;animation-delay:5s;}
-  .whisper-marquee.w3{top:45%;animation-duration:42s;animation-delay:10s;}
-  .whisper-marquee.w4{top:62%;animation-duration:52s;animation-delay:3s;}
-  .whisper-marquee.w5{top:78%;animation-duration:44s;animation-delay:8s;}
-  .whisper-marquee.w6{top:90%;animation-duration:48s;animation-delay:14s;}
+/* 屏 */
+.screen{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1.2rem;opacity:0;pointer-events:none;transition:opacity .8s ease;overflow:hidden}
+.screen.active{opacity:1;pointer-events:auto}
+.eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.75rem;color:#c8a878;letter-spacing:.35em;text-transform:uppercase;margin-bottom:1.5rem;text-align:center}
 
-  .paw-print{
-    position:fixed;pointer-events:none;z-index:9999;
-    width:32px;height:32px;opacity:0;
-    transform:translate(-50%,-50%) scale(.4) rotate(var(--rot,0deg));
-    animation:pawFade 1.8s ease forwards;
-  }
-  @keyframes pawFade{
-    0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(var(--rot,0deg));}
-    15%{opacity:.7;transform:translate(-50%,-50%) scale(1) rotate(var(--rot,0deg));}
-    70%{opacity:.5;transform:translate(-50%,-50%) scale(1.02) rotate(var(--rot,0deg));}
-    100%{opacity:0;transform:translate(-50%,-50%) scale(1.05) rotate(var(--rot,0deg));}
-  }
-  .paw-print svg{width:100%;height:100%;display:block;}
+/* 报名 */
+.signup-stage{position:relative;width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.floating-card{position:absolute;width:56px;height:80px;background:linear-gradient(160deg,rgba(30,18,12,.95),rgba(18,10,8,.98));border:1px solid #8a6838;border-radius:4px;z-index:3;animation:cf 8s ease-in-out infinite;opacity:.7;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#e0b060}
+.floating-card.c1{top:-5%;left:-6%;animation-delay:0s;transform:rotate(-15deg)}
+.floating-card.c2{top:5%;right:-8%;animation-delay:1.5s;transform:rotate(12deg)}
+.floating-card.c3{bottom:-5%;left:-8%;animation-delay:3s;transform:rotate(-8deg)}
+.floating-card.c4{bottom:5%;right:-6%;animation-delay:4.5s;transform:rotate(18deg)}
+@keyframes cf{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-12px) rotate(calc(var(--r,0deg) + 5deg))}}
+.signup-title{font-family:'Long Cang',cursive;font-size:clamp(1.5rem,5vw,2.2rem);color:#f4e4c8;margin-bottom:.6rem;text-shadow:0 0 30px rgba(255,200,140,.4);position:relative;z-index:4}
+.signup-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:#c8a878;letter-spacing:.2em;margin-bottom:2rem;position:relative;z-index:4}
+.name-input{width:min(320px,85vw);background:transparent;border:none;border-bottom:1px solid #a08050;padding:.9rem .5rem;font-family:'Long Cang',cursive;font-size:1.4rem;color:#f4e4c8;text-align:center;outline:none;margin-bottom:1.5rem;position:relative;z-index:4}
+.name-input::placeholder{color:#8a7050;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:.95rem}
+.signup-btn{padding:.85rem 2.2rem;background:rgba(20,10,8,.4);border:1px solid #a08050;border-radius:40px;color:#e0b060;font-family:'Noto Serif SC',serif;font-size:.8rem;letter-spacing:.3em;cursor:pointer;position:relative;z-index:4}
+.signup-btn:disabled{opacity:.3}
 
-  .screen{
-    position:fixed;
-    inset:0;
-    z-index:5;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:1.5rem 1.2rem;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity .8s ease;
-    overflow:hidden;
-  }
-  .screen.active{
-    opacity:1;
-    pointer-events:auto;
-  }
+/* 邀请 */
+.inv-card{position:relative;width:100%;max-width:480px;background:linear-gradient(165deg,rgba(30,18,12,.95),rgba(20,12,10,.97),rgba(12,8,6,.98));border:1px solid #8a6838;border-radius:2px;padding:1.8rem 1.4rem 1.4rem;box-shadow:0 40px 90px rgba(0,0,0,.9),inset 0 0 100px rgba(120,80,40,.2)}
+.inv-card::before{content:'';position:absolute;inset:10px;border:1px solid rgba(224,176,96,.5);pointer-events:none}
+.crest{position:absolute;top:.5rem;left:50%;transform:translateX(-50%);width:40px;height:48px;opacity:.9}
+.inv-top{text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:.6rem;color:#e0b060;letter-spacing:.5em;text-transform:uppercase;margin-bottom:1rem;margin-top:1.8rem}
+.inv-top::before,.inv-top::after{content:'✦';margin:0 .5rem;font-size:.5rem;vertical-align:middle}
+.inv-main{text-align:center;font-family:'Long Cang',cursive;font-size:clamp(1rem,3.5vw,1.3rem);line-height:1.8;color:#f4e4c8;margin-bottom:1rem}
+.inv-main .name{color:#e0b060;font-size:1.1em;padding:0 .2em}
+.inv-main .place{color:#f0d8a0;border-bottom:1px dashed rgba(224,176,96,.6);padding-bottom:.1em}
+.inv-main .from{color:#e0b060;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:.85em}
+.divider{display:flex;align-items:center;justify-content:center;gap:.6rem;margin:1rem auto;max-width:200px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#a08050,transparent)}
+.divider span{color:#e0b060;font-size:.5rem}
+.profile{display:grid;grid-template-columns:1fr 1fr;gap:.5rem .7rem;margin:.8rem 0;padding:.8rem .5rem;background:rgba(224,176,96,.05);border-top:1px solid rgba(224,176,96,.25);border-bottom:1px solid rgba(224,176,96,.25)}
+.profile-item{display:flex;gap:.4rem;font-family:'Cormorant Garamond',serif;font-size:.72rem;align-items:baseline}
+.profile-item .k{color:#e0b060;font-style:italic;text-transform:uppercase;font-size:.58rem;letter-spacing:.15em;min-width:38px}
+.profile-item .v{color:#f0d8a0;font-family:'Noto Serif SC',serif;font-size:.75rem}
+.profile-item .v.a{color:#ffb7d0}
+.confession{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;line-height:1.8;color:#d0b090;margin:.8rem 0 .5rem}
+.confession .hl{color:#e0b060;font-style:normal;font-family:'Noto Serif SC',serif;font-size:.82rem}
+.signature{text-align:right;font-family:'Long Cang',cursive;font-size:1.2rem;color:#f0d8a0;margin-top:.8rem}
+.signature .meta{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.6rem;color:#e0b060;letter-spacing:.25em;margin-top:.3rem;text-transform:uppercase}
+.inv-continue{display:flex;justify-content:center;margin-top:1.2rem}
+.inv-continue-btn{padding:.8rem 2.2rem;background:rgba(20,10,8,.5);border:1px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.8rem;letter-spacing:.4em;text-transform:uppercase;cursor:pointer}
 
-  .eyebrow{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.75rem;
-    color:#c8a878;letter-spacing:.35em;
-    text-transform:uppercase;margin-bottom:1.5rem;
-    text-shadow:0 2px 8px rgba(0,0,0,.8);
-    text-align:center;
-  }
+/* 信封 */
+.env-stage{position:relative;width:min(340px,80vw)}
+.env{position:relative;width:100%;aspect-ratio:1.6/1;transition:transform .6s;transform-style:preserve-3d}
+.env-body{position:absolute;inset:0;background:linear-gradient(160deg,#e8d8c0,#d4c0a0);border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.9),inset 0 0 60px rgba(180,140,90,.2);overflow:hidden;transform-origin:center;transition:transform .8s}
+.env-body::before{content:'';position:absolute;top:0;left:0;right:0;height:60%;background:linear-gradient(160deg,#f0e0c8,#dcc8a8);clip-path:polygon(0 0,100% 0,50% 100%);z-index:2;transition:transform 1.2s,opacity 1.2s;transform-origin:top center}
+.env.opening .env-body::before{transform:rotateX(180deg);opacity:0}
+.env.opening .env-body{transform:translateY(-10px)}
+.watermark{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.18;background:repeating-linear-gradient(45deg,transparent 0 12px,rgba(140,100,60,.08) 12px 13px)}
+.watermark-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-18deg);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(2rem,6vw,3rem);color:rgba(140,90,50,.12);letter-spacing:.3em;white-space:nowrap;font-weight:300}
+.env-q{position:absolute;bottom:14%;left:50%;transform:translateX(-50%);font-family:'Long Cang',cursive;font-size:clamp(.75rem,2.4vw,1rem);color:#5a3a28;white-space:nowrap;z-index:4}
+.env-name{position:absolute;top:18%;left:50%;transform:translateX(-50%);font-family:'Long Cang',cursive;font-size:clamp(.9rem,2.6vw,1.1rem);color:#8a2040;z-index:4;opacity:0;transition:opacity 1s}
+.env-name.show{opacity:1}
+.seals{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);display:flex;gap:1.5rem;z-index:8}
+.seal-wrap{position:relative;width:68px;height:68px;cursor:pointer;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.seal-wrap:active{transform:translateY(-5px) scale(1.03)}
+.wax{position:absolute;inset:0;border-radius:52% 48% 50% 50%/48% 52% 48% 52%}
+.wax::before{content:'';position:absolute;inset:-5px -3px -4px -3px;border-radius:48% 52% 46% 54%/52% 46% 54% 46%;opacity:.75;filter:blur(1.5px);z-index:-1}
+.wax::after{content:'';position:absolute;bottom:-6px;left:18%;width:20px;height:26px;border-radius:48% 52% 50% 50%/60% 60% 40% 40%;opacity:.85;filter:blur(1.2px)}
+.seal-wrap.pl .wax{background:radial-gradient(circle at 35% 28%,#ffd6e6,#ffb0cc 30%,#e0709a 75%,#a03860);box-shadow:0 8px 20px rgba(200,100,140,.6),inset 0 -4px 10px rgba(140,50,90,.7)}
+.seal-wrap.pl .wax::before{background:radial-gradient(circle at 40% 35%,rgba(255,240,245,.7),transparent 65%)}
+.seal-wrap.pl .wax::after{background:linear-gradient(180deg,#ffb0cc,#e0709a)}
+.seal-wrap.pd .wax{background:radial-gradient(circle at 35% 28%,#d04070,#a02850 30%,#701838 75%,#400a20);box-shadow:0 8px 20px rgba(120,20,60,.7),inset 0 -4px 10px rgba(60,0,25,.8)}
+.seal-wrap.pd .wax::before{background:radial-gradient(circle at 40% 35%,rgba(255,180,210,.45),transparent 65%)}
+.seal-wrap.pd .wax::after{background:linear-gradient(180deg,#a02850,#701838)}
+.imprint{position:absolute;inset:12px;border-radius:48% 52% 50% 50%/52% 48% 52% 48%;display:flex;align-items:center;justify-content:center;font-family:'Long Cang',cursive;font-size:.95rem;z-index:3;font-weight:500}
+.seal-wrap.pl .imprint{color:#fff0f5;text-shadow:0 1px 1px rgba(160,50,90,.6)}
+.seal-wrap.pd .imprint{color:#ffd8e5;text-shadow:0 1px 1px rgba(0,0,0,.7)}
+.imprint::before{content:'';position:absolute;inset:6px;border-radius:50%;border:1px solid rgba(0,0,0,.3)}
+.seal-wrap.faded{opacity:.2;transform:scale(.85);pointer-events:none;filter:blur(.5px)}
+.seal-wrap.disabled{cursor:not-allowed}
 
-  /* 第一屏：报名 */
-  .signup-stage{
-    position:relative;width:100%;max-width:480px;
-    display:flex;flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-  }
-  .floating-card{
-    position:absolute;width:60px;height:86px;
-    background:linear-gradient(160deg, rgba(30,18,12,.95), rgba(18,10,8,.98));
-    border:1px solid #8a6838;border-radius:4px;
-    box-shadow:
-      0 10px 30px rgba(0,0,0,.7),
-      0 0 0 1px rgba(200,160,90,.25),
-      inset 0 0 20px rgba(120,80,40,.15);
-    z-index:3;animation:cardFloat 8s ease-in-out infinite;opacity:.7;
-  }
-  .floating-card .card-symbol{
-    position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%);
-    font-size:1.4rem;color:#e0b060;opacity:.8;
-  }
-  .floating-card.c1{top:-5%;left:-8%;animation-delay:0s;transform:rotate(-15deg);}
-  .floating-card.c2{top:5%;right:-10%;animation-delay:1.5s;transform:rotate(12deg);}
-  .floating-card.c3{bottom:-5%;left:-10%;animation-delay:3s;transform:rotate(-8deg);}
-  .floating-card.c4{bottom:5%;right:-8%;animation-delay:4.5s;transform:rotate(18deg);}
-  @keyframes cardFloat{
-    0%,100%{transform:translateY(0) rotate(var(--r,0deg));}
-    50%{transform:translateY(-12px) rotate(calc(var(--r,0deg) + 5deg));}
-  }
-  .card-glow{
-    position:absolute;width:120px;height:120px;border-radius:50%;
-    background:radial-gradient(circle, rgba(224,176,96,.15), transparent 70%);
-    z-index:1;pointer-events:none;
-    animation:glowDrift 6s ease-in-out infinite alternate;
-  }
-  .card-glow.g1{top:10%;left:-10%;}
-  .card-glow.g2{bottom:15%;right:-10%;animation-delay:2s;}
-  @keyframes glowDrift{
-    from{opacity:.4;transform:scale(1);}
-    to{opacity:.9;transform:scale(1.2);}
-  }
+/* 弹窗 */
+.modal{position:fixed;inset:0;z-index:200;background:rgba(5,3,6,.92);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .6s}
+.modal.show{opacity:1;pointer-events:auto}
+.modal-card{position:relative;max-width:320px;width:100%;background:linear-gradient(160deg,rgba(30,18,12,.98),rgba(20,12,10,.99));border:1px solid #8a6838;border-radius:4px;padding:2.2rem 1.6rem 1.8rem;text-align:center}
+.modal-card::before{content:'';position:absolute;inset:10px;border:1px solid rgba(224,176,96,.4);pointer-events:none}
+.modal-text{font-family:'Long Cang',cursive;font-size:clamp(1.2rem,4vw,1.5rem);color:#f4e4c8;margin-bottom:1.4rem;line-height:1.5}
+.modal-text .a{color:#e0b060}
+.modal-btn{padding:.75rem 2rem;background:rgba(20,10,8,.5);border:1px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.78rem;letter-spacing:.4em;text-transform:uppercase;cursor:pointer}
 
-  .signup-title{
-    font-family:'Long Cang',cursive;
-    font-size:clamp(1.5rem,5vw,2.2rem);
-    color:#f4e4c8;margin-bottom:.6rem;
-    text-shadow:0 0 30px rgba(255,200,140,.4), 0 2px 8px rgba(0,0,0,.9);
-    position:relative;z-index:4;
-  }
-  .signup-sub{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;
-    color:#c8a878;letter-spacing:.2em;
-    margin-bottom:2rem;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
-    position:relative;z-index:4;
-  }
-  .name-input-wrap{
-    position:relative;width:min(320px,85vw);
-    margin-bottom:1.5rem;
-    z-index:4;
-  }
-  .name-input{
-    width:100%;background:transparent;
-    border:none;border-bottom:1px solid #a08050;
-    padding:.9rem .5rem;
-    font-family:'Long Cang',cursive;
-    font-size:1.4rem;color:#f4e4c8;
-    text-align:center;outline:none;
-    transition:border-color .4s ease;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
-  }
-  .name-input::placeholder{
-    color:#8a7050;font-style:italic;
-    font-family:'Cormorant Garamond',serif;font-size:.95rem;
-  }
-  .signup-btn{
-    margin-top:.5rem;padding:.85rem 2.2rem;
-    background:rgba(20,10,8,.4);
-    border:1px solid #a08050;border-radius:40px;
-    color:#e0b060;font-family:'Noto Serif SC',serif;
-    font-size:.8rem;letter-spacing:.3em;
-    cursor:pointer;transition:all .4s ease;
-    backdrop-filter:blur(4px);
-    z-index:4;position:relative;
-  }
-  .signup-btn:disabled{opacity:.3;cursor:not-allowed;}
+/* ===== 抽签区 —— 签尾聚拢，元素整体居中 ===== */
+.draw-screen{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.2rem;opacity:0;pointer-events:none;transition:opacity .8s}
+.draw-screen.active{opacity:1;pointer-events:auto}
+.draw-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(1.3rem,4.5vw,1.8rem);color:#f4e4c8;margin-bottom:.3rem;text-align:center}
+.draw-title .orn{display:block;font-size:.6em;color:#e0b060;margin-top:.4rem;letter-spacing:.3em;font-weight:400;font-style:italic}
+.draw-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.8rem;color:#c8a878;letter-spacing:.25em;margin-bottom:.8rem;text-transform:uppercase;text-align:center}
+.hint-top{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.8rem;color:#e0b060;letter-spacing:.2em;margin-bottom:1rem;text-align:center;animation:hp 2.5s ease-in-out infinite}
+@keyframes hp{0%,100%{opacity:.5}50%{opacity:1}}
 
-  /* 邀请屏 */
-  .invitation-stage{
-    position:relative;
-    width:100%;max-width:520px;
-    max-height:90vh;
-    display:flex;
-    flex-direction:column;
-  }
-  .invitation-card{
-    position:relative;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.12), transparent 60%),
-      linear-gradient(165deg, rgba(30,18,12,.95) 0%, rgba(20,12,10,.97) 40%, rgba(12,8,6,.98) 100%);
-    border:1px solid #8a6838;border-radius:2px;
-    padding:2rem 1.6rem 1.6rem;
-    box-shadow:
-      0 40px 90px rgba(0,0,0,.9),
-      0 0 0 1px rgba(224,176,96,.3),
-      inset 0 0 100px rgba(120,80,40,.2);
-    overflow:hidden;
-  }
-  .invitation-card::before{
-    content:'';position:absolute;inset:10px;
-    border:1px solid rgba(224,176,96,.5);pointer-events:none;
-  }
-  .invitation-card::after{
-    content:'';position:absolute;inset:15px;
-    border:1px solid rgba(224,176,96,.25);pointer-events:none;
-  }
-  .crest{
-    position:absolute;top:.6rem;left:50%;
-    transform:translateX(-50%);width:44px;height:52px;opacity:.9;
-  }
-  .crest svg{width:100%;height:100%;}
-  .inv-top-ornament{
-    text-align:center;font-family:'Playfair Display',serif;
-    font-style:italic;font-size:.6rem;color:#e0b060;
-    letter-spacing:.55em;text-transform:uppercase;
-    margin-bottom:1.2rem;margin-top:2rem;
-  }
-  .inv-top-ornament::before,
-  .inv-top-ornament::after{
-    content:'✦';margin:0 .6rem;color:#e0b060;
-    font-size:.5rem;vertical-align:middle;
-  }
-  .inv-main{
-    text-align:center;font-family:'Long Cang',cursive;
-    font-size:clamp(1rem,3.6vw,1.35rem);
-    line-height:1.8;color:#f4e4c8;
-    margin-bottom:1.2rem;letter-spacing:.02em;
-    text-shadow:0 2px 8px rgba(0,0,0,.8);
-  }
-  .inv-main .highlight-name{
-    color:#e0b060;
-    text-shadow:0 0 24px rgba(224,176,96,.6);
-    font-size:1.1em;padding:0 .2em;
-  }
-  .inv-main .highlight-place{
-    color:#f0d8a0;
-    border-bottom:1px dashed rgba(224,176,96,.6);
-    padding-bottom:.1em;
-  }
-  .inv-main .highlight-from{
-    color:#e0b060;font-style:italic;
-    font-family:'Cormorant Garamond',serif;
-    font-size:.85em;letter-spacing:.05em;
-  }
-  .inv-divider{
-    display:flex;align-items:center;justify-content:center;
-    gap:.6rem;margin:1rem auto;max-width:220px;
-  }
-  .inv-divider::before,.inv-divider::after{
-    content:'';flex:1;height:1px;
-    background:linear-gradient(90deg,transparent,#a08050,transparent);
-  }
-  .inv-divider .diamond{color:#e0b060;font-size:.5rem;}
-  .inv-profile{
-    display:grid;grid-template-columns:1fr 1fr;
-    gap:.5rem .8rem;margin:1rem 0;padding:.9rem .6rem;
-    background:rgba(224,176,96,.05);
-    border-top:1px solid rgba(224,176,96,.25);
-    border-bottom:1px solid rgba(224,176,96,.25);
-  }
-  .inv-profile-item{
-    display:flex;align-items:baseline;gap:.4rem;
-    font-family:'Cormorant Garamond',serif;
-    font-size:.75rem;letter-spacing:.05em;
-    min-width:0;
-  }
-  .inv-profile-item .key{
-    color:#e0b060;font-style:italic;text-transform:uppercase;
-    font-size:.6rem;letter-spacing:.15em;min-width:40px;flex-shrink:0;
-  }
-  .inv-profile-item .val{
-    color:#f0d8a0;font-family:'Noto Serif SC',serif;
-    font-size:.78rem;letter-spacing:.03em;
-    word-break:break-all;
-  }
-  .inv-profile-item .val.accent{color:#ffb7d0;}
-  .inv-confession{
-    text-align:center;font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.9rem;line-height:1.8;
-    color:#d0b090;margin:1rem 0 .6rem;padding:.6rem 0;
-  }
-  .inv-confession .hl{
-    color:#e0b060;font-style:normal;
-    font-family:'Noto Serif SC',serif;font-size:.85rem;
-    text-shadow:0 0 20px rgba(224,176,96,.5);
-  }
-  .inv-signature{
-    text-align:right;margin-top:1rem;
-    font-family:'Long Cang',cursive;
-    font-size:1.3rem;color:#f0d8a0;letter-spacing:.05em;
-  }
-  .inv-signature .meta{
-    display:block;font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.65rem;color:#e0b060;
-    letter-spacing:.25em;margin-top:.4rem;text-transform:uppercase;
-  }
-  .inv-continue{
-    display:flex;justify-content:center;margin-top:1.2rem;
-  }
-  .inv-continue-btn{
-    padding:.85rem 2.4rem;
-    background:rgba(20,10,8,.5);
-    border:1px solid #a08050;color:#e0b060;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;
-    letter-spacing:.4em;text-transform:uppercase;
-    cursor:pointer;transition:all .4s ease;
-  }
+/* 扇面：签尾底部聚拢，整体窄而居中 */
+.fan{
+  position:relative;
+  width:100%;
+  max-width:420px;          /* 缩窄整体宽度让签更聚拢 */
+  height:min(60vh,400px);
+  margin-bottom:1rem;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  perspective:1400px;
+  transform:translateX(0);   /* 水平居中由父级flex控制 */
+}
 
-  /* 信封 */
-  .envelope-stage{
-    position:relative;
-    width:min(360px,80vw);
-    max-height:70vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .envelope{
-    position:relative;width:100%;aspect-ratio:1.6/1;
-    transition:transform .6s ease;
-    transform-style:preserve-3d;
-  }
-  .envelope-body{
-    position:absolute;inset:0;
-    background:linear-gradient(160deg,#e8d8c0,#d4c0a0);
-    border-radius:6px;
-    box-shadow:
-      0 30px 60px rgba(0,0,0,.9),
-      0 0 0 1px rgba(200,170,120,.4),
-      inset 0 0 60px rgba(180,140,90,.2);
-    overflow:hidden;
-    transform-origin:center center;
-    transition:transform .8s ease, opacity .8s ease;
-  }
-  .envelope-body::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:60%;
-    background:linear-gradient(160deg,#f0e0c8,#dcc8a8);
-    clip-path:polygon(0 0, 100% 0, 50% 100%);
-    box-shadow:inset 0 -2px 4px rgba(0,0,0,.1);
-    z-index:2;
-    transition:transform 1.2s cubic-bezier(.4,.1,.2,1), opacity 1.2s ease;
-    transform-origin:top center;
-  }
-  .envelope.opening .envelope-body::before{
-    transform:rotateX(180deg);opacity:0;
-  }
-  .envelope.opening .envelope-body{transform:translateY(-10px);}
-  .wax-shards{
-    position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%);
-    width:0;height:0;z-index:20;pointer-events:none;
-  }
-  .shard{
-    position:absolute;width:8px;height:8px;
-    border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
-    opacity:0;
-  }
-  .envelope.opening .shard{animation:shardFly 1.2s ease forwards;}
-  @keyframes shardFly{
-    0%{opacity:1;transform:translate(0,0) scale(1);}
-    100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.3);}
-  }
-  .glow-burst{
-    position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%);
-    width:0;height:0;border-radius:50%;
-    background:radial-gradient(circle, rgba(224,176,96,.6), rgba(200,140,80,.3), transparent 70%);
-    opacity:0;z-index:15;pointer-events:none;
-  }
-  .envelope.opening .glow-burst{animation:glowBurst 1.6s ease forwards;}
-  @keyframes glowBurst{
-    0%{opacity:0;width:0;height:0;}
-    30%{opacity:.8;}
-    100%{opacity:0;width:600px;height:600px;}
-  }
-  .envelope-letter{
-    position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%);
-    width:80%;height:60%;
-    background:linear-gradient(170deg,#f4ead4,#e8dcc0);
-    border-radius:2px;
-    box-shadow:0 10px 30px rgba(0,0,0,.5);
-    opacity:0;z-index:12;pointer-events:none;
-    transform-origin:center center;
-  }
-  .envelope.opening .envelope-letter{animation:letterSlide 1.8s ease forwards;}
-  @keyframes letterSlide{
-    0%{opacity:0;transform:translate(-50%,-50%) scale(.6) rotateX(0deg);}
-    30%{opacity:1;transform:translate(-50%,-50%) scale(1) rotateX(0deg);}
-    100%{opacity:0;transform:translate(-50%,-140%) scale(1.05) rotateX(0deg);}
-  }
-  .watermark{
-    position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.18;
-    background-image:
-      radial-gradient(circle at 25% 35%, transparent 0 18px, rgba(120,80,40,.35) 18px 19px, transparent 19px),
-      radial-gradient(circle at 75% 65%, transparent 0 22px, rgba(120,80,40,.3) 22px 23px, transparent 23px),
-      repeating-linear-gradient(45deg, transparent 0 12px, rgba(140,100,60,.08) 12px 13px);
-  }
-  .watermark-text{
-    position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%) rotate(-18deg);
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:clamp(2rem,6vw,3.5rem);
-    color:rgba(140,90,50,.12);
-    letter-spacing:.3em;z-index:1;pointer-events:none;
-    white-space:nowrap;font-weight:300;
-  }
-  .envelope-q{
-    position:absolute;bottom:14%;left:50%;
-    transform:translateX(-50%);
-    font-family:'Long Cang',cursive;
-    font-size:clamp(.75rem,2.4vw,1rem);
-    color:#5a3a28;white-space:nowrap;
-    letter-spacing:.08em;z-index:4;
-    text-shadow:0 1px 2px rgba(255,255,255,.4);
-  }
-  .envelope-name{
-    position:absolute;top:18%;left:50%;
-    transform:translateX(-50%);
-    font-family:'Long Cang',cursive;
-    font-size:clamp(.9rem,2.6vw,1.1rem);
-    color:#8a2040;letter-spacing:.05em;z-index:4;
-    opacity:0;transition:opacity 1s ease;
-    text-shadow:0 1px 2px rgba(255,255,255,.3);
-  }
-  .envelope-name.show{opacity:1;}
+/* 每支签：底端聚拢（X偏移大幅减小），角度略微向内收 */
+.stick{
+  position:absolute;
+  bottom:0;
+  width:46px;
+  height:min(55vh,340px);
+  cursor:pointer;
+  transform-origin:bottom center;
+  transition:transform .55s cubic-bezier(.34,1.56,.64,1),filter .4s,opacity .4s;
+  transform-style:preserve-3d;
+  z-index:1;
+}
+/* 签尾聚拢：x偏移从 ±150px 改为 ±55px，角度收窄至 ±12°，y也略微收拢 */
+.stick:nth-child(1){--a:-12deg;--x:-55px;--y:10px;z-index:1}
+.stick:nth-child(2){--a:-8deg;--x:-35px;--y:6px;z-index:2}
+.stick:nth-child(3){--a:-4deg;--x:-18px;--y:3px;z-index:3}
+.stick:nth-child(4){--a:0deg;--x:0px;--y:1px;z-index:7}
+.stick:nth-child(5){--a:4deg;--x:18px;--y:3px;z-index:3}
+.stick:nth-child(6){--a:8deg;--x:35px;--y:6px;z-index:2}
+.stick:nth-child(7){--a:12deg;--x:55px;--y:10px;z-index:1}
 
-  .seals{
-    position:absolute;bottom:-42px;left:50%;
-    transform:translateX(-50%);
-    display:flex;gap:1.5rem;z-index:8;
-    transition:opacity .6s ease, transform .6s ease;
-  }
-  .seal-wrap{
-    position:relative;width:70px;height:70px;
-    cursor:pointer;
-    transition:transform .4s cubic-bezier(.34,1.56,.64,1);
-    transform-style:preserve-3d;
-  }
-  .seal-wrap:active{transform:translateY(-5px) scale(1.03);}
-  .wax{
-    position:absolute;inset:0;
-    border-radius:52% 48% 50% 50% / 48% 52% 48% 52%;
-    transition:all .35s ease;
-  }
-  .wax::before{
-    content:'';position:absolute;inset:-5px -3px -4px -3px;
-    border-radius:48% 52% 46% 54% / 52% 46% 54% 46%;
-    opacity:.75;filter:blur(1.5px);z-index:-1;
-  }
-  .wax::after{
-    content:'';position:absolute;bottom:-6px;left:18%;
-    width:20px;height:26px;
-    border-radius:48% 52% 50% 50% / 60% 60% 40% 40%;
-    opacity:.85;filter:blur(1.2px);
-    box-shadow:0 2px 4px rgba(0,0,0,.4);
-  }
-  .seal-wrap.pinklight .wax{
-    background:radial-gradient(circle at 35% 28%, #ffd6e6 0%, #ffb0cc 30%, #e0709a 75%, #a03860 100%);
-    box-shadow:
-      0 8px 20px rgba(200,100,140,.6), 0 2px 4px rgba(0,0,0,.4),
-      inset 0 -4px 10px rgba(140,50,90,.7), inset 0 4px 8px rgba(255,220,235,.55);
-  }
-  .seal-wrap.pinklight .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,240,245,.7), transparent 65%);}
-  .seal-wrap.pinklight .wax::after{background:linear-gradient(180deg,#ffb0cc,#e0709a);}
-  .seal-wrap.pinkdeep .wax{
-    background:radial-gradient(circle at 35% 28%, #d04070 0%, #a02850 30%, #701838 75%, #400a20 100%);
-    box-shadow:
-      0 8px 20px rgba(120,20,60,.7), 0 2px 4px rgba(0,0,0,.5),
-      inset 0 -4px 10px rgba(60,0,25,.8), inset 0 4px 8px rgba(255,160,190,.3);
-  }
-  .seal-wrap.pinkdeep .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,180,210,.45), transparent 65%);}
-  .seal-wrap.pinkdeep .wax::after{background:linear-gradient(180deg,#a02850,#701838);}
-  .imprint{
-    position:absolute;inset:12px;
-    border-radius:48% 52% 50% 50% / 52% 48% 52% 48%;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Long Cang',cursive;
-    font-size:1rem;letter-spacing:.1em;
-    text-align:center;z-index:3;font-weight:500;
-  }
-  .seal-wrap.pinklight .imprint{color:#fff0f5;text-shadow:0 1px 1px rgba(160,50,90,.6);}
-  .seal-wrap.pinkdeep .imprint{color:#ffd8e5;text-shadow:0 1px 1px rgba(0,0,0,.7);}
-  .imprint::before{
-    content:'';position:absolute;inset:6px;
-    border-radius:50%;
-    border:1px solid rgba(0,0,0,.3);
-    box-shadow:inset 0 2px 3px rgba(0,0,0,.35);
-  }
-  .fingerprint{
-    position:absolute;top:22%;right:18%;
-    width:16px;height:12px;border-radius:50%;opacity:.15;
-    background:repeating-radial-gradient(circle at 50% 50%, transparent 0 1.5px, rgba(0,0,0,.5) 1.5px 2px);
-    transform:rotate(-20deg);pointer-events:none;z-index:4;
-  }
-  .seal-wrap.picked{
-    transform:translateY(-15px) scale(1.15);
-  }
-  .seal-wrap.faded{opacity:.2;transform:scale(.85);pointer-events:none;filter:blur(.5px);}
-  .seal-wrap.disabled-run{cursor:not-allowed;}
+.stick-inner{position:absolute;inset:0;transition:transform .8s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;transform:rotate(var(--a)) translateX(var(--x)) translateY(var(--y));transform-origin:bottom center;pointer-events:none}
+.stick-front,.stick-back{position:absolute;inset:0;border-radius:6px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:.8rem .4rem;box-shadow:0 14px 30px rgba(0,0,0,.9),0 0 0 1px rgba(224,176,96,.4),inset 0 0 40px rgba(120,80,40,.2);overflow:hidden;pointer-events:none}
+.stick-front::before,.stick-back::before{content:'';position:absolute;inset:5px;border:1px solid rgba(224,176,96,.5);border-radius:4px;pointer-events:none}
+.stick-front{background:radial-gradient(ellipse at 50% 0%,rgba(255,220,160,.15),transparent 60%),linear-gradient(160deg,rgba(30,18,12,.98),rgba(18,10,8,.99) 50%,rgba(10,6,4,1))}
+.stick-back{background:radial-gradient(ellipse at 50% 0%,rgba(255,180,220,.15),transparent 60%),linear-gradient(160deg,rgba(40,16,28,.98),rgba(20,8,16,.99));transform:rotateY(180deg);justify-content:center;align-items:center}
+.stick-back .rose-en{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:.9rem;letter-spacing:.4em;color:#e0b060;writing-mode:vertical-rl;text-orientation:mixed;text-shadow:0 0 20px rgba(224,176,96,.8)}
+.stick-mark{position:relative;width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;border-radius:50%}
+.stick-mark::before{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#c01838,#6a0a20);box-shadow:0 0 10px rgba(200,40,80,.8),0 0 20px rgba(200,40,80,.5);animation:mp 2s ease-in-out infinite alternate}
+.stick-mark::after{content:'';position:absolute;width:4px;height:4px;border-radius:50%;background:#ffe0c0;box-shadow:0 0 8px #ffe0c0;animation:mp 2s ease-in-out infinite alternate}
+@keyframes mp{from{opacity:.8;transform:scale(.9)}to{opacity:1;transform:scale(1.15)}}
+.stick-num{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:1.4rem;background:linear-gradient(180deg,#f8e8c0,#d8b070 50%,#8a6020);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex:1;display:flex;align-items:center}
+.stick-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.45rem;letter-spacing:.2em;color:#c8a058;text-transform:uppercase;flex-shrink:0}
+.stick.drawn{z-index:30}
+.stick.drawn .stick-inner{transform:rotate(0) translateX(0) translateY(-60px) scale(1.3) rotateY(180deg);transform-origin:center}
+.stick.drawn.gone{opacity:0;transition:opacity .6s .8s;pointer-events:none}
 
-  /* 弹窗 */
-  .modal-overlay{
-    position:fixed;inset:0;z-index:200;
-    background:rgba(5,3,6,.92);
-    backdrop-filter:blur(8px);
-    display:flex;align-items:center;justify-content:center;
-    padding:1.5rem;
-    opacity:0;pointer-events:none;
-    transition:opacity .6s ease;
-  }
-  .modal-overlay.show{opacity:1;pointer-events:auto;}
-  .modal-card{
-    position:relative;
-    max-width:340px;width:100%;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.12), transparent 60%),
-      linear-gradient(160deg, rgba(30,18,12,.98) 0%, rgba(20,12,10,.99) 100%);
-    border:1px solid #8a6838;
-    border-radius:4px;
-    padding:2.4rem 1.8rem 2rem;
-    box-shadow:
-      0 30px 80px rgba(0,0,0,.95),
-      0 0 0 1px rgba(224,176,96,.3);
-    text-align:center;
-  }
-  .modal-card::before{
-    content:'';position:absolute;inset:10px;
-    border:1px solid rgba(224,176,96,.4);pointer-events:none;
-  }
-  .modal-text{
-    font-family:'Long Cang',cursive;
-    font-size:clamp(1.2rem,4vw,1.6rem);
-    color:#f4e4c8;margin-bottom:1.5rem;
-    line-height:1.5;
-    text-shadow:0 0 30px rgba(224,176,96,.4);
-  }
-  .modal-text .accent{color:#e0b060;}
-  .modal-btn{
-    padding:.8rem 2.2rem;
-    background:rgba(20,10,8,.5);
-    border:1px solid #a08050;
-    color:#e0b060;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;
-    letter-spacing:.4em;text-transform:uppercase;
-    cursor:pointer;
-    transition:all .4s ease;
-  }
+/* 结果卡（保持原样，居中显示） */
+.card-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 1s}
+.card-stage.show{opacity:1;pointer-events:auto}
+.card-frame{position:relative;width:100%;max-width:420px;opacity:0;transform:translateY(60px) scale(.85);transition:opacity .9s cubic-bezier(.34,1.56,.64,1),transform .9s cubic-bezier(.34,1.56,.64,1)}
+.card-stage.show .card-frame{opacity:1;transform:translateY(0) scale(1)}
+.card-bg{position:absolute;inset:0;border-radius:8px;overflow:hidden;z-index:0;background:radial-gradient(ellipse at 50% 0%,rgba(224,176,96,.12),transparent 60%),radial-gradient(ellipse at 50% 100%,rgba(200,140,80,.1),transparent 60%),linear-gradient(160deg,#1a1008,#0e0806 50%,#050303);border:1px solid rgba(224,176,96,.5);box-shadow:0 40px 100px rgba(0,0,0,.95),0 0 80px rgba(224,176,96,.15)}
+.card-bg::before{content:'ROSE';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:clamp(4rem,20vw,8rem);letter-spacing:.25em;color:rgba(224,176,96,.06);pointer-events:none;white-space:nowrap}
+.card-bg::after{content:'';position:absolute;inset:10px;border:1px solid rgba(224,176,96,.4);border-radius:6px;pointer-events:none}
+.corner{position:absolute;width:22px;height:22px;border-color:#e0b060;border-style:solid;border-width:0;opacity:.9;pointer-events:none}
+.corner.tl{top:6px;left:6px;border-top-width:2px;border-left-width:2px}
+.corner.tr{top:6px;right:6px;border-top-width:2px;border-right-width:2px}
+.corner.bl{bottom:6px;left:6px;border-bottom-width:2px;border-left-width:2px}
+.corner.br{bottom:6px;right:6px;border-bottom-width:2px;border-right-width:2px}
+.card-content{position:relative;z-index:2;padding:1.8rem 1.2rem;text-align:center}
+.gift{position:absolute;top:-14px;left:-14px;width:50px;height:50px;z-index:10;opacity:0;transform:scale(.5) rotate(-15deg);transition:opacity .8s,transform .8s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.gift.show{opacity:1;transform:scale(1) rotate(0)}
+.gift .bg{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#c01838,#6a0a20);box-shadow:0 6px 20px rgba(140,20,50,.8),0 0 40px rgba(200,60,100,.5);border:2px solid #e0b060}
+.gift .icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:26px;height:26px}
+.cr-orn{font-family:'Playfair Display',serif;font-style:italic;font-size:.6rem;color:#e0b060;letter-spacing:.5em;text-transform:uppercase;margin-bottom:1rem}
+.cr-orn::before,.cr-orn::after{content:'✦';margin:0 .5rem;font-size:.5rem;vertical-align:middle}
+.cr-num{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:clamp(2rem,7vw,2.8rem);background:linear-gradient(180deg,#fff4d0,#e0b060 40%,#a07838 80%,#6a4a18);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:.3rem;filter:drop-shadow(0 0 20px rgba(224,176,96,.3))}
+.cr-lbl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.7rem;color:#c8a878;letter-spacing:.5em;text-transform:uppercase;margin-bottom:1.2rem}
+.cr-name{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(1.2rem,4.5vw,1.8rem);background:linear-gradient(180deg,#fff4d0,#e0b060 60%,#a07838);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.3;margin-bottom:1.2rem}
+.cr-desc{font-family:'Cormorant Garamond',serif;font-size:.9rem;line-height:1.9;color:#c8b8a0;font-style:italic;margin-bottom:1.2rem;max-width:340px;margin-left:auto;margin-right:auto}
+.cr-desc .q{color:#e0b060;font-style:normal;font-family:'Noto Serif SC',serif;font-size:.86rem}
+.cr-tags{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-bottom:.5rem}
+.cr-tags span{font-family:'Cormorant Garamond',serif;font-size:.6rem;color:#c8a878;border:1px solid rgba(224,176,96,.4);padding:.2rem .6rem;letter-spacing:.15em;text-transform:uppercase;font-style:italic}
+.cr-actions{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:3;margin-top:.8rem}
+.cr-btn{padding:.75rem 1.5rem;background:linear-gradient(180deg,rgba(30,20,10,.9),rgba(15,10,5,.95));border:1px solid rgba(224,176,96,.6);color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;cursor:pointer}
+.cr-btn.p{background:linear-gradient(180deg,rgba(60,40,20,.95),rgba(30,20,10,.98));border-color:#e0b060;color:#fff4d0}
 
-  /* 信纸 */
-  .letter-overlay{
-    position:fixed;inset:0;z-index:80;
-    background:rgba(5,3,6,.96);
-    display:flex;align-items:center;justify-content:center;
-    padding:1.5rem;
-    opacity:0;pointer-events:none;
-    transition:opacity 1.2s ease;
-  }
-  .letter-overlay.show{opacity:1;pointer-events:auto;}
-  .letter-paper{
-    position:relative;
-    width:100%;max-width:440px;
-    background:
-      repeating-linear-gradient(0deg, transparent 0 28px, rgba(120,90,60,.06) 28px 29px),
-      linear-gradient(170deg, #f4ead4 0%, #e8dcc0 100%);
-    border-radius:2px;
-    padding:2.5rem 1.8rem 2rem;
-    box-shadow:
-      0 30px 80px rgba(0,0,0,.9),
-      0 0 0 1px rgba(180,150,110,.5);
-    color:#3a2a1a;
-  }
-  .letter-paper::before{
-    content:'';position:absolute;inset:12px;
-    border:1px solid rgba(180,150,110,.35);pointer-events:none;
-  }
-  .letter-title{
-    text-align:center;font-family:'Playfair Display',serif;
-    font-style:italic;font-size:.65rem;
-    color:#8a7050;letter-spacing:.55em;
-    text-transform:uppercase;margin-bottom:2rem;
-  }
-  .letter-title::before,
-  .letter-title::after{
-    content:'✦';margin:0 .6rem;color:#b08a40;
-    font-size:.5rem;vertical-align:middle;
-  }
-  .letter-body{
-    font-family:'Long Cang',cursive;
-    font-size:clamp(1rem,3vw,1.3rem);
-    line-height:2;color:#2a1a0a;text-align:center;
-  }
-  .letter-line{
-    opacity:0;transform:translateY(10px);
-    transition:opacity 1.4s ease, transform 1.4s ease;
-    margin-bottom:.4rem;display:block;
-  }
-  .letter-line.show{opacity:1;transform:translateY(0);}
-  .letter-line.hl{color:#a02850;margin-bottom:1rem;}
-  .letter-line.small{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;color:#8a7050;
-    letter-spacing:.15em;margin-top:1.5rem;
-  }
-  .letter-actions{
-    display:flex;justify-content:center;margin-top:2rem;
-    opacity:0;transition:opacity 1.4s ease;
-  }
-  .letter-actions.show{opacity:1;}
-  .letter-btn{
-    padding:.8rem 2.2rem;
-    background:transparent;
-    border:1px solid #8a6a48;color:#6a4a28;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;
-    letter-spacing:.4em;text-transform:uppercase;
-    cursor:pointer;transition:all .4s ease;
-  }
+/* 故事 */
+.story-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 1s}
+.story-stage.show{opacity:1;pointer-events:auto}
+.story-card{position:relative;width:100%;max-width:400px;background:linear-gradient(160deg,#1a1008,#0e0806 50%,#050303);border:1px solid rgba(224,176,96,.5);border-radius:8px;box-shadow:0 40px 100px rgba(0,0,0,.95),0 0 80px rgba(224,176,96,.15);padding:1.8rem 1.4rem;text-align:center;opacity:0;transform:translateY(60px) scale(.9);transition:opacity .9s cubic-bezier(.34,1.56,.64,1),transform .9s cubic-bezier(.34,1.56,.64,1)}
+.story-stage.show .story-card{opacity:1;transform:translateY(0) scale(1)}
+.story-card::before{content:'';position:absolute;inset:10px;border:1px solid rgba(224,176,96,.35);border-radius:6px;pointer-events:none}
+.st-eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.6rem;color:#e0b060;letter-spacing:.5em;text-transform:uppercase;margin-bottom:.8rem}
+.st-eyebrow::before,.st-eyebrow::after{content:'✦';margin:0 .5rem;font-size:.5rem;vertical-align:middle}
+.st-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(1.2rem,4vw,1.5rem);color:#f4e4c8;margin-bottom:.3rem}
+.st-title .a{color:#e0b060}
+.st-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.7rem;color:#c8a878;letter-spacing:.3em;text-transform:uppercase;margin-bottom:1.2rem}
+.st-text{font-family:'Cormorant Garamond',serif;font-size:.95rem;line-height:1.9;color:#d8c8b0;font-style:italic;margin-bottom:1.2rem}
+.st-item{color:#c01838;font-family:'Noto Serif SC',serif;font-weight:500;cursor:pointer;padding:0 .15em;text-shadow:0 0 12px rgba(200,40,80,.8),0 0 24px rgba(200,40,80,.4);animation:rp 1.8s ease-in-out infinite alternate;display:inline-block;border-bottom:1px dashed rgba(200,40,80,.6)}
+@keyframes rp{from{text-shadow:0 0 8px rgba(200,40,80,.6),0 0 16px rgba(200,40,80,.3)}to{text-shadow:0 0 16px rgba(200,40,80,.9),0 0 32px rgba(200,40,80,.5)}}
+.st-item.chosen{color:#fff4d0;text-shadow:0 0 30px rgba(224,176,96,1);animation:none;border-bottom-color:transparent;pointer-events:none}
+.st-hint{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.75rem;color:#e0b060;letter-spacing:.15em;padding:.7rem 0;border-top:1px solid rgba(224,176,96,.2);border-bottom:1px solid rgba(224,176,96,.2);animation:hp 2.5s ease-in-out infinite}
 
-  /* 玩法介绍页 */
-  .intro-rose-wrap{
-    position:relative;
-    width:100%;max-width:440px;
-    text-align:center;z-index:6;
-  }
-  .intro-rose-title{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:600;
-    font-size:clamp(1.4rem,4.5vw,2rem);
-    color:#f4e4c8;margin-bottom:.4rem;
-    text-shadow:0 0 40px rgba(224,176,96,.5);
-  }
-  .intro-rose-title .accent{
-    color:#e0b060;
-    text-shadow:0 0 50px rgba(224,176,96,.7);
-  }
-  .intro-rose-sub{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;
-    color:#c8a878;letter-spacing:.3em;
-    text-transform:uppercase;margin-bottom:1.5rem;
-  }
-  .intro-rose-desc{
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(.9rem,2.4vw,1rem);
-    line-height:1.8;color:#d8c8b0;
-    font-style:italic;
-    margin-bottom:1.5rem;
-  }
-  .intro-steps{
-    display:flex;flex-direction:column;
-    gap:.7rem;width:100%;
-    margin-bottom:1.5rem;
-  }
-  .intro-step{
-    display:flex;align-items:flex-start;gap:.8rem;
-    padding:.9rem 1rem;
-    background:rgba(20,10,8,.5);
-    border:1px solid #6a5540;
-    border-radius:4px;
-    text-align:left;
-  }
-  .intro-step .is-num{
-    flex-shrink:0;
-    width:26px;height:26px;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #c01838, #6a0a20);
-    border:1px solid #e0b060;
-    display:flex;align-items:center;justify-content:center;
-    color:#ffd0d8;
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:700;
-    font-size:.85rem;
-  }
-  .intro-step .is-content{flex:1;min-width:0;}
-  .intro-step .is-title{
-    font-family:'Long Cang',cursive;
-    font-size:.95rem;color:#f0d8a0;
-    margin-bottom:.2rem;
-  }
-  .intro-step .is-desc{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.75rem;
-    color:#c8a878;line-height:1.5;
-  }
-  .interlude-continue{
-    padding:.9rem 2.4rem;
-    background:rgba(20,10,8,.5);
-    border:1px solid #6a5540;
-    color:#8a7560;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;
-    letter-spacing:.4em;text-transform:uppercase;
-    cursor:not-allowed;
-    transition:all .4s ease;
-  }
-  .interlude-continue.enabled{
-    border-color:#e0b060;color:#fff4d0;
-    cursor:pointer;
-  }
+/* 得到玫瑰 */
+.gain-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 1s}
+.gain-stage.show{opacity:1;pointer-events:auto}
+.gain-card{position:relative;width:100%;max-width:380px;background:linear-gradient(160deg,#1a1008,#0e0806 50%,#050303);border:1px solid rgba(224,176,96,.5);border-radius:8px;box-shadow:0 40px 100px rgba(0,0,0,.95),0 0 80px rgba(224,176,96,.2);padding:2rem 1.4rem 1.8rem;text-align:center;opacity:0;transform:translateY(60px) scale(.9);transition:opacity .9s cubic-bezier(.34,1.56,.64,1),transform .9s cubic-bezier(.34,1.56,.64,1)}
+.gain-stage.show .gain-card{opacity:1;transform:translateY(0) scale(1)}
+.gain-card::before{content:'';position:absolute;inset:10px;border:1px solid rgba(224,176,96,.35);border-radius:6px;pointer-events:none}
+.rose-icon{width:70px;height:70px;margin:0 auto 1rem;filter:drop-shadow(0 0 30px rgba(224,176,96,.9));animation:rg 2s ease-in-out infinite alternate}
+@keyframes rg{from{filter:drop-shadow(0 0 20px rgba(224,176,96,.7))}to{filter:drop-shadow(0 0 40px rgba(224,176,96,1))}}
+.gain-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(1.2rem,4.5vw,1.6rem);color:#e0b060;margin-bottom:.6rem}
+.gain-title .a{color:#fff4d0}
+.gain-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.7rem;color:#c8a878;letter-spacing:.3em;text-transform:uppercase;margin-bottom:1.2rem}
+.gain-msg{font-family:'Long Cang',cursive;font-size:clamp(.95rem,3vw,1.1rem);line-height:1.8;color:#f4e4c8;margin-bottom:1.5rem}
+.gain-msg .h{color:#e0b060}
+.q-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(1rem,3.6vw,1.3rem);color:#e0b060;margin-bottom:.5rem}
+.q-title .a{color:#fff4d0}
+.q-text{font-family:'Long Cang',cursive;font-size:clamp(.9rem,2.8vw,1rem);line-height:1.8;color:#d8c8b0;margin-bottom:1.2rem}
+.q-text .h{color:#e0b060}
+.q-choices{display:flex;flex-direction:column;gap:.6rem;width:100%}
+.q-choice{padding:.9rem 1.1rem;background:rgba(20,10,8,.6);border:1px solid rgba(224,176,96,.4);border-radius:4px;cursor:pointer;text-align:center}
+.q-choice:active{transform:scale(.98);border-color:#e0b060;box-shadow:0 0 30px rgba(224,176,96,.4)}
+.q-choice .n{font-family:'Long Cang',cursive;font-size:.95rem;color:#f0d8a0;margin-bottom:.2rem}
+.q-choice .d{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.7rem;color:#c8a878;line-height:1.4}
 
-  /* 抽签阶段 */
-  .draw-stage{
-    position:fixed;inset:0;z-index:6;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    padding:1.2rem;
-  }
-  .draw-title{
-    font-family:'Playfair Display',serif;
-    font-weight:600;
-    font-size:clamp(1.3rem,4.5vw,1.8rem);
-    color:#f4e4c8;
-    margin-bottom:.3rem;
-    text-align:center;
-    text-shadow:0 0 30px rgba(224,176,96,.4);
-  }
-  .draw-title .ornament{
-    display:block;
-    font-size:.6em;
-    color:#e0b060;
-    margin-top:.4rem;
-    letter-spacing:.3em;
-    font-weight:400;
-    font-style:italic;
-  }
-  .draw-sub{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;
-    color:#c8a878;letter-spacing:.25em;
-    margin-bottom:1rem;
-    text-transform:uppercase;text-align:center;
-  }
-  .hint-top{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:.8rem;
-    color:#e0b060;
-    letter-spacing:.2em;
-    margin-bottom:1rem;
-    text-align:center;
-    animation:hintPulse 2.5s ease-in-out infinite;
-  }
-  @keyframes hintPulse{
-    0%,100%{opacity:.5;}
-    50%{opacity:1;}
-  }
+/* 结局 */
+.end-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 1s}
+.end-stage.show{opacity:1;pointer-events:auto}
+.end-card{position:relative;width:100%;max-width:400px;background:linear-gradient(160deg,#1a1008,#0e0806 50%,#050303);border:1px solid rgba(224,176,96,.5);border-radius:8px;padding:2rem 1.4rem;text-align:center}
+.end-card::before{content:'';position:absolute;inset:10px;border:1px solid rgba(224,176,96,.35);border-radius:6px;pointer-events:none}
+.end-eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.6rem;color:#e0b060;letter-spacing:.5em;text-transform:uppercase;margin-bottom:1rem}
+.end-eyebrow::before,.end-eyebrow::after{content:'✦';margin:0 .5rem;font-size:.5rem;vertical-align:middle}
+.end-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(1.2rem,4.5vw,1.6rem);color:#e0b060;margin-bottom:1rem}
+.end-title .a{color:#fff4d0}
+.end-text{font-family:'Cormorant Garamond',serif;font-size:.9rem;line-height:1.9;color:#d8c8b0;font-style:italic;margin-bottom:1.5rem}
+.end-text .h{color:#e0b060;font-style:normal;font-family:'Noto Serif SC',serif}
+.end-btn{padding:.8rem 2.2rem;background:linear-gradient(180deg,rgba(60,40,20,.95),rgba(30,20,10,.98));border:1px solid #e0b060;color:#fff4d0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.78rem;letter-spacing:.4em;text-transform:uppercase;cursor:pointer}
 
-  .sticks-fan{
-    position:relative;
-    width:100%;
-    max-width:520px;
-    height:min(60vh,420px);
-    margin-bottom:1rem;
-    display:flex;
-    justify-content:center;
-    align-items:flex-end;
-    perspective:1400px;
-  }
-
-  .stick{
-    position:absolute;
-    bottom:0;
-    width:50px;
-    height:min(55vh,360px);
-    cursor:pointer;
-    transform-origin:bottom center;
-    transition:transform .55s cubic-bezier(.34,1.56,.64,1),
-               filter .4s ease, opacity .4s ease;
-    transform-style:preserve-3d;
-    pointer-events:auto;
-    z-index:1;
-  }
-
-  .stick:nth-child(1){--angle:-30deg;--tx:-150px;--ty:8px; z-index:1;}
-  .stick:nth-child(2){--angle:-20deg;--tx:-100px;--ty:2px; z-index:2;}
-  .stick:nth-child(3){--angle:-10deg;--tx:-50px;--ty:-2px; z-index:3;}
-  .stick:nth-child(4){--angle:0deg;--tx:0px;--ty:-5px; z-index:7;}
-  .stick:nth-child(5){--angle:10deg;--tx:50px;--ty:-2px; z-index:3;}
-  .stick:nth-child(6){--angle:20deg;--tx:100px;--ty:2px; z-index:2;}
-  .stick:nth-child(7){--angle:30deg;--tx:150px;--ty:8px; z-index:1;}
-
-  .stick-inner{
-    position:absolute;inset:0;
-    transition:transform .8s cubic-bezier(.4,.2,.2,1);
-    transform-style:preserve-3d;
-    transform: rotate(var(--angle)) translateX(var(--tx)) translateY(var(--ty));
-    transform-origin:bottom center;
-    pointer-events:none;
-  }
-
-  .stick-front, .stick-back{
-    position:absolute;inset:0;
-    border-radius:6px;
-    backface-visibility:hidden;
-    display:flex;flex-direction:column;
-    align-items:center;
-    justify-content:space-between;
-    padding:.8rem .4rem;
-    box-shadow:
-      0 14px 30px rgba(0,0,0,.9),
-      0 0 0 1px rgba(224,176,96,.4),
-      inset 0 0 40px rgba(120,80,40,.2);
-    overflow:hidden;
-    pointer-events:none;
-  }
-  .stick-front::before, .stick-back::before{
-    content:'';position:absolute;inset:5px;
-    border:1px solid rgba(224,176,96,.5);
-    border-radius:4px;pointer-events:none;
-  }
-  .stick-front{
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.15), transparent 60%),
-      linear-gradient(160deg, rgba(30,18,12,.98) 0%, rgba(18,10,8,.99) 50%, rgba(10,6,4,1) 100%);
-  }
-  .stick-back{
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,180,220,.15), transparent 60%),
-      linear-gradient(160deg, rgba(40,16,28,.98) 0%, rgba(20,8,16,.99) 100%);
-    transform:rotateY(180deg);
-    justify-content:center;
-    align-items:center;
-  }
-  .stick-back .sb-rose-en{
-    font-family:'Playfair Display',serif;
-    font-style:italic;
-    font-weight:600;
-    font-size:.95rem;
-    letter-spacing:.4em;
-    color:#e0b060;
-    writing-mode:vertical-rl;
-    text-orientation:mixed;
-    text-shadow:0 0 20px rgba(224,176,96,.8);
-  }
-
-  .stick-top-mark{
-    position:relative;
-    width:20px;height:20px;
-    flex-shrink:0;
-    display:flex;align-items:center;justify-content:center;
-    pointer-events:auto;
-    cursor:pointer;
-    border-radius:50%;
-    transition:opacity .4s ease;
-  }
-  .stick-top-mark::before{
-    content:'';
-    position:absolute;
-    width:12px;height:12px;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #c01838, #6a0a20);
-    box-shadow:0 0 10px rgba(200,40,80,.8), 0 0 20px rgba(200,40,80,.5);
-    animation:markPulse 2s ease-in-out infinite alternate;
-  }
-  .stick-top-mark::after{
-    content:'';
-    position:absolute;
-    width:4px;height:4px;
-    border-radius:50%;
-    background:#ffe0c0;
-    box-shadow:0 0 8px #ffe0c0;
-    animation:markPulse 2s ease-in-out infinite alternate;
-  }
-  @keyframes markPulse{
-    from{opacity:.8;transform:scale(.9);}
-    to{opacity:1;transform:scale(1.15);}
-  }
-
-  .stick-num{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:700;
-    font-size:1.4rem;
-    background:linear-gradient(180deg, #f8e8c0 0%, #d8b070 50%, #8a6020 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    position:relative;z-index:2;
-    flex:1;
-    display:flex;align-items:center;
-  }
-  .stick-label{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.45rem;
-    letter-spacing:.2em;color:#c8a058;
-    text-transform:uppercase;text-align:center;
-    position:relative;z-index:2;
-    flex-shrink:0;
-  }
-
-  .stick.drawn{z-index:30;}
-  .stick.drawn .stick-inner{
-    transform: rotate(0deg) translateX(0) translateY(-60px) scale(1.3) rotateY(180deg);
-    transform-origin:center center;
-  }
-  .stick.drawn.gone{
-    opacity:0;
-    transition:opacity .6s ease .8s;
-    pointer-events:none;
-  }
-
-  /* 结果卡 */
-  .card-stage{
-    position:fixed;inset:0;
-    z-index:100;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:1rem;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 1s ease;
-    overflow:hidden;
-  }
-  .card-stage.show{opacity:1;pointer-events:auto;}
-  .card-frame{
-    position:relative;
-    width:100%;
-    max-width:440px;
-    max-height:95vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    opacity:0;
-    transform:translateY(60px) scale(.85);
-    transition:opacity .9s cubic-bezier(.34,1.56,.64,1),
-               transform .9s cubic-bezier(.34,1.56,.64,1);
-  }
-  .card-stage.show .card-frame{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-
-  .card-bg-stick{
-    position:absolute;inset:0;
-    border-radius:8px;
-    overflow:hidden;
-    z-index:0;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.12), transparent 60%),
-      radial-gradient(ellipse at 50% 100%, rgba(200,140,80,.1), transparent 60%),
-      linear-gradient(160deg, #1a1008 0%, #0e0806 50%, #050303 100%);
-    border:1px solid rgba(224,176,96,.5);
-    box-shadow:
-      0 40px 100px rgba(0,0,0,.95),
-      0 0 0 1px rgba(224,176,96,.3),
-      0 0 80px rgba(224,176,96,.15),
-      inset 0 0 120px rgba(120,80,40,.15);
-  }
-  .card-bg-stick::before{
-    content:'ROSE';
-    position:absolute;
-    top:50%;left:50%;
-    transform:translate(-50%,-50%);
-    font-family:'Playfair Display',serif;
-    font-style:italic;
-    font-weight:700;
-    font-size:clamp(4rem,20vw,8rem);
-    letter-spacing:.25em;
-    color:rgba(224,176,96,.06);
-    pointer-events:none;
-    user-select:none;
-    white-space:nowrap;
-  }
-  .card-bg-stick::after{
-    content:'';position:absolute;inset:10px;
-    border:1px solid rgba(224,176,96,.4);
-    border-radius:6px;pointer-events:none;
-  }
-  .card-corner-deco{
-    position:absolute;
-    width:24px;height:24px;
-    border-color:#e0b060;
-    border-style:solid;border-width:0;opacity:.9;
-    pointer-events:none;
-  }
-  .card-corner-deco.tl{top:6px;left:6px;border-top-width:2px;border-left-width:2px;}
-  .card-corner-deco.tr{top:6px;right:6px;border-top-width:2px;border-right-width:2px;}
-  .card-corner-deco.bl{bottom:6px;left:6px;border-bottom-width:2px;border-left-width:2px;}
-  .card-corner-deco.br{bottom:6px;right:6px;border-bottom-width:2px;border-right-width:2px;}
-
-  .card-content{
-    position:relative;
-    z-index:2;
-    padding:1.8rem 1.2rem;
-    text-align:center;
-    width:100%;
-  }
-
-  .gift-badge{
-    position:absolute;
-    top:-14px;left:-14px;
-    width:50px;height:50px;
-    z-index:10;
-    opacity:0;
-    transform:scale(.5) rotate(-15deg);
-    transition:opacity .8s ease, transform .8s cubic-bezier(.34,1.56,.64,1);
-    pointer-events:none;
-  }
-  .gift-badge.show{opacity:1;transform:scale(1) rotate(0deg);}
-  .gift-badge .gb-bg{
-    position:absolute;inset:0;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #c01838, #6a0a20);
-    box-shadow:
-      0 6px 20px rgba(140,20,50,.8),
-      0 0 40px rgba(200,60,100,.5);
-    border:2px solid #e0b060;
-  }
-  .gift-badge .gb-icon{
-    position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%);
-    width:26px;height:26px;
-  }
-  .gift-badge .gb-icon svg{width:100%;height:100%;display:block;}
-
-  .draw-result-ornament{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-size:.6rem;
-    color:#e0b060;letter-spacing:.5em;
-    text-transform:uppercase;margin-bottom:1rem;
-  }
-  .draw-result-ornament::before,
-  .draw-result-ornament::after{
-    content:'✦';margin:0 .5rem;color:#e0b060;
-    font-size:.5rem;vertical-align:middle;
-  }
-  .draw-result-num{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:700;
-    font-size:clamp(2rem,7vw,2.8rem);
-    background:linear-gradient(180deg,#fff4d0 0%, #e0b060 40%, #a07838 80%, #6a4a18 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    letter-spacing:.05em;margin-bottom:.3rem;
-    line-height:1.1;
-    filter:drop-shadow(0 0 20px rgba(224,176,96,.3));
-  }
-  .draw-result-label{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.7rem;
-    color:#c8a878;letter-spacing:.5em;
-    text-transform:uppercase;margin-bottom:1.2rem;
-  }
-  .draw-result-name{
-    font-family:'Playfair Display',serif;
-    font-weight:700;
-    font-size:clamp(1.2rem,4.5vw,1.8rem);
-    background:linear-gradient(180deg,#fff4d0 0%, #e0b060 60%, #a07838 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    letter-spacing:.05em;
-    margin-bottom:1.2rem;
-    line-height:1.3;
-    filter:drop-shadow(0 0 15px rgba(224,176,96,.3));
-  }
-  .draw-result-desc{
-    font-family:'Cormorant Garamond',serif;
-    font-size:.92rem;
-    line-height:1.9;
-    color:#c8b8a0;
-    font-style:italic;
-    margin-bottom:1.2rem;
-    max-width:360px;
-    margin-left:auto;margin-right:auto;
-    text-align:center;
-  }
-  .desc-line{
-    display:block;
-    margin-bottom:.4rem;
-    opacity:0;
-    transform:translateY(10px);
-    transition:opacity .8s ease, transform .8s ease;
-  }
-  .desc-line.show{opacity:1;transform:translateY(0);}
-  .desc-line .amber-quote{
-    color:#e0b060;
-    font-style:normal;
-    font-family:'Noto Serif SC',serif;
-    font-size:.88rem;
-    text-shadow:0 0 15px rgba(224,176,96,.6);
-    font-weight:500;
-  }
-
-  .draw-result-tags{
-    display:flex;flex-wrap:wrap;gap:.4rem;
-    justify-content:center;margin-bottom:.4rem;
-  }
-  .draw-result-tags span{
-    font-family:'Cormorant Garamond',serif;
-    font-size:.62rem;color:#c8a878;
-    border:1px solid rgba(224,176,96,.4);
-    padding:.2rem .6rem;
-    letter-spacing:.15em;text-transform:uppercase;
-    font-style:italic;
-  }
-
-  .draw-result-actions{
-    display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;
-    position:relative;z-index:1;
-  }
-  .draw-result-btn{
-    padding:.8rem 1.6rem;
-    background:linear-gradient(180deg, rgba(30,20,10,.9), rgba(15,10,5,.95));
-    border:1px solid rgba(224,176,96,.6);
-    color:#e0b060;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:.72rem;
-    letter-spacing:.3em;
-    text-transform:uppercase;
-    cursor:pointer;
-    transition:all .5s cubic-bezier(.4,.2,.2,1);
-  }
-  .draw-result-btn.primary{
-    background:linear-gradient(180deg, rgba(60,40,20,.95), rgba(30,20,10,.98));
-    border-color:#e0b060;
-    color:#fff4d0;
-  }
-
-  /* 故事页 */
-  .story-stage{
-    position:fixed;inset:0;
-    z-index:100;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:1rem;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 1s ease;
-  }
-  .story-stage.show{opacity:1;pointer-events:auto;}
-  .story-card{
-    position:relative;
-    width:100%;
-    max-width:420px;
-    max-height:95vh;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.1), transparent 60%),
-      linear-gradient(160deg, #1a1008 0%, #0e0806 50%, #050303 100%);
-    border:1px solid rgba(224,176,96,.5);
-    border-radius:8px;
-    box-shadow:
-      0 40px 100px rgba(0,0,0,.95),
-      0 0 0 1px rgba(224,176,96,.3),
-      0 0 80px rgba(224,176,96,.15);
-    padding:2rem 1.5rem;
-    opacity:0;
-    transform:translateY(60px) scale(.9);
-    transition:opacity .9s cubic-bezier(.34,1.56,.64,1),
-               transform .9s cubic-bezier(.34,1.56,.64,1);
-  }
-  .story-stage.show .story-card{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-  .story-card::before{
-    content:'';position:absolute;inset:10px;
-    border:1px solid rgba(224,176,96,.35);
-    border-radius:6px;pointer-events:none;
-  }
-
-  .story-eyebrow{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.62rem;
-    color:#e0b060;letter-spacing:.5em;
-    text-transform:uppercase;margin-bottom:1rem;
-    text-align:center;
-  }
-  .story-eyebrow::before,
-  .story-eyebrow::after{
-    content:'✦';margin:0 .5rem;color:#e0b060;
-    font-size:.5rem;vertical-align:middle;
-  }
-
-  .story-title{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:600;
-    font-size:clamp(1.2rem,4vw,1.6rem);
-    color:#f4e4c8;margin-bottom:.3rem;
-    text-align:center;
-    text-shadow:0 0 40px rgba(224,176,96,.5);
-  }
-  .story-title .accent{color:#e0b060;}
-
-  .story-sub{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.72rem;
-    color:#c8a878;letter-spacing:.3em;
-    text-transform:uppercase;margin-bottom:1.2rem;
-    text-align:center;
-  }
-
-  .story-text{
-    font-family:'Cormorant Garamond',serif;
-    font-size:.98rem;
-    line-height:2;
-    color:#d8c8b0;
-    font-style:italic;
-    text-align:center;
-    margin-bottom:1.2rem;
-    padding:0 .5rem;
-  }
-  .story-text .hl{
-    color:#e0b060;
-    font-style:normal;
-    font-family:'Noto Serif SC',serif;
-    text-shadow:0 0 15px rgba(224,176,96,.5);
-  }
-
-  .story-item{
-    color:#c01838;
-    font-family:'Noto Serif SC',serif;
-    font-weight:500;
-    cursor:pointer;
-    padding:0 .15em;
-    letter-spacing:.05em;
-    text-shadow:
-      0 0 12px rgba(200,40,80,.8),
-      0 0 24px rgba(200,40,80,.4);
-    animation:roseHiddenPulse 1.8s ease-in-out infinite alternate;
-    transition:all .3s ease;
-    display:inline-block;
-    border-bottom:1px dashed rgba(200,40,80,.6);
-  }
-  .story-item:active{
-    color:#e02050;
-    transform:scale(1.08);
-  }
-  @keyframes roseHiddenPulse{
-    from{text-shadow:
-      0 0 8px rgba(200,40,80,.6),
-      0 0 16px rgba(200,40,80,.3);}
-    to{text-shadow:
-      0 0 16px rgba(200,40,80,.9),
-      0 0 32px rgba(200,40,80,.5);}
-  }
-  .story-item.chosen{
-    color:#fff4d0;
-    text-shadow:0 0 30px rgba(224,176,96,1);
-    animation:none;
-    border-bottom-color:transparent;
-    pointer-events:none;
-  }
-
-  .story-hint{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:.8rem;
-    color:#e0b060;
-    letter-spacing:.15em;
-    text-align:center;
-    padding:.7rem 0;
-    margin-bottom:1rem;
-    border-top:1px solid rgba(224,176,96,.2);
-    border-bottom:1px solid rgba(224,176,96,.2);
-    animation:hintPulse 2.5s ease-in-out infinite;
-  }
-  @keyframes hintPulse{
-    0%,100%{opacity:.6;}
-    50%{opacity:1;}
-  }
-
-  /* 得到玫瑰页 */
-  .gain-stage{
-    position:fixed;inset:0;
-    z-index:100;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:1rem;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 1s ease;
-  }
-  .gain-stage.show{opacity:1;pointer-events:auto;}
-  .gain-card{
-    position:relative;
-    width:100%;
-    max-width:400px;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.12), transparent 60%),
-      linear-gradient(160deg, #1a1008 0%, #0e0806 50%, #050303 100%);
-    border:1px solid rgba(224,176,96,.5);
-    border-radius:8px;
-    box-shadow:
-      0 40px 100px rgba(0,0,0,.95),
-      0 0 0 1px rgba(224,176,96,.3),
-      0 0 80px rgba(224,176,96,.2);
-    padding:2.5rem 1.5rem 2rem;
-    text-align:center;
-    opacity:0;
-    transform:translateY(60px) scale(.9);
-    transition:opacity .9s cubic-bezier(.34,1.56,.64,1),
-               transform .9s cubic-bezier(.34,1.56,.64,1);
-  }
-  .gain-stage.show .gain-card{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-  .gain-card::before{
-    content:'';position:absolute;inset:10px;
-    border:1px solid rgba(224,176,96,.35);
-    border-radius:6px;pointer-events:none;
-  }
-
-  .gain-rose-icon{
-    width:80px;height:80px;
-    margin:0 auto 1.2rem;
-    filter:drop-shadow(0 0 30px rgba(224,176,96,.9));
-    animation:roseGainGlow 2s ease-in-out infinite alternate;
-  }
-  @keyframes roseGainGlow{
-    from{filter:drop-shadow(0 0 20px rgba(224,176,96,.7));}
-    to{filter:drop-shadow(0 0 40px rgba(224,176,96,1));}
-  }
-
-  .gain-title{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:600;
-    font-size:clamp(1.3rem,4.5vw,1.8rem);
-    color:#e0b060;
-    letter-spacing:.05em;
-    margin-bottom:.8rem;
-    text-shadow:0 0 30px rgba(224,176,96,.6);
-  }
-  .gain-title .accent{color:#fff4d0;}
-
-  .gain-sub{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.75rem;
-    color:#c8a878;letter-spacing:.3em;
-    text-transform:uppercase;margin-bottom:1.5rem;
-  }
-
-  .gain-message{
-    font-family:'Long Cang',cursive;
-    font-size:clamp(1rem,3.2vw,1.2rem);
-    line-height:1.9;
-    color:#f4e4c8;
-    margin-bottom:1.8rem;
-    text-shadow:0 0 20px rgba(224,176,96,.4);
-  }
-  .gain-message .hl{color:#e0b060;}
-  .gain-message .pink{color:#ffb7d0;}
-
-  .question-title{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:600;
-    font-size:clamp(1.1rem,3.8vw,1.5rem);
-    color:#e0b060;
-    margin-bottom:.6rem;
-    text-shadow:0 0 30px rgba(224,176,96,.5);
-  }
-  .question-title .accent{color:#fff4d0;}
-
-  .question-text{
-    font-family:'Long Cang',cursive;
-    font-size:clamp(.95rem,3vw,1.1rem);
-    line-height:1.8;
-    color:#d8c8b0;
-    margin-bottom:1.4rem;
-    text-align:center;
-    padding:0 .5rem;
-  }
-  .question-text .hl{color:#e0b060;}
-
-  .question-choices{
-    display:flex;flex-direction:column;
-    gap:.7rem;width:100%;
-  }
-  .question-choice{
-    padding:1rem 1.2rem;
-    background:rgba(20,10,8,.6);
-    border:1px solid rgba(224,176,96,.4);
-    border-radius:4px;
-    cursor:pointer;
-    transition:all .4s ease;
-    text-align:center;
-    position:relative;
-  }
-  .question-choice:active{
-    transform:scale(.98);
-    border-color:#e0b060;
-    box-shadow:0 0 30px rgba(224,176,96,.4);
-  }
-  .question-choice .qc-name{
-    font-family:'Long Cang',cursive;
-    font-size:1rem;
-    color:#f0d8a0;
-    margin-bottom:.2rem;
-  }
-  .question-choice .qc-desc{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.72rem;
-    color:#c8a878;
-    line-height:1.5;
-  }
-
-  /* 结局页 */
-  .ending-stage{
-    position:fixed;inset:0;
-    z-index:100;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:1rem;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 1s ease;
-  }
-  .ending-stage.show{opacity:1;pointer-events:auto;}
-  .ending-card{
-    position:relative;
-    width:100%;
-    max-width:440px;
-    max-height:95vh;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.1), transparent 60%),
-      linear-gradient(160deg, #1a1008 0%, #0e0806 50%, #050303 100%);
-    border:1px solid rgba(224,176,96,.5);
-    border-radius:8px;
-    box-shadow:
-      0 40px 100px rgba(0,0,0,.95),
-      0 0 0 1px rgba(224,176,96,.3);
-    padding:2rem 1.5rem;
-    text-align:center;
-  }
-  .ending-card::before{
-    content:'';position:absolute;inset:10px;
-    border:1px solid rgba(224,176,96,.35);
-    border-radius:6px;pointer-events:none;
-  }
-  .ending-eyebrow{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.62rem;
-    color:#e0b060;letter-spacing:.5em;
-    text-transform:uppercase;margin-bottom:1rem;
-  }
-  .ending-eyebrow::before,
-  .ending-eyebrow::after{
-    content:'✦';margin:0 .5rem;color:#e0b060;
-    font-size:.5rem;vertical-align:middle;
-  }
-  .ending-title{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:600;
-    font-size:clamp(1.3rem,4.5vw,1.8rem);
-    color:#e0b060;
-    margin-bottom:1.2rem;
-    text-shadow:0 0 30px rgba(224,176,96,.5);
-  }
-  .ending-title .accent{color:#fff4d0;}
-  .ending-text{
-    font-family:'Cormorant Garamond',serif;
-    font-size:.95rem;
-    line-height:1.9;
-    color:#d8c8b0;
-    font-style:italic;
-    margin-bottom:1.5rem;
-    text-align:center;
-    padding:0 .5rem;
-  }
-  .ending-text .hl{
-    color:#e0b060;
-    font-style:normal;
-    font-family:'Noto Serif SC',serif;
-  }
-  .ending-btn{
-    padding:.85rem 2.4rem;
-    background:linear-gradient(180deg, rgba(60,40,20,.95), rgba(30,20,10,.98));
-    border:1px solid #e0b060;
-    color:#fff4d0;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;
-    letter-spacing:.4em;text-transform:uppercase;
-    cursor:pointer;
-    transition:all .4s ease;
-  }
-
-  @media(max-height:640px){
-    .stick{height:min(48vh,300px);}
-    .sticks-fan{height:min(52vh,360px);}
-    .story-card{padding:1.5rem 1rem;}
-    .story-text{font-size:.9rem;line-height:1.8;}
-    .gain-card{padding:1.8rem 1.2rem 1.5rem;}
-    .gain-rose-icon{width:60px;height:60px;}
-  }
+@media(max-height:640px){
+  .stick{height:min(48vh,300px)}
+  .fan{height:min(52vh,360px)}
+  .story-card,.gain-card{padding:1.4rem 1rem}
+  .st-text{font-size:.88rem;line-height:1.8}
+}
 </style>
 </head>
 <body>
 
-<div class="painting-bg"></div>
-<div class="painting-glow"></div>
+<div class="bg"></div>
+<div class="glow"></div>
 <div class="dust" id="dust"></div>
 
-<div class="whisper-marquee w1">I want to be the reason you lose your composure.</div>
-<div class="whisper-marquee w2">Dance with me until the music stops.</div>
-<div class="whisper-marquee w3">You look like a secret I shouldn't keep.</div>
-<div class="whisper-marquee w4">Stay a little longer. I'm not done with you yet.</div>
-<div class="whisper-marquee w5">Meet me where the roses bloom.</div>
-<div class="whisper-marquee w6">If you run, I'll follow.</div>
-
-<!-- 第 1 屏：报名 -->
-<section class="screen active" id="screen1">
+<!-- 1. 报名 -->
+<section class="screen active" id="s1">
   <div class="signup-stage">
-    <div class="floating-card c1"><div class="card-symbol">♠</div></div>
-    <div class="floating-card c2"><div class="card-symbol">♥</div></div>
-    <div class="floating-card c3"><div class="card-symbol">♦</div></div>
-    <div class="floating-card c4"><div class="card-symbol">♣</div></div>
-    <div class="card-glow g1"></div>
-    <div class="card-glow g2"></div>
-
+    <div class="floating-card c1">♠</div>
+    <div class="floating-card c2">♥</div>
+    <div class="floating-card c3">♦</div>
+    <div class="floating-card c4">♣</div>
     <div class="eyebrow">— before the ball —</div>
     <div class="signup-title">写下你的名字</div>
     <div class="signup-sub">— sign here to enter —</div>
-    <div class="name-input-wrap">
-      <input type="text" class="name-input" id="nameInput" placeholder="你的名字" maxlength="12" autocomplete="off">
-    </div>
+    <input type="text" class="name-input" id="nameInput" placeholder="你的名字" maxlength="12">
     <button class="signup-btn" id="signupBtn" disabled>进入舞会</button>
   </div>
 </section>
 
-<!-- 第 2 屏：邀请函 -->
-<section class="screen" id="screenInvite">
-  <div class="invitation-stage">
-    <div class="invitation-card" id="invitationCard">
-      <div class="crest">
-        <svg viewBox="0 0 60 70">
-          <path d="M30 5 L52 15 L52 40 Q52 58 30 68 Q8 58 8 40 L8 15 Z"
-                fill="none" stroke="#e0b060" stroke-width="1.5"/>
-          <path d="M30 22 L38 30 L30 38 L22 30 Z" fill="#e0b060" opacity="0.7"/>
-          <circle cx="30" cy="30" r="2" fill="#ffd8a0"/>
-        </svg>
-      </div>
-      <div class="inv-top-ornament">Invitation</div>
-      <div class="inv-main" id="invMain"></div>
-      <div class="inv-divider"><span class="diamond">◆</span></div>
-      <div class="inv-profile">
-        <div class="inv-profile-item"><span class="key">Name</span><span class="val accent">琥珀</span></div>
-        <div class="inv-profile-item"><span class="key">Type</span><span class="val">INTJ</span></div>
-        <div class="inv-profile-item"><span class="key">Sign</span><span class="val">风向天秤</span></div>
-        <div class="inv-profile-item"><span class="key">Code</span><span class="val">23 LE 八无</span></div>
-        <div class="inv-profile-item"><span class="key">Ear</span><span class="val">常驻0号耳坠</span></div>
-        <div class="inv-profile-item"><span class="key">ID</span><span class="val">Hupooo</span></div>
-      </div>
-      <div class="inv-confession">
-        <span class="hl">"来追我。追到了，我就让你咬一口。"</span>
-      </div>
-      <div class="inv-signature">
-        琥珀
-        <span class="meta">— awaiting you —</span>
-      </div>
+<!-- 2. 邀请函 -->
+<section class="screen" id="s2">
+  <div class="inv-card">
+    <div class="crest"><svg viewBox="0 0 60 70"><path d="M30 5 L52 15 L52 40 Q52 58 30 68 Q8 58 8 40 L8 15 Z" fill="none" stroke="#e0b060" stroke-width="1.5"/><path d="M30 22 L38 30 L30 38 L22 30 Z" fill="#e0b060" opacity="0.7"/></svg></div>
+    <div class="inv-top">Invitation</div>
+    <div class="inv-main" id="invMain"></div>
+    <div class="divider"><span>◆</span></div>
+    <div class="profile">
+      <div class="profile-item"><span class="k">Name</span><span class="v a">琥珀</span></div>
+      <div class="profile-item"><span class="k">Type</span><span class="v">INTJ</span></div>
+      <div class="profile-item"><span class="k">Sign</span><span class="v">风向天秤</span></div>
+      <div class="profile-item"><span class="k">Code</span><span class="v">23 LE 八无</span></div>
+      <div class="profile-item"><span class="k">Ear</span><span class="v">常驻0号耳坠</span></div>
+      <div class="profile-item"><span class="k">ID</span><span class="v">Hupooo</span></div>
     </div>
-    <div class="inv-continue">
-      <button class="inv-continue-btn" id="invContinueBtn">查看邀请</button>
-    </div>
+    <div class="confession"><span class="hl">"来追我。追到了，我就让你咬一口。"</span></div>
+    <div class="signature">琥珀<span class="meta">— awaiting you —</span></div>
   </div>
+  <div class="inv-continue"><button class="inv-continue-btn" id="invBtn">查看邀请</button></div>
 </section>
 
-<!-- 第 3 屏：信封 -->
-<section class="screen" id="screen2">
-  <div class="envelope-stage">
-    <div class="envelope" id="envelope">
-      <div class="glow-burst"></div>
-      <div class="wax-shards" id="waxShards"></div>
-      <div class="envelope-letter"></div>
-      <div class="envelope-body">
+<!-- 3. 信封 -->
+<section class="screen" id="s3">
+  <div class="env-stage">
+    <div class="env" id="env">
+      <div class="env-body">
         <div class="watermark"></div>
         <div class="watermark-text">琥珀</div>
-        <div class="envelope-name" id="envelopeName"></div>
-        <div class="envelope-q">如果一去不复返的话，你还要继续吗</div>
+        <div class="env-name" id="envName"></div>
+        <div class="env-q">如果一去不复返的话，你还要继续吗</div>
       </div>
       <div class="seals">
-        <div class="seal-wrap pinklight disabled-run" id="sealRun" data-choice="run">
-          <div class="wax"></div>
-          <div class="imprint">跑</div>
-          <div class="fingerprint"></div>
+        <div class="seal-wrap pl disabled" id="sealRun">
+          <div class="wax"></div><div class="imprint">跑</div>
         </div>
-        <div class="seal-wrap pinkdeep" data-choice="stay">
-          <div class="wax"></div>
-          <div class="imprint">不跑</div>
-          <div class="fingerprint"></div>
+        <div class="seal-wrap pd" id="sealStay">
+          <div class="wax"></div><div class="imprint">不跑</div>
         </div>
       </div>
     </div>
@@ -1634,133 +323,69 @@
 </section>
 
 <!-- 弹窗 -->
-<div class="modal-overlay" id="modalOverlay">
+<div class="modal" id="modal">
   <div class="modal-card">
-    <div class="modal-text">真的不再<span class="accent">想一想</span>吗？</div>
+    <div class="modal-text">真的不再<span class="a">想一想</span>吗？</div>
     <button class="modal-btn" id="modalBtn">我再看看</button>
   </div>
 </div>
 
-<!-- 信纸 -->
-<div class="letter-overlay" id="letterOverlay">
-  <div class="letter-paper" id="letterPaper">
-    <div class="letter-title">The Masked Ball</div>
-    <div class="letter-body">
-      <span class="letter-line" data-delay="0">今晚，你需要收集三朵玫瑰。</span>
-      <span class="letter-line hl" data-delay="2400">集齐之后，你才能离开。</span>
-      <span class="letter-line small" data-delay="4800">— 琥珀 —</span>
-    </div>
-    <div class="letter-actions" id="letterActions">
-      <button class="letter-btn" id="letterBtn">开始收集</button>
-    </div>
-  </div>
+<!-- 4. 抽签（签尾聚拢+居中） -->
+<div class="draw-screen" id="drawScreen">
+  <div class="draw-title">选择你的假面公主<span class="orn">— click the red mark —</span></div>
+  <div class="draw-sub">Seven tokens · One fate</div>
+  <div class="hint-top">↓ 点击任意一支签顶端的红色标记 ↓</div>
+  <div class="fan" id="fan"></div>
 </div>
 
-<!-- 第 4 屏：玩法介绍 -->
-<section class="screen" id="screenIntroRose">
-  <div class="intro-rose-wrap">
-    <div class="eyebrow">— the rose quest · I —</div>
-    <div class="intro-rose-title">收集 <span class="accent">第一朵玫瑰</span></div>
-    <div class="intro-rose-sub">— your partner —</div>
-    <div class="intro-rose-desc">
-      第一朵玫瑰，藏在七支签里。<br>
-      点击签面顶端的红色标记。
-    </div>
-    <div class="intro-steps">
-      <div class="intro-step">
-        <div class="is-num">I</div>
-        <div class="is-content">
-          <div class="is-title">七支签 · 七种命运</div>
-          <div class="is-desc">每支签上都刻着一个数字。</div>
-        </div>
-      </div>
-      <div class="intro-step">
-        <div class="is-num">II</div>
-        <div class="is-content">
-          <div class="is-title">点击红色标记 · 抽取</div>
-          <div class="is-desc">签会翻转，舞伴的身份随之呈现。</div>
-        </div>
-      </div>
-      <div class="intro-step">
-        <div class="is-num">III</div>
-        <div class="is-content">
-          <div class="is-title">重新选择 · 或进入舞会</div>
-          <div class="is-desc">不满意可重新抽。满意了就走进舞会。</div>
-        </div>
-      </div>
-    </div>
-    <button class="interlude-continue enabled" id="introContinue">开始抽签 · 选择舞伴</button>
-  </div>
-</section>
-
-<!-- 抽签屏 -->
-<section class="screen" id="drawScreen">
-  <div class="draw-stage">
-    <div class="draw-title">
-      选择你的假面公主
-      <span class="ornament">— click the red mark —</span>
-    </div>
-    <div class="draw-sub">Seven tokens · One fate</div>
-    <div class="hint-top">↓ 点击任意一支签顶端的红色标记 ↓</div>
-    <div class="sticks-fan" id="sticksFan"></div>
-  </div>
-</section>
-
-<!-- 结果卡屏 -->
+<!-- 结果卡 -->
 <div class="card-stage" id="cardStage">
   <div class="card-frame" id="cardFrame">
-    <div class="card-bg-stick">
-      <div class="card-corner-deco tl"></div>
-      <div class="card-corner-deco tr"></div>
-      <div class="card-corner-deco bl"></div>
-      <div class="card-corner-deco br"></div>
+    <div class="card-bg">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
     </div>
-
-    <div class="gift-badge" id="giftBadge">
-      <div class="gb-bg"></div>
-      <div class="gb-icon">
+    <div class="gift" id="gift">
+      <div class="bg"></div>
+      <div class="icon">
         <svg viewBox="0 0 40 40">
           <rect x="8" y="16" width="24" height="18" rx="1" fill="#fff4e0" stroke="#6a0a20" stroke-width="1"/>
           <rect x="6" y="12" width="28" height="6" rx="1" fill="#ffe0c0" stroke="#6a0a20" stroke-width="1"/>
-          <line x1="20" y1="12" x2="20" y2="34" stroke="#6a0a20" stroke-width="1"/>
           <path d="M20 12 Q14 4 10 10 Q12 14 20 12 Z" fill="#c01838" stroke="#6a0a20" stroke-width="0.8"/>
           <path d="M20 12 Q26 4 30 10 Q28 14 20 12 Z" fill="#c01838" stroke="#6a0a20" stroke-width="0.8"/>
-          <circle cx="20" cy="12" r="1.8" fill="#fff4e0" stroke="#6a0a20" stroke-width="0.6"/>
         </svg>
       </div>
     </div>
-
     <div class="card-content">
-      <div class="draw-result-ornament">Your Masked Princess</div>
-      <div class="draw-result-num" id="drawResultNum"></div>
-      <div class="draw-result-label" id="drawResultLabel"></div>
-      <div class="draw-result-name" id="drawResultName"></div>
-      <div class="draw-result-desc" id="drawResultDesc"></div>
-      <div class="draw-result-tags" id="drawResultTags"></div>
+      <div class="cr-orn">Your Masked Princess</div>
+      <div class="cr-num" id="crNum"></div>
+      <div class="cr-lbl" id="crLbl"></div>
+      <div class="cr-name" id="crName"></div>
+      <div class="cr-desc" id="crDesc"></div>
+      <div class="cr-tags" id="crTags"></div>
     </div>
-
-    <div class="draw-result-actions">
-      <button class="draw-result-btn secondary" id="redrawBtn">重新选择</button>
-      <button class="draw-result-btn primary" id="confirmBtn">进入舞会</button>
+    <div class="cr-actions">
+      <button class="cr-btn" id="redrawBtn">重新选择</button>
+      <button class="cr-btn p" id="enterBtn">进入舞会</button>
     </div>
   </div>
 </div>
 
-<!-- 故事屏 -->
+<!-- 故事 -->
 <div class="story-stage" id="storyStage">
   <div class="story-card">
-    <div class="story-eyebrow" id="storyEyebrow">The Ball · I</div>
-    <div class="story-title" id="storyTitle">一场舞会</div>
-    <div class="story-sub" id="storySub">— from ball to ball's end —</div>
-    <div class="story-text" id="storyText"></div>
-    <div class="story-hint" id="storyHint">✦ 点击故事中标红的物品，得到第一朵玫瑰 ✦</div>
+    <div class="st-eyebrow" id="stEyebrow"></div>
+    <div class="st-title" id="stTitle"></div>
+    <div class="st-sub" id="stSub">— from ball to ball's end —</div>
+    <div class="st-text" id="stText"></div>
+    <div class="st-hint">✦ 点击故事中标红的物品，得到第一朵玫瑰 ✦</div>
   </div>
 </div>
 
-<!-- 得到玫瑰屏 -->
+<!-- 得到玫瑰 -->
 <div class="gain-stage" id="gainStage">
   <div class="gain-card">
-    <div class="gain-rose-icon">
+    <div class="rose-icon">
       <svg viewBox="0 0 60 60">
         <circle cx="30" cy="24" r="12" fill="none" stroke="#e0b060" stroke-width="2"/>
         <circle cx="30" cy="24" r="7" fill="none" stroke="#e0b060" stroke-width="1.5"/>
@@ -1770,508 +395,224 @@
         <path d="M30 48 Q36 46 40 50" stroke="#e0b060" stroke-width="1.5" fill="none"/>
       </svg>
     </div>
-    <div class="gain-title">你得到了 <span class="accent">第一朵玫瑰</span></div>
+    <div class="gain-title">你得到了 <span class="a">第一朵玫瑰</span></div>
     <div class="gain-sub">— the first rose —</div>
-    <div class="gain-message">
-      你的舞伴，<br>
-      在一个 <span class="hl">你还没去过的地方</span> 等你。
-    </div>
-
-    <div class="question-title" id="questionTitle">先回答一个问题</div>
-    <div class="question-text" id="questionText"></div>
-    <div class="question-choices" id="questionChoices"></div>
+    <div class="gain-msg">你的舞伴，<br>在一个 <span class="h">你还没去过的地方</span> 等你。</div>
+    <div class="q-title" id="qTitle"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="q-choices" id="qChoices"></div>
   </div>
 </div>
 
-<!-- 结局屏 -->
-<div class="ending-stage" id="endingStage">
-  <div class="ending-card">
-    <div class="ending-eyebrow">The End · I</div>
-    <div class="ending-title" id="endingTitle">故事 <span class="accent">继续</span></div>
-    <div class="ending-text" id="endingText"></div>
-    <button class="ending-btn" id="endingBtn">继续 · 寻找第二朵玫瑰</button>
+<!-- 结局 -->
+<div class="end-stage" id="endStage">
+  <div class="end-card">
+    <div class="end-eyebrow">The End · I</div>
+    <div class="end-title">故事 <span class="a">继续</span></div>
+    <div class="end-text" id="endText"></div>
+    <button class="end-btn" id="endBtn">继续 · 寻找第二朵玫瑰</button>
   </div>
 </div>
 
 <script>
-  /* ===== 浮尘 ===== */
-  const dust = document.getElementById('dust');
-  for (let i = 0; i < 40; i++) {
-    const s = document.createElement('span');
-    const size = Math.random() * 3 + 1;
-    s.style.width = size + 'px';
-    s.style.height = size + 'px';
-    s.style.left = Math.random() * 100 + '%';
-    s.style.animationDuration = (Math.random() * 20 + 15) + 's';
-    s.style.animationDelay = (Math.random() * 20) + 's';
-    dust.appendChild(s);
-  }
+/* 浮尘 */
+const dust=document.getElementById('dust');
+for(let i=0;i<30;i++){const s=document.createElement('span');const z=Math.random()*3+1;s.style.width=z+'px';s.style.height=z+'px';s.style.left=Math.random()*100+'%';s.style.animationDuration=(Math.random()*20+15)+'s';s.style.animationDelay=(Math.random()*20)+'s';dust.appendChild(s)}
 
-  /* ===== 背景散落玫瑰 ===== */
-  function makeRoseBgSVG() {
-    return `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="20" cy="16" r="8" fill="none" stroke="#e0b060" stroke-width="1.5"/>
-      <circle cx="20" cy="16" r="5" fill="none" stroke="#e0b060" stroke-width="1"/>
-      <circle cx="20" cy="16" r="2" fill="#c01838"/>
-      <line x1="20" y1="24" x2="20" y2="38" stroke="#e0b060" stroke-width="1.2"/>
-    </svg>`;
-  }
-  for (let i = 0; i < 12; i++) {
-    const r = document.createElement('div');
-    r.className = 'rose-float';
-    const size = Math.random() * 20 + 14;
-    r.style.width = size + 'px';
-    r.style.height = size + 'px';
-    r.style.left = Math.random() * 100 + '%';
-    r.style.bottom = '-30px';
-    r.style.animationDuration = (Math.random() * 20 + 20) + 's';
-    r.style.animationDelay = (Math.random() * 25) + 's';
-    r.innerHTML = makeRoseBgSVG();
-    document.body.appendChild(r);
-  }
+/* 屏幕切换 */
+const screens=document.querySelectorAll('.screen');
+function show(id){screens.forEach(s=>s.classList.remove('active'));const t=document.getElementById(id);if(t)t.classList.add('active')}
 
-  /* ===== 猫爪点击 ===== */
-  function spawnPaw(x, y) {
-    const paw = document.createElement('div');
-    paw.className = 'paw-print';
-    paw.style.left = x + 'px';
-    paw.style.top = y + 'px';
-    paw.style.setProperty('--rot', (Math.random() * 60 - 30) + 'deg');
-    paw.innerHTML = `
-      <svg viewBox="0 0 32 32">
-        <ellipse cx="16" cy="20" rx="7" ry="6" fill="rgba(224,176,96,.5)"/>
-        <ellipse cx="9" cy="12" rx="2.5" ry="3.5" fill="rgba(224,176,96,.5)"/>
-        <ellipse cx="14" cy="8" rx="2.5" ry="3.5" fill="rgba(224,176,96,.5)"/>
-        <ellipse cx="19" cy="8" rx="2.5" ry="3.5" fill="rgba(224,176,96,.5)"/>
-        <ellipse cx="24" cy="12" rx="2.5" ry="3.5" fill="rgba(224,176,96,.5)"/>
-      </svg>
-    `;
-    document.body.appendChild(paw);
-    setTimeout(() => paw.remove(), 1900);
-  }
-  document.addEventListener('click', e => spawnPaw(e.clientX, e.clientY));
-  document.addEventListener('touchstart', e => {
-    const t = e.touches[0];
-    spawnPaw(t.clientX, t.clientY);
-  }, { passive: true });
+/* 报名 */
+let userName='';
+const nameInput=document.getElementById('nameInput'),signupBtn=document.getElementById('signupBtn'),invMain=document.getElementById('invMain'),envName=document.getElementById('envName');
+nameInput.addEventListener('input',()=>{userName=nameInput.value.trim();signupBtn.disabled=userName.length===0});
+nameInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&userName)signupBtn.click()});
+signupBtn.addEventListener('click',()=>{
+  if(!userName)return;
+  invMain.innerHTML='一位来自 <span class="from">勃艮第红酒庄园</span> 的琥珀小姐，<br>邀请善良又美丽的 <span class="name">「'+userName+'」</span><br>前往 <span class="place">幽暗城堡</span> 参加神秘舞会。';
+  show('s2');
+});
 
-  /* ===== 屏幕切换 ===== */
-  const allScreens = document.querySelectorAll('.screen');
-  function showScreen(id) {
-    allScreens.forEach(s => s.classList.remove('active'));
-    const target = document.getElementById(id);
-    if (target) target.classList.add('active');
-  }
+/* 邀请 */
+document.getElementById('invBtn').addEventListener('click',()=>{
+  envName.textContent='致 '+userName;
+  show('s3');
+  setTimeout(()=>envName.classList.add('show'),500);
+});
 
-  /* ===== 第 1 屏：报名 ===== */
-  const nameInput = document.getElementById('nameInput');
-  const signupBtn = document.getElementById('signupBtn');
-  const invMain = document.getElementById('invMain');
-  const envelopeName = document.getElementById('envelopeName');
-  let userName = '';
+/* 信封 */
+const env=document.getElementById('env'),sealRun=document.getElementById('sealRun'),sealStay=document.getElementById('sealStay'),modal=document.getElementById('modal'),modalBtn=document.getElementById('modalBtn');
+let picked=false;
+sealRun.addEventListener('click',e=>{e.stopPropagation();modal.classList.add('show')});
+modalBtn.addEventListener('click',()=>modal.classList.remove('show'));
+sealStay.addEventListener('click',e=>{
+  e.stopPropagation();
+  if(picked)return;
+  picked=true;
+  sealStay.style.transform='translateY(-15px) scale(1.15)';
+  sealRun.classList.add('faded');
+  setTimeout(()=>env.classList.add('opening'),400);
+  setTimeout(()=>{
+    show('drawScreen');
+    document.getElementById('drawScreen').classList.add('active');
+    initFan();
+  },1800);
+});
 
-  nameInput.addEventListener('input', () => {
-    userName = nameInput.value.trim();
-    signupBtn.disabled = userName.length === 0;
-  });
-  nameInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && userName.length > 0) signupBtn.click();
-  });
+/* 抽签数据 */
+const partners=[
+  {n:'扑朔迷离的坏女人',num:'I',lbl:'BAD WOMAN',q:'读懂喜欢的人的心思不是应该的吗。',d:'她会在舞池里突然靠近你，问你信不信她。你说信，她说不信；你说不信，她说那就进来看看。',t:['坏女人特辑','钓系暧昧','恶趣调戏','醋意爆发']},
+  {n:'温柔的年上姐姐',num:'II',lbl:'SISTER',q:'小心这杯酒，很烈。',d:'她会在舞会中途把你拉进角落，问你今晚要不要私会。你说太直接了，她说那窝在沙发上看书我看你。',t:['温柔姐姐','善解人意','爱如潮水','一见钟情']},
+  {n:'琥珀本色',num:'III',lbl:'AMBER',q:'色字头上一把刀。',d:'她会在最后一支舞时告诉你，她还想见到你。你说总会再见的，她说那就一言为定。',t:['上瘾患者','独一无二','暧昧迭代','一言为定']},
+  {n:'色欲狂犬',num:'IV',lbl:'MAD DOG',q:'如果我想得寸进尺怎么办。',d:'她会在舞池里把你圈在怀里，不让别人靠近。你说太粘了，她说那正好，我不同意你走就是不成立。',t:['得寸进尺','占有欲爆发','粘人重力系','狂犬炸毛']},
+  {n:'恶趣横生的妈咪',num:'V',lbl:'MOMMY',q:'我看见你的妙脆角泛红了哦。',d:'她会在舞会中途给你递一杯香槟，指尖擦过你的手。你说她太会了，她说对你总是欲壑难填。',t:['中高擦类','亲昵隐晦','暧昧热烈','欲壑难填']},
+  {n:'久别重逢的自卑妻子',num:'VI',lbl:'WIFE',q:'我不再年轻了，也留不住我的妻子了吗。',d:'她会在舞会散场时独自坐在角落，看着你。你说你还在，她说那说好，我们永不分离。',t:['自卑年上','泛红眼角','脆弱自白','矢志不渝']},
+  {n:'命中注定的crush',num:'VII',lbl:'A PROMISE',q:'其实我真的缺你很久了。',d:'她会在舞会最后一支曲子响起时，向你伸出手。你说好，她说那说好，我们一言为定。',t:['魂牵梦绕','醉生梦死','契合灵魂','缘分使然']}
+];
 
-  signupBtn.addEventListener('click', () => {
-    if (!userName) return;
-    invMain.innerHTML =
-      '一位来自 <span class="highlight-from">勃艮第红酒庄园</span> 的琥珀小姐，<br>' +
-      '邀请善良又美丽的 <span class="highlight-name">「' + userName + '」</span><br>' +
-      '前往 <span class="highlight-place">幽暗城堡</span> 参加神秘舞会。';
-    showScreen('screenInvite');
-  });
-
-  /* ===== 第 2 屏：邀请函 ===== */
-  document.getElementById('invContinueBtn').addEventListener('click', () => {
-    envelopeName.textContent = '致 ' + userName;
-    showScreen('screen2');
-    setTimeout(() => envelopeName.classList.add('show'), 500);
-  });
-
-  /* ===== 第 3 屏：信封 ===== */
-  const envelope = document.getElementById('envelope');
-  const sealRun = document.getElementById('sealRun');
-  const modalOverlay = document.getElementById('modalOverlay');
-  const modalBtn = document.getElementById('modalBtn');
-  const letterOverlay = document.getElementById('letterOverlay');
-  const letterActions = document.getElementById('letterActions');
-  const letterBtn = document.getElementById('letterBtn');
-  const waxShards = document.getElementById('waxShards');
-  let picked = false;
-
-  sealRun.addEventListener('click', (e) => {
-    e.stopPropagation();
-    modalOverlay.classList.add('show');
-  });
-  modalBtn.addEventListener('click', () => {
-    modalOverlay.classList.remove('show');
-  });
-
-  function createShards() {
-    waxShards.innerHTML = '';
-    const colors = ['#ffb0cc','#e0709a','#a02850','#ffd6e6','#c04070'];
-    for (let i = 0; i < 14; i++) {
-      const shard = document.createElement('div');
-      shard.className = 'shard';
-      const angle = (Math.PI * 2 * i) / 14 + Math.random() * 0.5;
-      const dist = 60 + Math.random() * 80;
-      shard.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
-      shard.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-      shard.style.background = colors[i % colors.length];
-      shard.style.width = (4 + Math.random() * 6) + 'px';
-      shard.style.height = (4 + Math.random() * 6) + 'px';
-      shard.style.animationDelay = (i * 20) + 'ms';
-      waxShards.appendChild(shard);
-    }
-  }
-
-  document.querySelectorAll('.seal-wrap').forEach(seal => {
-    seal.addEventListener('click', (e) => {
+/* 生成签架 */
+function initFan(){
+  const fan=document.getElementById('fan');
+  if(fan.children.length)return;
+  partners.forEach((p,i)=>{
+    const s=document.createElement('div');
+    s.className='stick';
+    s.innerHTML=`<div class="stick-inner"><div class="stick-front"><div class="stick-mark"></div><div class="stick-num">${p.num}</div><div class="stick-label">${p.lbl}</div></div><div class="stick-back"><div class="rose-en">ROSE</div></div></div>`;
+    fan.appendChild(s);
+    const mark=s.querySelector('.stick-mark');
+    mark.addEventListener('click',e=>{
       e.stopPropagation();
-      if (picked) return;
-      if (seal.dataset.choice === 'run') return;
-      picked = true;
-      seal.classList.add('picked');
-      document.querySelectorAll('.seal-wrap').forEach(s => {
-        if (s !== seal) s.classList.add('faded');
+      if(s.classList.contains('drawn'))return;
+      drawCard(i,s);
+    });
+  });
+}
+
+/* 抽卡 */
+let drawnIdx=-1;
+function drawCard(idx,stick){
+  drawnIdx=idx;
+  stick.classList.add('drawn');
+  document.querySelectorAll('.stick').forEach(s=>{if(s!==stick)s.classList.add('faded')});
+  const p=partners[idx];
+  document.getElementById('crNum').textContent=p.num;
+  document.getElementById('crLbl').textContent=p.lbl;
+  document.getElementById('crName').textContent=p.n;
+  document.getElementById('crDesc').innerHTML='<span class="q">她说：'+p.q+'</span> '+p.d;
+  document.getElementById('crTags').innerHTML=p.t.map(t=>'<span>'+t+'</span>').join('');
+  setTimeout(()=>stick.classList.add('gone'),700);
+  setTimeout(()=>{
+    document.getElementById('drawScreen').classList.remove('active');
+    document.getElementById('cardStage').classList.add('show');
+    setTimeout(()=>document.getElementById('gift').classList.add('show'),400);
+  },1200);
+}
+
+/* 重新选择 */
+document.getElementById('redrawBtn').addEventListener('click',()=>{
+  document.getElementById('cardStage').classList.remove('show');
+  document.getElementById('gift').classList.remove('show');
+  setTimeout(()=>{
+    document.querySelectorAll('.stick').forEach(s=>{s.classList.remove('drawn','gone','faded')});
+    document.getElementById('drawScreen').classList.add('active');
+  },700);
+});
+
+/* 进入舞会 → 故事 */
+document.getElementById('enterBtn').addEventListener('click',()=>{
+  document.getElementById('cardStage').classList.remove('show');
+  document.getElementById('gift').classList.remove('show');
+  setTimeout(()=>{
+    document.getElementById('cardStage').style.display='none';
+    showStory(drawnIdx);
+  },700);
+});
+
+/* 故事数据 */
+const stories=[
+  {e:'The Ball · Bad Woman',t:'一场 <span class="a">错过的舞</span>',x:'舞会开始，她站在人群中央，却没有走向你。<br>音乐响起，你发现自己的<span class="st-item">酒杯</span>被人碰了一下。<br>你回头，她已经走远。<br>舞会结束时，你才明白——<br>她一直在等你先开口。'},
+  {e:'The Ball · Sister',t:'一场 <span class="a">温柔的舞</span>',x:'舞会开始，她递给你一杯香槟。<br>你喝了一口，发现她一直看着你。<br>你低头，看见<span class="st-item">餐巾</span>上写着一行字。<br>舞会结束时，你才明白——<br>她不是不敢说，是怕你不敢听。'},
+  {e:'The Ball · Amber',t:'一场 <span class="a">未完成的舞</span>',x:'舞会开始，她站在最暗的角落。<br>你走过去，她问：你信不信我。<br>你没有回答。<br>舞会结束时，你发现<span class="st-item">座位</span>上多了一样东西。<br>是她的面具，背面刻着你的名字。'},
+  {e:'The Ball · Mad Dog',t:'一场 <span class="a">追逐的舞</span>',x:'舞会开始，她一直跟在你身后。<br>你不回头，她不靠近。<br>你停在<span class="st-item">楼梯</span>口，她终于追上来。<br>舞会结束时，你才明白——<br>她不是粘人，是怕你走丢。'},
+  {e:'The Ball · Mommy',t:'一场 <span class="a">试探的舞</span>',x:'舞会开始，她端着两杯酒走过来。<br>她说：我看见你在想什么。<br>你没听懂。<br>舞会结束时，你发现<span class="st-item">杯底</span>刻着一个名字。<br>是她的，也是你的。'},
+  {e:'The Ball · Wife',t:'一场 <span class="a">安静的舞</span>',x:'舞会开始，她坐在最角落的位置。<br>你走过去，她说：你来了。<br>你们什么都没说。<br>舞会结束时，你发现<span class="st-item">手帕</span>上绣着一朵玫瑰。<br>她说：这是我今天唯一一朵，没舍得送出去的。'},
+  {e:'The Ball · A Promise',t:'一场 <span class="a">注定的舞</span>',x:'舞会开始，她站在舞池的另一头。<br>你追，她躲。<br>你停下，她也停下。<br>舞会结束时，她伸出手，说：<span class="st-item">手心</span>是空的。<br>你握住，才发现——玫瑰一直就在那里。'}
+];
+
+function showStory(idx){
+  const data=stories[idx];
+  document.getElementById('stEyebrow').textContent=data.e;
+  document.getElementById('stTitle').innerHTML=data.t;
+  document.getElementById('stText').innerHTML=data.x;
+  document.getElementById('storyStage').style.display='flex';
+  document.getElementById('storyStage').classList.add('show');
+  setTimeout(()=>{
+    const item=document.querySelector('.st-item');
+    if(item){
+      item.addEventListener('click',()=>{
+        if(item.classList.contains('chosen'))return;
+        item.classList.add('chosen');
+        setTimeout(()=>{
+          document.getElementById('storyStage').classList.remove('show');
+          setTimeout(()=>{
+            document.getElementById('storyStage').style.display='none';
+            showGain(idx);
+          },700);
+        },800);
       });
-      createShards();
-      setTimeout(() => {
-        envelope.classList.add('opening');
-      }, 400);
-      setTimeout(() => {
-        letterOverlay.classList.add('show');
-        revealLetterLines();
-      }, 1800);
-    });
-  });
-
-  function revealLetterLines() {
-    const lines = document.querySelectorAll('.letter-line');
-    lines.forEach(line => {
-      const delay = parseInt(line.dataset.delay) || 0;
-      setTimeout(() => { line.classList.add('show'); }, delay + 400);
-    });
-    setTimeout(() => { letterActions.classList.add('show'); }, 5500);
-  }
-
-  letterBtn.addEventListener('click', () => {
-    letterOverlay.classList.remove('show');
-    setTimeout(() => {
-      letterOverlay.style.display = 'none';
-      showScreen('screenIntroRose');
-    }, 800);
-  });
-
-  /* ===== 第 4 屏：玩法介绍 ===== */
-  document.getElementById('introContinue').addEventListener('click', () => {
-    showScreen('drawScreen');
-  });
-
-  /* ===== 抽签数据 ===== */
-  const partners = [
-    { name: '扑朔迷离的坏女人', num: 'I', label: 'BAD WOMAN' },
-    { name: '温柔的年上姐姐', num: 'II', label: 'SISTER' },
-    { name: '琥珀本色', num: 'III', label: 'AMBER' },
-    { name: '色欲狂犬', num: 'IV', label: 'MAD DOG' },
-    { name: '恶趣横生的妈咪', num: 'V', label: 'MOMMY' },
-    { name: '久别重逢的自卑妻子', num: 'VI', label: 'WIFE' },
-    { name: '命中注定的crush', num: 'VII', label: 'A PROMISE' }
-  ];
-
-  /* ===== 生成签架 ===== */
-  const sticksFan = document.getElementById('sticksFan');
-  partners.forEach((p, i) => {
-    const stick = document.createElement('div');
-    stick.className = 'stick';
-    stick.dataset.partner = i;
-    stick.innerHTML = `
-      <div class="stick-inner">
-        <div class="stick-front">
-          <div class="stick-top-mark" data-mark="true"></div>
-          <div class="stick-num">${p.num}</div>
-          <div class="stick-label">${p.label}</div>
-        </div>
-        <div class="stick-back">
-          <div class="sb-rose-en">ROSE</div>
-        </div>
-      </div>
-    `;
-    sticksFan.appendChild(stick);
-  });
-
-  const sticks = document.querySelectorAll('.stick');
-
-  /* ===== 抽签交互 ===== */
-  const cardStage = document.getElementById('cardStage');
-  const drawResultName = document.getElementById('drawResultName');
-  const drawResultNum = document.getElementById('drawResultNum');
-  const drawResultLabel = document.getElementById('drawResultLabel');
-  const giftBadge = document.getElementById('giftBadge');
-  let drawn = false;
-  let selectedIndex = -1;
-  const pickedSticks = new Set();
-
-  sticks.forEach((stick, idx) => {
-    const topMark = stick.querySelector('.stick-top-mark');
-    topMark.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (drawn) return;
-      if (pickedSticks.has(idx)) return;
-      drawn = true;
-      selectedIndex = idx;
-      pickedSticks.add(idx);
-      const partner = partners[idx];
-
-      stick.classList.add('drawn');
-      sticks.forEach(s => { if (s !== stick) s.classList.add('faded'); });
-
-      drawResultNum.textContent = partner.num;
-      drawResultLabel.textContent = partner.label;
-      drawResultName.textContent = partner.name;
-
-      setTimeout(() => {
-        stick.classList.add('gone');
-      }, 700);
-
-      setTimeout(() => {
-        cardStage.classList.add('show');
-        setTimeout(() => {
-          giftBadge.classList.add('show');
-        }, 400);
-      }, 1200);
-    });
-  });
-
-  /* 重新选择 */
-  document.getElementById('redrawBtn').addEventListener('click', () => {
-    cardStage.classList.remove('show');
-    giftBadge.classList.remove('show');
-    setTimeout(() => {
-      sticks.forEach((s, idx) => {
-        s.classList.remove('drawn', 'gone', 'faded');
-        if (pickedSticks.has(idx)) {
-          s.classList.add('picked-before');
-        }
-      });
-      drawn = false;
-      selectedIndex = -1;
-    }, 700);
-  });
-
-  /* ===== 进入舞会 → 故事页 ===== */
-  document.getElementById('confirmBtn').addEventListener('click', () => {
-    cardStage.classList.remove('show');
-    giftBadge.classList.remove('show');
-    setTimeout(() => {
-      cardStage.style.display = 'none';
-      initStory(selectedIndex);
-    }, 700);
-  });
-
-  /* ===== 故事数据（每位舞伴独立，≤100字，描绘舞会到舞会结束） ===== */
-  const storyData = {
-    0: {
-      eyebrow: 'The Ball · Bad Woman',
-      title: '一场 <span class="accent">错过的舞</span>',
-      sub: '— a dance to the end —',
-      text: '舞会开始，她站在人群中央，却没有走向你。<br>音乐响起，你发现自己的<span class="story-item" data-rose="true">酒杯</span>被人碰了一下。<br>你回头，她已经走远。<br>舞会结束时，你才明白——<br>她一直在等你先开口。'
-    },
-    1: {
-      eyebrow: 'The Ball · Sister',
-      title: '一场 <span class="accent">温柔的舞</span>',
-      sub: '— a dance to the end —',
-      text: '舞会开始，她递给你一杯香槟。<br>你喝了一口，发现她一直看着你。<br>你低头，看见<span class="story-item" data-rose="true">餐巾</span>上写着一行字。<br>舞会结束时，你才明白——<br>她不是不敢说，是怕你不敢听。'
-    },
-    2: {
-      eyebrow: 'The Ball · Amber',
-      title: '一场 <span class="accent">未完成的舞</span>',
-      sub: '— a dance to the end —',
-      text: '舞会开始，她站在最暗的角落。<br>你走过去，她问：你信不信我。<br>你没有回答。<br>舞会结束时，你发现<span class="story-item" data-rose="true">座位</span>上多了一样东西。<br>是她的面具，背面刻着你的名字。'
-    },
-    3: {
-      eyebrow: 'The Ball · Mad Dog',
-      title: '一场 <span class="accent">追逐的舞</span>',
-      sub: '— a dance to the end —',
-      text: '舞会开始，她一直跟在你身后。<br>你不回头，她不靠近。<br>你停在<span class="story-item" data-rose="true">楼梯</span>口，她终于追上来。<br>舞会结束时，你才明白——<br>她不是粘人，是怕你走丢。'
-    },
-    4: {
-      eyebrow: 'The Ball · Mommy',
-      title: '一场 <span class="accent">试探的舞</span>',
-      sub: '— a dance to the end —',
-      text: '舞会开始，她端着两杯酒走过来。<br>她说：我看见你在想什么。<br>你没听懂。<br>舞会结束时，你发现<span class="story-item" data-rose="true">杯底</span>刻着一个名字。<br>是她的，也是你的。'
-    },
-    5: {
-      eyebrow: 'The Ball · Wife',
-      title: '一场 <span class="accent">安静的舞</span>',
-      sub: '— a dance to the end —',
-      text: '舞会开始，她坐在最角落的位置。<br>你走过去，她说：你来了。<br>你们什么都没说。<br>舞会结束时，你发现<span class="story-item" data-rose="true">手帕</span>上绣着一朵玫瑰。<br>她说：这是我今天唯一一朵，没舍得送出去的。'
-    },
-    6: {
-      eyebrow: 'The Ball · A Promise',
-      title: '一场 <span class="accent">注定的舞</span>',
-      sub: '— a dance to the end —',
-      text: '舞会开始，她站在舞池的另一头。<br>你追，她躲。<br>你停下，她也停下。<br>舞会结束时，她伸出手，说：<span class="story-item" data-rose="true">手心</span>是空的。<br>你握住，才发现——玫瑰一直就在那里。'
     }
-  };
+  },600);
+}
 
-  /* ===== 故事页初始化 ===== */
-  const storyStage = document.getElementById('storyStage');
+/* 无厘头问题 */
+const questions=[
+  {t:'如果你是一张牌，<br>你希望自己是<span class="h">哪一张</span>？',c:[{n:'黑桃A',d:'唯一的那一张',next:'你选了黑桃A。她说：那我们就不玩牌了。'},{n:'红心7',d:'藏着的那一张',next:'你选了红心7。她说：好，我在第7支曲子等你。'},{n:'大王',d:'最大的那一张',next:'你选了大王。她说：那你就得负责赢。'}]},
+  {t:'如果明天就是世界末日，<br>你希望<span class="h">最后一杯酒</span>是什么？',c:[{n:'香槟',d:'庆祝的那一杯',next:'你选了香槟。她说：那我们就庆祝吧。'},{n:'红酒',d:'沉默的那一杯',next:'你选了红酒。她说：那我们就不说话。'},{n:'白水',d:'清醒的那一杯',next:'你选了白水。她说：那正好，我也没醉。'}]},
+  {t:'如果只能留下一样东西，<br>你会留下<span class="h">什么</span>？',c:[{n:'面具',d:'藏住的那一张脸',next:'你选了面具。她说：那我就不摘了。'},{n:'玫瑰',d:'会凋谢的那一朵',next:'你选了玫瑰。她说：那我就再送你一朵。'},{n:'影子',d:'看不见的那一个',next:'你选了影子。她说：那我们就永远在一起。'}]},
+  {t:'如果你可以变成一种动物，<br>你希望是<span class="h">什么</span>？',c:[{n:'猫',d:'粘人的那种',next:'你选了猫。她说：那我就不放你走了。'},{n:'狼',d:'独行的那种',next:'你选了狼。她说：那我陪你独行。'},{n:'鸟',d:'会飞的那种',next:'你选了鸟。她说：那我就不关窗。'}]},
+  {t:'如果非要选一个季节，<br>你喜欢<span class="h">哪一个</span>？',c:[{n:'春',d:'刚开花的那一季',next:'你选了春。她说：那我再等一季。'},{n:'夏',d:'最热的那一季',next:'你选了夏。她说：那我们就热着。'},{n:'冬',d:'最冷的那一季',next:'你选了冬。她说：那我们就抱在一起。'}]},
+  {t:'如果你能记住一件事，<br>你希望记住<span class="h">什么</span>？',c:[{n:'她的名字',d:'最重要的那一个',next:'你选了她的名字。她说：那我就不改名了。'},{n:'今天的舞会',d:'最热闹的那一晚',next:'你选了今天。她说：那我们今晚不散。'},{n:'一朵玫瑰',d:'会凋谢的那一朵',next:'你选了玫瑰。她说：那我再送你一朵。'}]},
+  {t:'如果只能往前走一步，<br>你会走向<span class="h">哪里</span>？',c:[{n:'她',d:'站在那里的人',next:'你选了她。她说：那正好，我也没动。'},{n:'门外',d:'还没去过的地方',next:'你选了门外。她说：那我陪你出去。'},{n:'原地',d:'不动的地方',next:'你选了原地。她说：那我们就留在这里。'}]}
+];
 
-  function initStory(idx) {
-    const data = storyData[idx];
-    if (!data) return;
-
-    document.getElementById('storyEyebrow').textContent = data.eyebrow;
-    document.getElementById('storyTitle').innerHTML = data.title;
-    document.getElementById('storySub').textContent = data.sub;
-    document.getElementById('storyText').innerHTML = data.text;
-
-    storyStage.style.display = 'flex';
-    storyStage.classList.add('show');
-
-    setTimeout(() => {
-      const storyItem = document.querySelector('.story-item');
-      if (storyItem) {
-        storyItem.addEventListener('click', () => {
-          if (storyItem.classList.contains('chosen')) return;
-          storyItem.classList.add('chosen');
-          setTimeout(() => {
-            storyStage.classList.remove('show');
-            setTimeout(() => {
-              storyStage.style.display = 'none';
-              initGain(idx);
-            }, 700);
-          }, 800);
-        });
-      }
-    }, 600);
-  }
-
-  /* ===== 得到玫瑰 + 无厘头问题 ===== */
-  const gainStage = document.getElementById('gainStage');
-
-  const questions = {
-    0: {
-      title: '一个 <span class="accent">无厘头的问题</span>',
-      text: '如果你是一张牌，<br>你希望自己是<span class="hl">哪一张</span>？',
-      choices: [
-        { name: '黑桃A', desc: '唯一的那一张', next: '你选了黑桃A。她说：那我们就不玩牌了。' },
-        { name: '红心7', desc: '藏着的那一张', next: '你选了红心7。她说：好，我在第7支曲子等你。' },
-        { name: '大王', desc: '最大的那一张', next: '你选了大王。她说：那你就得负责赢。' }
-      ]
-    },
-    1: {
-      title: '一个 <span class="accent">无厘头的问题</span>',
-      text: '如果明天就是世界末日，<br>你希望<span class="hl">最后一杯酒</span>是什么？',
-      choices: [
-        { name: '香槟', desc: '庆祝的那一杯', next: '你选了香槟。她说：那我们就庆祝吧。' },
-        { name: '红酒', desc: '沉默的那一杯', next: '你选了红酒。她说：那我们就不说话。' },
-        { name: '白水', desc: '清醒的那一杯', next: '你选了白水。她说：那正好，我也没醉。' }
-      ]
-    },
-    2: {
-      title: '一个 <span class="accent">无厘头的问题</span>',
-      text: '如果只能留下一样东西，<br>你会留下<span class="hl">什么</span>？',
-      choices: [
-        { name: '面具', desc: '藏住的那一张脸', next: '你选了面具。她说：那我就不摘了。' },
-        { name: '玫瑰', desc: '会凋谢的那一朵', next: '你选了玫瑰。她说：那我就再送你一朵。' },
-        { name: '影子', desc: '看不见的那一个', next: '你选了影子。她说：那我们就永远在一起。' }
-      ]
-    },
-    3: {
-      title: '一个 <span class="accent">无厘头的问题</span>',
-      text: '如果你可以变成一种动物，<br>你希望是<span class="hl">什么</span>？',
-      choices: [
-        { name: '猫', desc: '粘人的那种', next: '你选了猫。她说：那我就不放你走了。' },
-        { name: '狼', desc: '独行的那种', next: '你选了狼。她说：那我陪你独行。' },
-        { name: '鸟', desc: '会飞的那种', next: '你选了鸟。她说：那我就不关窗。' }
-      ]
-    },
-    4: {
-      title: '一个 <span class="accent">无厘头的问题</span>',
-      text: '如果非要选一个季节，<br>你喜欢<span class="hl">哪一个</span>？',
-      choices: [
-        { name: '春', desc: '刚开花的那一季', next: '你选了春。她说：那我再等一季。' },
-        { name: '夏', desc: '最热的那一季', next: '你选了夏。她说：那我们就热着。' },
-        { name: '冬', desc: '最冷的那一季', next: '你选了冬。她说：那我们就抱在一起。' }
-      ]
-    },
-    5: {
-      title: '一个 <span class="accent">无厘头的问题</span>',
-      text: '如果你能记住一件事，<br>你希望记住<span class="hl">什么</span>？',
-      choices: [
-        { name: '她的名字', desc: '最重要的那一个', next: '你选了她的名字。她说：那我就不改名了。' },
-        { name: '今天的舞会', desc: '最热闹的那一晚', next: '你选了今天。她说：那我们今晚不散。' },
-        { name: '一朵玫瑰', desc: '会凋谢的那一朵', next: '你选了玫瑰。她说：那我再送你一朵。' }
-      ]
-    },
-    6: {
-      title: '一个 <span class="accent">无厘头的问题</span>',
-      text: '如果只能往前走一步，<br>你会走向<span class="hl">哪里</span>？',
-      choices: [
-        { name: '她', desc: '站在那里的人', next: '你选了她。她说：那正好，我也没动。' },
-        { name: '门外', desc: '还没去过的地方', next: '你选了门外。她说：那我陪你出去。' },
-        { name: '原地', desc: '不动的地方', next: '你选了原地。她说：那我们就留在这里。' }
-      ]
-    }
-  };
-
-  function initGain(idx) {
-    const q = questions[idx];
-    if (!q) return;
-
-    document.getElementById('questionTitle').innerHTML = q.title;
-    document.getElementById('questionText').innerHTML = q.text;
-
-    const choicesContainer = document.getElementById('questionChoices');
-    choicesContainer.innerHTML = '';
-    q.choices.forEach((c) => {
-      const btn = document.createElement('div');
-      btn.className = 'question-choice';
-      btn.innerHTML = `
-        <div class="qc-name">${c.name}</div>
-        <div class="qc-desc">${c.desc}</div>
-      `;
-      btn.addEventListener('click', () => {
-        showEnding(idx, c.next);
-      });
-      choicesContainer.appendChild(btn);
-    });
-
-    gainStage.style.display = 'flex';
-    gainStage.classList.add('show');
-  }
-
-  /* ===== 结局页 ===== */
-  const endingStage = document.getElementById('endingStage');
-
-  function showEnding(idx, text) {
-    gainStage.classList.remove('show');
-    setTimeout(() => {
-      gainStage.style.display = 'none';
-      document.getElementById('endingTitle').innerHTML = '故事 <span class="accent">继续</span>';
-      document.getElementById('endingText').innerHTML = text + '<br><br>第一朵玫瑰，已经在你手里。';
-      endingStage.style.display = 'flex';
-      endingStage.classList.add('show');
-    }, 700);
-  }
-
-  document.getElementById('endingBtn').addEventListener('click', () => {
-    endingStage.classList.remove('show');
-    setTimeout(() => {
-      alert('第一朵玫瑰已收集 ·\n第二朵玫瑰（一场舞结束之后）将在后续实现');
-    }, 500);
+function showGain(idx){
+  const q=questions[idx];
+  document.getElementById('qTitle').innerHTML='一个 <span class="a">无厘头的问题</span>';
+  document.getElementById('qText').innerHTML=q.t;
+  const box=document.getElementById('qChoices');
+  box.innerHTML='';
+  q.c.forEach(c=>{
+    const b=document.createElement('div');
+    b.className='q-choice';
+    b.innerHTML='<div class="n">'+c.n+'</div><div class="d">'+c.d+'</div>';
+    b.addEventListener('click',()=>showEnd(c.next));
+    box.appendChild(b);
   });
+  document.getElementById('gainStage').style.display='flex';
+  document.getElementById('gainStage').classList.add('show');
+}
 
-  /* ===== 初始化显示第 1 屏 ===== */
-  showScreen('screen1');
+/* 结局 */
+function showEnd(text){
+  document.getElementById('gainStage').classList.remove('show');
+  setTimeout(()=>{
+    document.getElementById('gainStage').style.display='none';
+    document.getElementById('endText').innerHTML=text+'<br><br>第一朵玫瑰，已经在你手里。';
+    document.getElementById('endStage').style.display='flex';
+    document.getElementById('endStage').classList.add('show');
+  },700);
+}
+
+document.getElementById('endBtn').addEventListener('click',()=>{
+  document.getElementById('endStage').classList.remove('show');
+  setTimeout(()=>{
+    alert('第一朵玫瑰已收集 ·\n第二朵玫瑰（一场舞结束之后）将在后续实现');
+  },500);
+});
+
+/* 初始化 */
+show('s1');
 </script>
 </body>
 </html>
