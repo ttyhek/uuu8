@@ -1,373 +1,494 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>我的个人主页</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      width: 100%;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      -webkit-text-size-adjust: 100%;
-    }
-    body {
-      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-      color: #4a3b45;
-      line-height: 1.9;
-      background: #fdf6f8;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>我的个人主页</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;overflow-x:hidden;scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{font-family:"FangSong","仿宋","FangSong_GB2312","华文仿宋","STFangsong",serif;color:#4a3b45;line-height:1.9;background:#fdf6f8;}
 
-    section {
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 80px 20px;
-      text-align: center;
-      scroll-snap-align: start;
-      position: relative;
-    }
-    section:nth-child(odd) { background: #fdf6f8; }
-    section:nth-child(even) { background: #f7eef2; }
+  /* 物理画布 */
+  #physics-bg{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    pointer-events:none;
+    z-index:0;
+    opacity:.7;
+  }
 
-    h2 {
-      font-size: 32px;
-      font-weight: 700;
-      color: #6b4a58;
-      margin-bottom: 24px;
-      position: relative;
-      padding-bottom: 16px;
-    }
-    h2::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 50px; height: 3px;
-      background: #c98da8;
-      border-radius: 2px;
-    }
-    p {
-      font-size: 17px;
-      max-width: 620px;
-      color: #8a6a78;
-    }
+  .page-wrap{
+    position:relative;
+    height:100vh;height:100dvh;
+    overflow-y:auto;overflow-x:hidden;
+    scroll-snap-type:y proximity;
+    -webkit-overflow-scrolling:touch;
+    z-index:1;
+  }
 
-    .page-wrap {
-      height: 100vh;
-      height: 100dvh;
-      overflow-y: auto;
-      overflow-x: hidden;
-      scroll-snap-type: y proximity;
-      -webkit-overflow-scrolling: touch;
-    }
+  section{
+    min-height:100vh;min-height:100dvh;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:80px 20px;text-align:center;scroll-snap-align:start;position:relative;
+  }
+  section:nth-child(odd){background:rgba(253,246,248,.82);}
+  section:nth-child(even){background:rgba(247,238,242,.82);}
 
-    .tag {
-      display: inline-block;
-      background: #c98da8;
-      color: #fff;
-      padding: 8px 20px;
-      border-radius: 24px;
-      margin: 6px;
-      font-size: 15px;
-      font-weight: 500;
-    }
+  h2{font-size:32px;font-weight:700;color:#6b4a58;margin-bottom:24px;position:relative;padding-bottom:16px;}
+  h2::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:50px;height:3px;background:#c98da8;border-radius:2px;}
+  p{font-size:17px;max-width:620px;color:#8a6a78;}
 
-    /* ===== 第一页 ===== */
-    #home {
-      background: linear-gradient(160deg, #fdf6f8 0%, #f9e8ef 40%, #f3dde8 70%, #e8d0e0 100%);
-      overflow: hidden;
-    }
+  .tag{display:inline-block;background:#c98da8;color:#fff;padding:8px 20px;border-radius:24px;margin:6px;font-size:15px;font-weight:500;}
 
-    /* 爱心背景层 */
-    .hearts-bg {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .heart {
-      position: absolute;
-      bottom: -60px;
-      font-size: 28px;
-      color: #e8a8c0;
-      opacity: 0.7;
-      animation: floatUp linear infinite;
-      user-select: none;
-    }
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(1) rotate(0deg);
-        opacity: 0;
-      }
-      10% { opacity: 0.8; }
-      90% { opacity: 0.6; }
-      100% {
-        transform: translateY(-110vh) scale(1.3) rotate(20deg);
-        opacity: 0;
-      }
-    }
+  /* 第一页光晕 */
+  #home{background:rgba(253,246,248,.82);overflow:hidden;}
+  .glow{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55;pointer-events:none;z-index:0;}
+  .glow-1{width:320px;height:320px;background:#e8a8c0;top:-80px;left:-60px;animation:floatGlow1 18s ease-in-out infinite;}
+  .glow-2{width:260px;height:260px;background:#c98da8;bottom:-60px;right:-40px;animation:floatGlow2 22s ease-in-out infinite;}
+  .glow-3{width:200px;height:200px;background:#f0c8d8;top:40%;left:50%;animation:floatGlow3 20s ease-in-out infinite;}
+  @keyframes floatGlow1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(60px,40px) scale(1.15);}}
+  @keyframes floatGlow2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-50px,-30px) scale(1.2);}}
+  @keyframes floatGlow3{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-40%,-60%) scale(1.1);}}
 
-    /* 弹窗：正常形状，缓慢弹出 */
-    .popup-box {
-      position: relative;
-      z-index: 2;
-      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(249,232,239,0.9));
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 20px;
-      padding: 56px 44px;
-      box-shadow:
-        0 12px 40px rgba(201,141,168,0.25),
-        inset 0 0 30px rgba(255,255,255,0.5);
-      max-width: 480px;
-      width: 100%;
-      border: 1px solid rgba(201,141,168,0.25);
-      opacity: 0;
-      transform: scale(0.85) translateY(20px);
-      animation: popupIn 0.9s ease-out 1s forwards;
-    }
-    @keyframes popupIn {
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-    }
-    .popup-box h1 {
-      font-size: 24px;
-      color: #6b4a58;
-      margin-bottom: 32px;
-      position: relative;
-      z-index: 1;
-      line-height: 1.7;
-      font-weight: 700;
-    }
-    .popup-btns {
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
-    }
-    .popup-btns button {
-      font-family: inherit;
-      font-size: 15px;
-      font-weight: 600;
-      padding: 12px 30px;
-      border-radius: 30px;
-      border: 2px solid #c98da8;
-      cursor: pointer;
-      transition: all 0.25s;
-      touch-action: manipulation;
-    }
-    .btn-yes {
-      background: #c98da8;
-      color: #fff;
-    }
-    .btn-yes:active { background: #b07a94; transform: scale(0.97); }
-    .btn-no {
-      background: transparent;
-      color: #c98da8;
-    }
-    .btn-no:active { background: rgba(201,141,168,0.12); transform: scale(0.97); }
+  /* ===== 弹窗 ===== */
+  .popup-box{
+    position:relative;z-index:2;
+    background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(249,232,239,.9));
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border-radius:20px;padding:56px 44px;
+    box-shadow:0 12px 40px rgba(201,141,168,.25),inset 0 0 30px rgba(255,255,255,.5);
+    max-width:480px;width:100%;border:1px solid rgba(201,141,168,.25);
+    opacity:0;transform:scale(.85) translateY(20px);
+    animation:popupIn .9s ease-out 1s forwards;
+    overflow:hidden;
+  }
+  @keyframes popupIn{to{opacity:1;transform:scale(1) translateY(0);}}
 
-    /* ===== 第二页 ===== */
-    #about {
-      background: linear-gradient(160deg, #fdf6f8 0%, #f9e8ef 40%, #f3dde8 70%, #e8d0e0 100%);
-      padding: 60px 20px;
-      justify-content: flex-start;
-    }
-    .about-page {
-      width: 100%;
-      max-width: 520px;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-      text-align: left;
-    }
+  /* ===== 弹幕水印层 ===== */
+  .watermark-stage{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    overflow:hidden;
+  }
 
-    /* 第一部分：头像 + 名字 + 一句话 */
-    .part-one {
-      display: flex;
-      align-items: flex-end;
-      gap: 20px;
-    }
-    .avatar-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-shrink: 0;
-    }
-    .avatar {
-      width: 110px;
-      height: 110px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 4px solid #c98da8;
-      box-shadow: 0 8px 24px rgba(201,141,168,0.3);
-    }
-    .avatar-name {
-      margin-top: 10px;
-      font-size: 18px;
-      font-weight: 700;
-      color: #6b4a58;
-      letter-spacing: 2px;
-    }
-    .one-line {
-      font-family: "SimSun", "宋体", serif;
-      font-size: 20px;
-      color: #6b4a58;
-      line-height: 1.8;
-      padding-bottom: 8px;
-    }
+  /* 每行弹幕：从右向左滚动 */
+  .danmaku-line{
+    position:absolute;
+    white-space:nowrap;
+    font-family:"Georgia",serif;
+    font-style:italic;
+    font-size:14px;
+    letter-spacing:1px;
+    color:#a86988;
+    opacity:.5;
+    animation:danmakuMove linear infinite;
+    will-change:transform;
+  }
 
-    /* 第二、三、四部分：对话框 */
-    .dialog-box {
-      background: #fff;
-      border: 1px solid rgba(201,141,168,0.25);
-      border-radius: 16px;
-      padding: 20px 24px;
-      box-shadow: 0 6px 20px rgba(201,141,168,0.12);
-      font-size: 17px;
-      color: #8a6a78;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.7s ease-out forwards;
-    }
-    .dialog-box:nth-child(2) { animation-delay: 0.3s; }
-    .dialog-box:nth-child(3) { animation-delay: 0.6s; }
-    .dialog-box:nth-child(4) { animation-delay: 0.9s; }
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
+  @keyframes danmakuMove{
+    0%{transform:translateX(100%);}
+    100%{transform:translateX(-100%);}
+  }
 
-    /* 手机端适配 */
-    @media (max-width: 600px) {
-      section { padding: 50px 16px; }
-      .popup-box { padding: 44px 24px; border-radius: 18px; }
-      .popup-box h1 { font-size: 20px; }
-      .popup-btns button { font-size: 14px; padding: 11px 22px; }
-      h2 { font-size: 26px; }
-      p { font-size: 16px; }
+  /* 内容层 */
+  .popup-box > *:not(.watermark-stage){position:relative;z-index:1;}
 
-      #about { padding: 50px 18px; }
-      .about-page { gap: 22px; }
+  .popup-box h1{font-size:24px;color:#6b4a58;margin-bottom:32px;line-height:1.7;font-weight:700;min-height:2em;}
 
-      .part-one {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 14px;
-      }
-      .avatar-wrap {
-        flex-direction: row;
-        align-items: center;
-        gap: 12px;
-      }
-      .avatar { width: 80px; height: 80px; }
-      .avatar-name {
-        margin-top: 0;
-        font-size: 17px;
-      }
-      .one-line {
-        font-size: 18px;
-        padding-bottom: 0;
-      }
-      .dialog-box {
-        font-size: 16px;
-        padding: 18px 20px;
-      }
-    }
-  </style>
+  .sub-text{font-size:13px;color:#b58a9c;letter-spacing:2px;margin:-16px 0 24px;opacity:0;transition:opacity .8s ease 1.4s;font-weight:700;}
+  .popup-box.ready .sub-text{opacity:1;}
+
+  .cursor{display:inline-block;width:2px;height:1em;background:#c98da8;vertical-align:-.15em;margin-left:2px;animation:blink .8s infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  .popup-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;transition:opacity .6s ease;}
+  .popup-btns.show{opacity:1;}
+  .popup-btns button{font-family:inherit;font-size:15px;font-weight:600;padding:12px 30px;border-radius:30px;border:2px solid #c98da8;cursor:pointer;transition:transform .3s ease,background .25s,color .25s;touch-action:manipulation;}
+  .btn-yes{background:#c98da8;color:#fff;}
+  .btn-yes:active{background:#b07a94;transform:scale(.97);}
+  .btn-no{background:transparent;color:#c98da8;position:relative;}
+  .btn-no:active{background:rgba(201,141,168,.12);}
+
+  /* 第二页 */
+  #about{background:rgba(255,245,248,.82);padding:60px 20px;justify-content:flex-start;}
+  .about-page{width:100%;max-width:520px;display:flex;flex-direction:column;gap:28px;text-align:left;}
+  .part-one{display:flex;align-items:flex-end;gap:20px;}
+  .avatar-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+  .avatar{width:110px;height:110px;object-fit:cover;border-radius:50%;border:4px solid #c98da8;box-shadow:0 8px 24px rgba(201,141,168,.3);}
+  .avatar-name-row{display:flex;align-items:center;gap:6px;margin-top:10px;}
+  .avatar-name{font-size:18px;font-weight:700;color:#6b4a58;letter-spacing:2px;}
+  .name-arrow{font-size:14px;color:#c98da8;line-height:1;}
+  .name-content{font-size:16px;color:#8a6a78;margin-left:4px;}
+  .one-line{font-family:"FangSong","仿宋","FangSong_GB2312","华文仿宋","STFangsong",serif;font-size:20px;color:#6b4a58;line-height:1.8;padding-bottom:8px;}
+
+  .dialog-box{position:relative;background:#fff;border:1px solid rgba(201,141,168,.25);border-radius:16px;padding:20px 24px 20px 56px;box-shadow:0 6px 20px rgba(201,141,168,.12);font-size:17px;color:#8a6a78;opacity:0;transform:translateY(16px);animation:fadeUp .7s ease-out forwards;}
+  .dialog-box .heart-icon{position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:18px;}
+  .dialog-box:nth-child(2) .heart-icon{color:#d9a7b0;}
+  .dialog-box:nth-child(3) .heart-icon{color:#cfa3b5;}
+  .dialog-box:nth-child(4) .heart-icon{color:#c48da4;}
+  .dialog-box:nth-child(2){animation-delay:.3s;}
+  .dialog-box:nth-child(3){animation-delay:.6s;}
+  .dialog-box:nth-child(4){animation-delay:.9s;}
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+  .click-heart{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);animation:clickHeartFly ease-out forwards;user-select:none;}
+  @keyframes clickHeartFly{
+    0%{opacity:1;transform:translate(-50%,-50%) scale(.5);}
+    100%{opacity:0;transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1.4);}
+  }
+
+  @media (max-width:600px){
+    section{padding:50px 16px;}
+    .popup-box{padding:44px 24px;border-radius:18px;}
+    .popup-box h1{font-size:20px;}
+    .popup-btns button{font-size:14px;padding:11px 22px;}
+    h2{font-size:26px;}
+    p{font-size:16px;}
+    #about{padding:50px 18px;}
+    .about-page{gap:22px;}
+    .part-one{flex-direction:column;align-items:flex-start;gap:14px;}
+    .avatar-wrap{flex-direction:row;align-items:center;gap:12px;}
+    .avatar{width:80px;height:80px;}
+    .avatar-name-row{margin-top:0;}
+    .avatar-name{font-size:17px;}
+    .name-content{font-size:15px;}
+    .one-line{font-size:18px;padding-bottom:0;}
+    .dialog-box{font-size:16px;padding:18px 20px 18px 48px;}
+    .dialog-box .heart-icon{left:16px;font-size:16px;}
+    .danmaku-line{font-size:12px;}
+  }
+</style>
 </head>
 <body>
 
-  <div class="page-wrap">
+<canvas id="physics-bg"></canvas>
 
-    <!-- 第一页：爱心背景 + 互动弹窗 -->
-    <section id="home">
-      <div class="hearts-bg" id="heartsBg"></div>
-      <div class="popup-box">
-        <h1>“手拉手是什么感觉”</h1>
-        <div class="popup-btns">
-          <button class="btn-yes" onclick="chooseYes()">a</button>
-          <button class="btn-no" onclick="chooseNo()">b</button>
-        </div>
+<div class="page-wrap">
+
+  <section id="home">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+    <div class="popup-box" id="popupBox">
+      <!-- 弹幕水印层（JS 动态生成） -->
+      <div class="watermark-stage" id="danmakuStage" aria-hidden="true"></div>
+
+      <h1><span id="typeText"></span><span class="cursor" id="typeCursor"></span></h1>
+      <p class="sub-text">怕也没用</p>
+      <div class="popup-btns" id="popupBtns">
+        <button class="btn-yes" onclick="chooseYes()">我不怕</button>
+        <button class="btn-no" id="btnNo">我怕了</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- 第二页：四部分布局 -->
-    <section id="about">
-      <div class="about-page">
-
-        <div class="part-one">
-          <div class="avatar-wrap">
-            <img src="avatar.jpg" alt="琥珀" class="avatar">
-            <div class="avatar-name">琥珀</div>
+  <section id="about">
+    <div class="about-page">
+      <div class="part-one">
+        <div class="avatar-wrap">
+          <img src="avatar.jpg" alt="琥珀" class="avatar">
+          <div class="avatar-name-row">
+            <span class="avatar-name">琥珀</span>
+            <span class="name-arrow">▶</span>
+            <span class="name-content">11111111</span>
           </div>
-          <div class="one-line">直到世界毁灭，独留你我二人</div>
         </div>
-
-        <div class="dialog-box">“aaaa”</div>
-        <div class="dialog-box">“bbbbb”</div>
-        <div class="dialog-box">“cccc”</div>
-
+        <div class="one-line">直到世界毁灭，独留你我二人</div>
       </div>
-    </section>
+      <div class="dialog-box"><span class="heart-icon">❤</span>“aaaa”</div>
+      <div class="dialog-box"><span class="heart-icon">❤</span>“bbbbb”</div>
+      <div class="dialog-box"><span class="heart-icon">❤</span>“cccc”</div>
+    </div>
+  </section>
 
-    <!-- 第三页：标签 -->
-    <section id="skills">
-      <h2>我的标签</h2>
-      <div>
-        <span class="tag">爱学习</span>
-        <span class="tag">爱折腾</span>
-        <span class="tag">GitHub 新手</span>
-      </div>
-    </section>
+  <section id="skills">
+    <h2>我的标签</h2>
+    <div>
+      <span class="tag">爱学习</span>
+      <span class="tag">爱折腾</span>
+      <span class="tag">GitHub 新手</span>
+    </div>
+  </section>
 
-    <!-- 第四页：联系 -->
-    <section id="contact">
-      <h2>联系我</h2>
-      <p>邮箱：你的邮箱@example.com</p>
-    </section>
+  <section id="contact">
+    <h2>联系我</h2>
+    <p>邮箱：你的邮箱@example.com</p>
+  </section>
 
-  </div>
+</div>
 
-  <script>
-    // 按钮点击：滑到第二页
-    function chooseYes() {
-      document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+<script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+
+<script>
+  /* ============================================================
+     一、物理引擎：英文字符下落 + 堆砌 + 重力感应
+     ============================================================ */
+  (function initPhysics(){
+    const canvas = document.getElementById('physics-bg');
+    const ctx = canvas.getContext('2d');
+
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    const { Engine, World, Bodies, Body } = Matter;
+
+    const engine = Engine.create();
+    engine.gravity.x = 0;
+    engine.gravity.y = 1;
+
+    const world = engine.world;
+
+    const wallOpts = { isStatic: true, render: { visible: false } };
+    let walls = [
+      Bodies.rectangle(W / 2, H + 30, W + 200, 60, wallOpts),
+      Bodies.rectangle(-30, H / 2, 60, H * 2, wallOpts),
+      Bodies.rectangle(W + 30, H / 2, 60, H * 2, wallOpts),
+    ];
+    World.add(world, walls);
+
+    const LETTERS = ['L','O','V','E','Y','O','U','M','I','S','S','H','E','R','T','W','A','N','C','F','D','G','B','K','P','R','S','U','V','X','Z'];
+
+    // ===== 颜色加深 =====
+    const colors = ['#b07a94','#c98da8','#a86988','#8f5775','#b5809c','#9d6380','#7d4a63'];
+
+    const bodies = [];
+    function makeLetter(x, y){
+      const size = 28 + Math.random() * 10;
+      const ch = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+
+      const body = Bodies.circle(x, y, size / 2, {
+        restitution: 0.35,
+        friction: 0.4,
+        frictionAir: 0.015,
+        render: { visible: false }
+      });
+      body.customChar = ch;
+      body.customColor = color;
+      body.customSize = size;
+      body.customAngle = (Math.random() - 0.5) * 1.2;
+
+      Body.setAngle(body, body.customAngle);
+      bodies.push(body);
+      return body;
     }
-    function chooseNo() {
-      document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+
+    const INITIAL_COUNT = 45;
+    for (let i = 0; i < INITIAL_COUNT; i++) {
+      const x = 40 + Math.random() * (W - 80);
+      const y = -100 - Math.random() * 800;
+      World.add(world, makeLetter(x, y));
     }
 
-    // 生成满屏飘动爱心
-    const heartsBg = document.getElementById('heartsBg');
-    const heartChars = ['❤', '💗', '💕', '💖', '♡'];
-    const heartCount = 40;
+    setInterval(() => {
+      if (bodies.length > 80) return;
+      const x = 40 + Math.random() * (W - 80);
+      const y = -60;
+      World.add(world, makeLetter(x, y));
+    }, 1200);
 
-    for (let i = 0; i < heartCount; i++) {
-      const heart = document.createElement('span');
-      heart.className = 'heart';
-      heart.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+    function renderLetters(){
+      ctx.clearRect(0, 0, W, H);
+      for (const b of bodies){
+        const { x, y } = b.position;
+        const angle = b.angle;
+        const size = b.customSize;
 
-      heart.style.left = Math.random() * 100 + '%';
-      heart.style.fontSize = (16 + Math.random() * 24) + 'px';
-      heart.style.animationDuration = (6 + Math.random() * 8) + 's';
-      heart.style.animationDelay = (Math.random() * 8) + 's';
-      heart.style.opacity = 0.3 + Math.random() * 0.5;
-
-      heartsBg.appendChild(heart);
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.font = `italic bold ${size}px Georgia, serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = b.customColor;
+        ctx.globalAlpha = 0.85;
+        ctx.fillText(b.customChar, 0, 0);
+        ctx.restore();
+      }
     }
-  </script>
+
+    function loop(){
+      Engine.update(engine, 1000 / 60);
+      renderLetters();
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    window.addEventListener('resize', () => {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+
+      World.remove(world, walls);
+      walls = [
+        Bodies.rectangle(W / 2, H + 30, W + 200, 60, wallOpts),
+        Bodies.rectangle(-30, H / 2, 60, H * 2, wallOpts),
+        Bodies.rectangle(W + 30, H / 2, 60, H * 2, wallOpts)
+      ];
+      World.add(world, walls);
+    });
+
+    /* 重力感应 */
+    function handleOrientation(e){
+      const gamma = e.gamma || 0;
+      const beta  = e.beta  || 0;
+      const gx = Math.max(-1, Math.min(1, gamma / 45));
+      const gy = Math.max(-1, Math.min(1, beta  / 90)) + 1;
+      engine.gravity.x = gx * 0.8;
+      engine.gravity.y = Math.max(0.2, gy);
+    }
+
+    function requestOrientationPermission(){
+      if (typeof DeviceOrientationEvent !== 'undefined' &&
+          typeof DeviceOrientationEvent.requestPermission === 'function'){
+        DeviceOrientationEvent.requestPermission()
+          .then(state => {
+            if (state === 'granted'){
+              window.addEventListener('deviceorientation', handleOrientation);
+            }
+          })
+          .catch(() => {});
+      } else {
+        window.addEventListener('deviceorientation', handleOrientation);
+      }
+    }
+
+    window.addEventListener('touchstart', requestOrientationPermission, { once: true });
+    window.addEventListener('click', requestOrientationPermission, { once: true });
+
+  })();
+
+  /* ============================================================
+     二、弹窗弹幕水印：英文暧昧短语，从右到左滚动
+     ============================================================ */
+  (function initDanmaku(){
+    const stage = document.getElementById('danmakuStage');
+
+    // 英文暧昧短语池
+    const phrases = [
+      'Stay with me',
+      'Hold me tight',
+      'You and I',
+      'Just tonight',
+      'Don\'t let go',
+      'Come closer',
+      'Only us',
+      'Be mine',
+      'Say it again',
+      'One more time',
+      'I\'m yours',
+      'Stay a little',
+      'Look at me',
+      'Don\'t look away',
+      'Just us two',
+      'Almost there'
+    ];
+
+    // 生成多行弹幕，垂直均布，速度/延迟各不相同
+    const LINE_COUNT = 6;
+    const stageH = 100; // 百分比单位
+    for (let i = 0; i < LINE_COUNT; i++){
+      const line = document.createElement('div');
+      line.className = 'danmaku-line';
+
+      // 随机短语，拼接 2~3 个
+      const count = 2 + Math.floor(Math.random() * 2);
+      let text = '';
+      for (let k = 0; k < count; k++){
+        text += phrases[Math.floor(Math.random() * phrases.length)];
+        if (k < count - 1) text += '  ·  ';
+      }
+      line.textContent = text;
+
+      // 垂直位置均布
+      line.style.top = (8 + i * 15) + '%';
+
+      // 滚动时长（速度）随机
+      const dur = 14 + Math.random() * 12;
+      line.style.animationDuration = dur + 's';
+
+      // 延迟随机，错开
+      line.style.animationDelay = (-Math.random() * dur) + 's';
+
+      // 透明度随机
+      line.style.opacity = (0.35 + Math.random() * 0.25).toFixed(2);
+
+      stage.appendChild(line);
+    }
+  })();
+
+  /* ============================================================
+     三、打字机开场
+     ============================================================ */
+  const fullText='“如果我是坏女人怎么办”';
+  const typeEl=document.getElementById('typeText');
+  const cursorEl=document.getElementById('typeCursor');
+  const btnsEl=document.getElementById('popupBtns');
+  const popupBox=document.getElementById('popupBox');
+  let ti=0;
+  (function typeLoop(){
+    if(ti<=fullText.length){
+      typeEl.textContent=fullText.slice(0,ti++);
+      setTimeout(typeLoop,120);
+    }else{
+      cursorEl.style.display='none';
+      popupBox.classList.add('ready');
+      btnsEl.classList.add('show');
+    }
+  })();
+
+  /* ============================================================
+     四、“我怕了”按钮躲避
+     ============================================================ */
+  const btnNo=document.getElementById('btnNo');
+  let dodgeCount=0;
+  btnNo.addEventListener('mouseenter',()=>{
+    btnNo.style.transform=`translate(${(Math.random()-.5)*140}px,${(Math.random()-.5)*80}px)`;
+  });
+  btnNo.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    btnNo.style.transform=`translate(${(Math.random()-.5)*140}px,${(Math.random()-.5)*80}px)`;
+  },{passive:false});
+  btnNo.addEventListener('click',()=>{
+    dodgeCount++;
+    if(dodgeCount>=3){chooseYes();}
+  });
+
+  function chooseYes(){document.getElementById('about').scrollIntoView({behavior:'smooth'});}
+  function chooseNo(){document.getElementById('about').scrollIntoView({behavior:'smooth'});}
+
+  /* ============================================================
+     五、点击冒爱心
+     ============================================================ */
+  const morandiPinks=['#d9a7b0','#e3b8c0','#cfa3b5','#e8c4cc','#d4a5b8','#f0d0d8'];
+  const clickHeartChars=['❤','♡','💗'];
+  document.addEventListener('click',function(e){
+    const num=5+Math.floor(Math.random()*4);
+    for(let i=0;i<num;i++){
+      const h=document.createElement('span');
+      h.className='click-heart';
+      h.textContent=clickHeartChars[Math.floor(Math.random()*clickHeartChars.length)];
+      const ox=(Math.random()-.5)*40, oy=(Math.random()-.5)*40;
+      h.style.left=(e.clientX+ox)+'px';
+      h.style.top=(e.clientY+oy)+'px';
+      h.style.color=morandiPinks[Math.floor(Math.random()*morandiPinks.length)];
+      h.style.fontSize=(12+Math.random()*14)+'px';
+      h.style.setProperty('--tx',(Math.random()-.5)*120+'px');
+      h.style.setProperty('--ty',(-40-Math.random()*80)+'px');
+      h.style.animationDuration=(.9+Math.random()*.6)+'s';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),1600);
+    }
+  });
+</script>
 
 </body>
 </html>
