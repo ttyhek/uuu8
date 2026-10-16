@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>我和你belike↑ · 舞会邀请</title>
+<title>幽暗城堡 · 假面舞会</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500;1,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
@@ -16,22 +16,74 @@
     min-height:100vh;
   }
 
-  /* ===== 舞厅背景 ===== */
-  .ballroom-bg{
+  /* ============================================================
+     英国贵族庄园背景层
+     ============================================================ */
+  .estate-bg{
     position:fixed;inset:0;z-index:0;pointer-events:none;
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(180,130,80,.12), transparent 55%),
-      radial-gradient(ellipse at 20% 80%, rgba(120,60,100,.1), transparent 55%),
-      radial-gradient(ellipse at 80% 70%, rgba(80,60,120,.08), transparent 55%),
+      radial-gradient(ellipse at 50% 0%, rgba(180,130,80,.14), transparent 55%),
+      radial-gradient(ellipse at 15% 85%, rgba(100,50,120,.08), transparent 55%),
+      radial-gradient(ellipse at 85% 75%, rgba(140,60,100,.08), transparent 55%),
       linear-gradient(180deg,#0a0608,#120a0e 50%,#0a0608);
   }
-  .ballroom-bg::after{
+  .estate-bg::after{
     content:'';position:absolute;inset:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.16'/%3E%3C/svg%3E");
     opacity:.4;
   }
 
-  .dust{position:fixed;inset:0;z-index:1;pointer-events:none;}
+  /* 大理石柱 */
+  .marble-column{
+    position:fixed;
+    top:0;bottom:0;
+    width:80px;
+    z-index:1;
+    pointer-events:none;
+    background:linear-gradient(90deg,
+      transparent 0%,
+      rgba(180,170,150,.04) 20%,
+      rgba(220,210,190,.06) 50%,
+      rgba(180,170,150,.04) 80%,
+      transparent 100%);
+  }
+  .marble-column.left{left:0;}
+  .marble-column.right{right:0;transform:scaleX(-1);}
+  .marble-column::before{
+    content:'';position:absolute;
+    top:0;bottom:0;left:50%;
+    width:1px;
+    background:linear-gradient(180deg,transparent,rgba(200,180,140,.15) 20%,rgba(200,180,140,.15) 80%,transparent);
+  }
+
+  /* 窗棂剪影 */
+  .window-arch{
+    position:fixed;
+    top:8%;left:50%;
+    transform:translateX(-50%);
+    width:min(700px,85vw);
+    height:60vh;
+    z-index:1;
+    pointer-events:none;
+    opacity:.08;
+  }
+  .window-arch svg{width:100%;height:100%;}
+
+  /* 常春藤 */
+  .ivy{
+    position:fixed;
+    top:0;
+    width:180px;height:100vh;
+    z-index:1;
+    pointer-events:none;
+    opacity:.15;
+  }
+  .ivy.left{left:0;}
+  .ivy.right{right:0;transform:scaleX(-1);}
+  .ivy svg{width:100%;height:100%;}
+
+  /* 浮动光尘 */
+  .dust{position:fixed;inset:0;z-index:2;pointer-events:none;}
   .dust span{
     position:absolute;border-radius:50%;
     background:#ffd8a0;opacity:.25;
@@ -44,7 +96,72 @@
     100%{transform:translateY(-10vh) scale(1);opacity:0;}
   }
 
-  /* ===== 通用屏 ===== */
+  /* 水晶吊灯（邀请屏 / 抽签屏） */
+  .chandelier-bg{
+    position:fixed;
+    top:-80px;left:50%;
+    transform:translateX(-50%);
+    width:320px;height:380px;
+    z-index:2;
+    pointer-events:none;
+    opacity:.9;
+  }
+  .chandelier-bg svg{width:100%;height:100%;display:block;}
+  .chandelier-bg .crystal{
+    transform-origin:top center;
+    animation:crystalSway 4s ease-in-out infinite alternate;
+  }
+  .chandelier-bg .crystal:nth-child(odd){animation-duration:3.5s;}
+  .chandelier-bg .crystal:nth-child(even){animation-duration:4.5s;animation-delay:-1s;}
+  @keyframes crystalSway{
+    from{transform:rotate(-3deg);}
+    to{transform:rotate(3deg);}
+  }
+  .chandelier-bg .frame{
+    filter:drop-shadow(0 0 12px rgba(255,220,160,.4));
+    animation:frameGlow 4s ease-in-out infinite alternate;
+  }
+  @keyframes frameGlow{
+    from{filter:drop-shadow(0 0 8px rgba(255,220,160,.3));}
+    to{filter:drop-shadow(0 0 22px rgba(255,220,160,.6));}
+  }
+
+  /* 吊灯光晕 */
+  .chandelier-glow{
+    position:fixed;
+    top:180px;left:50%;
+    transform:translate(-50%,-50%);
+    width:700px;height:700px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,220,160,.10), rgba(255,180,220,.04), transparent 70%);
+    z-index:1;
+    pointer-events:none;
+    animation:glowPulse 5s ease-in-out infinite alternate;
+  }
+  @keyframes glowPulse{
+    from{opacity:.6;transform:translate(-50%,-50%) scale(1);}
+    to{opacity:1;transform:translate(-50%,-50%) scale(1.08);}
+  }
+
+  /* 碎光粒子 */
+  .sparkle{
+    position:fixed;
+    border-radius:50%;
+    background:#ffd8a0;
+    pointer-events:none;
+    z-index:3;
+    animation:sparkleFall linear infinite;
+  }
+  @keyframes sparkleFall{
+    0%{transform:translateY(0) scale(0);opacity:0;}
+    10%{opacity:1;transform:translateY(20px) scale(1);}
+    90%{opacity:.8;}
+    100%{transform:translateY(100vh) scale(.5);opacity:0;}
+  }
+
+  /* ============================================================
+     通用屏
+     ============================================================ */
   .screen{
     position:relative;z-index:5;
     min-height:100vh;
@@ -69,7 +186,9 @@
   }
   @keyframes fadeIn{to{opacity:1;}}
 
-  /* ===== 第一屏：报名 ===== */
+  /* ============================================================
+     第一屏：报名
+     ============================================================ */
   .signup-title{
     font-family:'Long Cang',cursive;
     font-size:clamp(1.6rem,4.5vw,2.4rem);
@@ -152,7 +271,303 @@
   }
   .signup-btn:disabled{opacity:.3;cursor:not-allowed;}
 
-  /* ===== 第二屏：信封 + 火漆 ===== */
+  /* ============================================================
+     邀请屏
+     ============================================================ */
+  .invitation-stage{
+    position:relative;
+    max-width:620px;
+    width:100%;
+    perspective:1200px;
+  }
+
+  .invitation-card{
+    position:relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.10), transparent 60%),
+      linear-gradient(165deg, #1e1418 0%, #160d12 40%, #0e070a 100%);
+    border:1px solid #6a5030;
+    border-radius:2px;
+    padding:3.5rem 2.8rem 2.8rem;
+    box-shadow:
+      0 40px 90px rgba(0,0,0,.85),
+      0 0 0 1px rgba(180,140,70,.2),
+      inset 0 0 100px rgba(120,80,40,.15);
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(30px) rotateX(4deg);
+    transition:opacity 1.4s ease, transform 1.4s ease;
+  }
+  .invitation-card.show{
+    opacity:1;
+    transform:translateY(0) rotateX(0);
+  }
+
+  .invitation-card::before{
+    content:'';position:absolute;inset:12px;
+    border:1px solid rgba(180,140,70,.45);
+    pointer-events:none;
+  }
+  .invitation-card::after{
+    content:'';position:absolute;inset:18px;
+    border:1px solid rgba(180,140,70,.2);
+    pointer-events:none;
+  }
+
+  /* 纹章装饰 */
+  .crest{
+    position:absolute;
+    top:1rem;left:50%;
+    transform:translateX(-50%);
+    width:60px;height:70px;
+    opacity:.8;
+  }
+  .crest svg{width:100%;height:100%;}
+
+  .inv-corner{
+    position:absolute;
+    width:26px;height:26px;
+    border-color:#b08a40;
+    border-style:solid;
+    border-width:0;
+    opacity:.75;
+  }
+  .inv-corner.tl{top:8px;left:8px;border-top-width:1px;border-left-width:1px;}
+  .inv-corner.tr{top:8px;right:8px;border-top-width:1px;border-right-width:1px;}
+  .inv-corner.bl{bottom:8px;left:8px;border-bottom-width:1px;border-left-width:1px;}
+  .inv-corner.br{bottom:8px;right:8px;border-bottom-width:1px;border-right-width:1px;}
+
+  .inv-top-ornament{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:.7rem;
+    color:#8a7050;
+    letter-spacing:.55em;
+    text-transform:uppercase;
+    margin-bottom:2rem;
+    margin-top:3rem;
+  }
+  .inv-top-ornament::before,
+  .inv-top-ornament::after{
+    content:'✦';
+    margin:0 .8rem;
+    color:#b08a40;
+    font-size:.6rem;
+    vertical-align:middle;
+  }
+
+  .inv-main{
+    text-align:center;
+    font-family:'Long Cang',cursive;
+    font-size:clamp(1.3rem,3.4vw,1.75rem);
+    line-height:1.9;
+    color:#f0e0c8;
+    margin-bottom:2rem;
+    letter-spacing:.02em;
+  }
+  .inv-main .highlight-name{
+    color:#ffb7d0;
+    text-shadow:0 0 24px rgba(255,155,192,.35);
+    font-size:1.1em;
+    padding:0 .2em;
+  }
+  .inv-main .highlight-place{
+    color:#e0c8a0;
+    border-bottom:1px dashed rgba(200,160,100,.5);
+    padding-bottom:.1em;
+  }
+  .inv-main .highlight-from{
+    color:#c0a070;
+    font-style:italic;
+    font-family:'Cormorant Garamond',serif;
+    font-size:.85em;
+    letter-spacing:.05em;
+  }
+
+  .inv-divider{
+    display:flex;align-items:center;justify-content:center;
+    gap:.8rem;margin:1.8rem auto;max-width:320px;
+  }
+  .inv-divider::before,
+  .inv-divider::after{
+    content:'';flex:1;height:1px;
+    background:linear-gradient(90deg,transparent,#8a7050,transparent);
+  }
+  .inv-divider .diamond{color:#b08a40;font-size:.55rem;}
+
+  .inv-profile{
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:.7rem 1.2rem;margin:1.8rem 0;padding:1.4rem 1rem;
+    background:rgba(180,140,70,.04);
+    border-top:1px solid rgba(180,140,70,.18);
+    border-bottom:1px solid rgba(180,140,70,.18);
+  }
+  .inv-profile-item{
+    display:flex;align-items:baseline;gap:.6rem;
+    font-family:'Cormorant Garamond',serif;
+    font-size:.85rem;letter-spacing:.05em;
+  }
+  .inv-profile-item .key{
+    color:#8a7050;font-style:italic;text-transform:uppercase;
+    font-size:.7rem;letter-spacing:.15em;min-width:56px;flex-shrink:0;
+  }
+  .inv-profile-item .val{
+    color:#e0c8a0;font-family:'Noto Serif SC',serif;
+    font-size:.88rem;letter-spacing:.03em;
+  }
+  .inv-profile-item .val.accent{color:#ffb7d0;}
+
+  .inv-confession{
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:1rem;line-height:2;
+    color:#b0a090;margin:1.8rem 0 1rem;padding:1rem 0;
+  }
+  .inv-confession .hl{
+    color:#ffb7d0;font-style:normal;
+    font-family:'Noto Serif SC',serif;
+    font-size:.92rem;
+  }
+
+  .inv-signature{
+    text-align:right;margin-top:2rem;
+    font-family:'Long Cang',cursive;
+    font-size:1.5rem;color:#e0c8a0;letter-spacing:.05em;
+  }
+  .inv-signature .meta{
+    display:block;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.7rem;color:#8a7050;
+    letter-spacing:.25em;margin-top:.5rem;text-transform:uppercase;
+  }
+
+  .inv-seal{
+    display:flex;align-items:center;justify-content:center;
+    gap:1rem;margin-top:1.8rem;
+  }
+  .inv-seal .wax-mini{
+    width:44px;height:44px;
+    border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
+    background:radial-gradient(circle at 35% 30%, #e04868 0%, #c03050 30%, #8a1830 80%);
+    box-shadow:
+      0 6px 16px rgba(140,20,50,.6),
+      inset 0 -3px 6px rgba(60,0,20,.7),
+      inset 0 3px 6px rgba(255,180,200,.35);
+    display:flex;align-items:center;justify-content:center;
+    color:#ffd0d8;
+    font-family:'Playfair Display',serif;
+    font-style:italic;font-size:1rem;flex-shrink:0;
+  }
+  .inv-seal .wax-text{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.78rem;
+    color:#8a7560;letter-spacing:.25em;text-transform:uppercase;
+  }
+
+  .inv-continue{
+    display:flex;justify-content:center;margin-top:2.5rem;
+    opacity:0;transform:translateY(15px);
+    transition:opacity 1s ease 1.2s, transform 1s ease 1.2s;
+    pointer-events:none;
+  }
+  .invitation-card.show ~ .inv-continue,
+  .inv-continue.show{
+    opacity:1;transform:translateY(0);pointer-events:auto;
+  }
+  .inv-continue-btn{
+    padding:1rem 3rem;
+    background:transparent;
+    border:1px solid #6a5540;
+    color:#c0a070;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.88rem;letter-spacing:.4em;
+    text-transform:uppercase;cursor:pointer;
+    transition:all .4s ease;position:relative;
+  }
+  .inv-continue-btn:hover{
+    border-color:#ffb7d0;color:#ffd8e8;
+    box-shadow:0 0 40px rgba(255,155,192,.3);
+    letter-spacing:.45em;
+  }
+  .inv-continue-btn::after{
+    content:'→';position:absolute;
+    right:1.2rem;top:50%;transform:translateY(-50%);
+    opacity:0;transition:opacity .3s ease, right .3s ease;
+  }
+  .inv-continue-btn:hover::after{opacity:1;right:.8rem;}
+
+  /* ============================================================
+     第二屏：信封 + 火漆（烛光氛围）
+     ============================================================ */
+  .candle-light{
+    position:fixed;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:800px;height:800px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,180,100,.08), transparent 70%);
+    z-index:1;
+    pointer-events:none;
+    animation:candleFlicker 4s ease-in-out infinite alternate;
+  }
+  @keyframes candleFlicker{
+    from{opacity:.5;transform:translate(-50%,-50%) scale(1);}
+    to{opacity:1;transform:translate(-50%,-50%) scale(1.08);}
+  }
+
+  /* 两侧烛台 */
+  .candle-stand{
+    position:fixed;
+    bottom:20vh;
+    z-index:2;
+    pointer-events:none;
+    width:40px;
+  }
+  .candle-stand.left{left:8%;}
+  .candle-stand.right{right:8%;}
+  .candle-stand .candle-flame{
+    position:absolute;
+    top:-40px;left:50%;
+    transform:translateX(-50%);
+    width:14px;height:32px;
+    background:radial-gradient(ellipse at 50% 80%, #ffb040 0%, #ff8020 40%, #c04010 70%, transparent 100%);
+    border-radius:50% 50% 40% 40% / 60% 60% 40% 40%;
+    filter:blur(1px);
+    animation:flameFlicker 0.4s ease-in-out infinite alternate;
+  }
+  .candle-stand .candle-flame::after{
+    content:'';position:absolute;
+    top:30%;left:50%;transform:translateX(-50%);
+    width:5px;height:12px;
+    background:radial-gradient(ellipse, #fff8d0, #ffe080 60%, transparent);
+    border-radius:50%;
+  }
+  .candle-stand .candle-body{
+    width:36px;height:120px;
+    background:linear-gradient(90deg,#e8d0a0,#f4e0b8 30%,#e8d0a0 70%,#c8a870);
+    border-radius:3px 3px 0 0;
+    box-shadow:
+      0 0 20px rgba(255,200,120,.25),
+      inset -4px 0 8px rgba(120,80,40,.4),
+      inset 4px 0 8px rgba(255,240,200,.3);
+    position:relative;
+  }
+  .candle-stand .candle-body::before{
+    content:'';position:absolute;
+    top:0;left:7px;
+    width:5px;height:24px;
+    background:linear-gradient(180deg,#f4e0b8,#e0c898);
+    border-radius:0 0 5px 5px;
+  }
+  @keyframes flameFlicker{
+    0%{transform:translateX(-50%) scaleY(1) scaleX(1);}
+    50%{transform:translateX(-50%) scaleY(1.06) scaleX(.96);}
+    100%{transform:translateX(-50%) scaleY(.97) scaleX(1.04);}
+  }
+
   .envelope-stage{
     position:relative;
     width:min(420px,90vw);
@@ -169,18 +584,18 @@
     animation:featherSway 5s ease-in-out infinite;
     pointer-events:none;
     filter:drop-shadow(0 6px 12px rgba(0,0,0,.7));
-    transition:transform 1s ease, opacity 1s ease;
+    transition:transform 1.2s ease, opacity 1.2s ease;
   }
   @keyframes featherSway{
     0%,100%{transform:rotate(-6deg) translateY(0);}
     50%{transform:rotate(4deg) translateY(-6px);}
   }
-  .feather.fall{animation:featherFall 1.2s ease forwards;}
+  .feather.fall{animation:featherFall 1.4s ease forwards;}
   @keyframes featherFall{
-    0%{transform:rotate(-6deg) translateY(0);}
-    30%{transform:rotate(-40deg) translateY(20px) translateX(-30px);}
-    60%{transform:rotate(-80deg) translateY(60px) translateX(-60px);}
-    100%{transform:rotate(-110deg) translateY(140px) translateX(-80px);opacity:0;}
+    0%{transform:rotate(-6deg) translateY(0);opacity:1;}
+    30%{transform:rotate(-40deg) translateY(20px) translateX(-30px);opacity:.9;}
+    60%{transform:rotate(-80deg) translateY(60px) translateX(-60px);opacity:.6;}
+    100%{transform:rotate(-110deg) translateY(160px) translateX(-90px);opacity:0;}
   }
 
   .envelope{
@@ -199,6 +614,8 @@
       0 0 0 1px rgba(200,170,120,.3),
       inset 0 0 60px rgba(180,140,90,.15);
     overflow:hidden;
+    transform-origin:center center;
+    transition:transform .8s ease, opacity .8s ease;
   }
   .envelope-body::before{
     content:'';position:absolute;top:0;left:0;right:0;height:60%;
@@ -206,6 +623,79 @@
     clip-path:polygon(0 0, 100% 0, 50% 100%);
     box-shadow:inset 0 -2px 4px rgba(0,0,0,.1);
     z-index:2;
+    transition:transform 1.2s cubic-bezier(.4,.1,.2,1), opacity 1.2s ease;
+    transform-origin:top center;
+  }
+  .envelope.opening .envelope-body::before{
+    transform:rotateX(180deg);
+    opacity:0;
+  }
+  .envelope.opening .envelope-body{
+    transform:translateY(-10px);
+  }
+
+  .wax-shards{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:0;height:0;
+    z-index:20;
+    pointer-events:none;
+  }
+  .shard{
+    position:absolute;
+    width:8px;height:8px;
+    border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
+    opacity:0;
+  }
+  .envelope.opening .shard{
+    animation:shardFly 1.2s ease forwards;
+  }
+  @keyframes shardFly{
+    0%{opacity:1;transform:translate(0,0) scale(1);}
+    100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.3);}
+  }
+
+  .glow-burst{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:0;height:0;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,220,160,.6), rgba(255,180,220,.3), transparent 70%);
+    opacity:0;
+    z-index:15;
+    pointer-events:none;
+  }
+  .envelope.opening .glow-burst{
+    animation:glowBurst 1.6s ease forwards;
+  }
+  @keyframes glowBurst{
+    0%{opacity:0;width:0;height:0;}
+    30%{opacity:.8;}
+    100%{opacity:0;width:600px;height:600px;}
+  }
+
+  .envelope-letter{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:80%;height:60%;
+    background:linear-gradient(170deg,#f4ead4,#e8dcc0);
+    border-radius:2px;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+    opacity:0;
+    z-index:12;
+    pointer-events:none;
+    transform-origin:center center;
+  }
+  .envelope.opening .envelope-letter{
+    animation:letterSlide 1.8s ease forwards;
+  }
+  @keyframes letterSlide{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.6) rotateX(0deg);}
+    30%{opacity:1;transform:translate(-50%,-50%) scale(1) rotateX(0deg);}
+    100%{opacity:0;transform:translate(-50%,-140%) scale(1.05) rotateX(0deg);}
   }
 
   .watermark{
@@ -248,16 +738,20 @@
   }
   .envelope-name.show{opacity:1;}
 
-  /* ===== 火漆 ===== */
+  /* 火漆 */
   .seals{
     position:absolute;
     bottom:-50px;left:50%;transform:translateX(-50%);
-    display:flex;gap:1.6rem;
+    display:flex;gap:2rem;
     z-index:8;
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .envelope.opening ~ .seals{
+    opacity:0;transform:translateX(-50%) translateY(20px);
   }
   .seal-wrap{
     position:relative;
-    width:82px;height:82px;
+    width:86px;height:86px;
     cursor:pointer;
     transition:transform .4s cubic-bezier(.34,1.56,.64,1);
     transform-style:preserve-3d;
@@ -286,69 +780,51 @@
     box-shadow:0 2px 4px rgba(0,0,0,.4);
   }
 
-  .seal-wrap.red .wax{
+  .seal-wrap.pinklight .wax{
     background:
       url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n1)' opacity='0.22'/%3E%3C/svg%3E"),
-      radial-gradient(circle at 35% 28%, #e04868 0%, #c03050 30%, #8a1830 75%, #5a0a18 100%);
+      radial-gradient(circle at 35% 28%, #ffd6e6 0%, #ffb0cc 30%, #e0709a 75%, #a03860 100%);
     box-shadow:
-      0 8px 20px rgba(140,20,50,.6), 0 2px 4px rgba(0,0,0,.4),
-      inset 0 -4px 10px rgba(60,0,20,.7), inset 0 4px 8px rgba(255,180,200,.35),
-      inset 0 0 20px rgba(255,100,140,.2);
+      0 8px 20px rgba(200,100,140,.6), 0 2px 4px rgba(0,0,0,.4),
+      inset 0 -4px 10px rgba(140,50,90,.7), inset 0 4px 8px rgba(255,220,235,.55),
+      inset 0 0 20px rgba(255,150,190,.35);
   }
-  .seal-wrap.red .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,180,200,.5), transparent 65%);}
-  .seal-wrap.red .wax::after{background:linear-gradient(180deg,#a02848,#7a1830);}
-  .seal-wrap.red:hover .wax{
-    box-shadow:0 12px 32px rgba(200,40,80,.8), 0 2px 4px rgba(0,0,0,.4),
-      inset 0 -4px 10px rgba(60,0,20,.7), inset 0 4px 10px rgba(255,200,220,.45),
-      inset 0 0 30px rgba(255,120,160,.3);
+  .seal-wrap.pinklight .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,240,245,.7), transparent 65%);}
+  .seal-wrap.pinklight .wax::after{background:linear-gradient(180deg,#ffb0cc,#e0709a);}
+  .seal-wrap.pinklight:hover .wax{
+    box-shadow:0 12px 32px rgba(255,150,190,.8), 0 2px 4px rgba(0,0,0,.4),
+      inset 0 -4px 10px rgba(140,50,90,.7), inset 0 4px 10px rgba(255,230,240,.65),
+      inset 0 0 30px rgba(255,170,200,.5);
   }
 
-  .seal-wrap.gold .wax{
+  .seal-wrap.pinkdeep .wax{
     background:
       url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)' opacity='0.22'/%3E%3C/svg%3E"),
-      radial-gradient(circle at 35% 28%, #f4d070 0%, #e0b040 30%, #a07818 75%, #6a4a08 100%);
+      radial-gradient(circle at 35% 28%, #d04070 0%, #a02850 30%, #701838 75%, #400a20 100%);
     box-shadow:
-      0 8px 20px rgba(140,100,20,.6), 0 2px 4px rgba(0,0,0,.4),
-      inset 0 -4px 10px rgba(60,40,0,.7), inset 0 4px 8px rgba(255,250,200,.45),
-      inset 0 0 20px rgba(255,220,120,.25);
+      0 8px 20px rgba(120,20,60,.7), 0 2px 4px rgba(0,0,0,.5),
+      inset 0 -4px 10px rgba(60,0,25,.8), inset 0 4px 8px rgba(255,160,190,.3),
+      inset 0 0 20px rgba(255,100,150,.2);
   }
-  .seal-wrap.gold .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,250,200,.6), transparent 65%);}
-  .seal-wrap.gold .wax::after{background:linear-gradient(180deg,#c0a030,#8a6010);}
-  .seal-wrap.gold:hover .wax{
-    box-shadow:0 12px 32px rgba(220,180,60,.8), 0 2px 4px rgba(0,0,0,.4),
-      inset 0 -4px 10px rgba(60,40,0,.7), inset 0 4px 10px rgba(255,250,220,.55),
-      inset 0 0 30px rgba(255,230,140,.35);
-  }
-
-  .seal-wrap.black .wax{
-    background:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n3'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n3)' opacity='0.3'/%3E%3C/svg%3E"),
-      radial-gradient(circle at 35% 28%, #6a5a68 0%, #4a3a48 30%, #2a1e28 75%, #0e080e 100%);
-    box-shadow:
-      0 8px 20px rgba(0,0,0,.75), 0 2px 4px rgba(0,0,0,.5),
-      inset 0 -4px 10px rgba(0,0,0,.9), inset 0 4px 8px rgba(180,160,180,.25),
-      inset 0 0 20px rgba(140,120,150,.15);
-  }
-  .seal-wrap.black .wax::before{background:radial-gradient(circle at 40% 35%, rgba(180,160,180,.3), transparent 65%);}
-  .seal-wrap.black .wax::after{background:linear-gradient(180deg,#2a1e28,#0e080e);}
-  .seal-wrap.black:hover .wax{
-    box-shadow:0 12px 32px rgba(80,60,80,.85), 0 2px 4px rgba(0,0,0,.5),
-      inset 0 -4px 10px rgba(0,0,0,.9), inset 0 4px 10px rgba(200,180,200,.35),
-      inset 0 0 30px rgba(160,140,170,.25);
+  .seal-wrap.pinkdeep .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,180,210,.45), transparent 65%);}
+  .seal-wrap.pinkdeep .wax::after{background:linear-gradient(180deg,#a02850,#701838);}
+  .seal-wrap.pinkdeep:hover .wax{
+    box-shadow:0 12px 32px rgba(200,40,90,.85), 0 2px 4px rgba(0,0,0,.5),
+      inset 0 -4px 10px rgba(60,0,25,.8), inset 0 4px 10px rgba(255,180,210,.45),
+      inset 0 0 30px rgba(255,120,170,.35);
   }
 
   .imprint{
     position:absolute;inset:14px;
     border-radius:48% 52% 50% 50% / 52% 48% 52% 48%;
     display:flex;align-items:center;justify-content:center;
-    font-family:'Noto Serif SC',serif;
-    font-size:.68rem;line-height:1.2;text-align:center;
-    letter-spacing:.03em;z-index:3;font-weight:500;
+    font-family:'Long Cang',cursive;
+    font-size:1.15rem;letter-spacing:.1em;
+    text-align:center;z-index:3;font-weight:500;
     transition:all .3s ease;
   }
-  .seal-wrap.red .imprint{color:#ffd8e0;text-shadow:0 1px 1px rgba(0,0,0,.6),0 -1px 0 rgba(255,200,220,.3);}
-  .seal-wrap.gold .imprint{color:#3a2a08;text-shadow:0 1px 1px rgba(255,250,200,.5),0 -1px 0 rgba(60,40,0,.4);}
-  .seal-wrap.black .imprint{color:#d0c0d0;text-shadow:0 1px 1px rgba(0,0,0,.8),0 -1px 0 rgba(200,180,200,.2);}
+  .seal-wrap.pinklight .imprint{color:#fff0f5;text-shadow:0 1px 1px rgba(160,50,90,.6),0 -1px 0 rgba(255,255,255,.4);}
+  .seal-wrap.pinkdeep .imprint{color:#ffd8e5;text-shadow:0 1px 1px rgba(0,0,0,.7),0 -1px 0 rgba(255,200,220,.3);}
   .imprint::before{
     content:'';position:absolute;inset:7px;
     border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
@@ -356,11 +832,11 @@
     box-shadow:inset 0 2px 3px rgba(0,0,0,.35), inset 0 -1px 2px rgba(255,255,255,.15);
     transition:all .3s ease;
   }
-  .seal-wrap.gold .imprint::before{
-    border-color:rgba(80,60,0,.4);
-    box-shadow:inset 0 2px 3px rgba(80,60,0,.4), inset 0 -1px 2px rgba(255,250,200,.3);
+  .seal-wrap.pinklight .imprint::before{
+    border-color:rgba(160,60,100,.4);
+    box-shadow:inset 0 2px 3px rgba(160,60,100,.4), inset 0 -1px 2px rgba(255,240,245,.4);
   }
-  .seal-wrap.black .imprint::before{border-color:rgba(0,0,0,.5);}
+  .seal-wrap.pinkdeep .imprint::before{border-color:rgba(0,0,0,.5);}
 
   .fingerprint{
     position:absolute;top:22%;right:18%;
@@ -391,334 +867,324 @@
     font-family:'Cormorant Garamond',serif;
     font-style:italic;
     font-size:.9rem;
-    color:#8a7560;
-    letter-spacing:.2em;
-    text-align:center;
-    transition:opacity .5s ease;
+    color:#8a7560;letter-spacing:.2em;
+    text-align:center;transition:opacity .5s ease;
+    position:relative;z-index:5;
   }
   .hint.changed{color:#c0a070;}
 
-  .envelope.crack-red .envelope-body::after{
-    content:'';position:absolute;top:0;bottom:0;left:50%;
-    width:2px;
-    background:linear-gradient(180deg,transparent,#ff6a8a,#c03050,transparent);
-    box-shadow:0 0 20px #ff6a8a;
-    transform:translateX(-50%) scaleY(0);
-    animation:crackRed 1.2s ease forwards;z-index:5;
+  /* ============================================================
+     信纸（香槟气泡氛围）
+     ============================================================ */
+  .letter-overlay{
+    position:fixed;inset:0;z-index:80;
+    background:rgba(5,3,6,.92);
+    backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;
+    padding:2rem 1.5rem;
+    opacity:0;pointer-events:none;
+    transition:opacity 1.2s ease;
+    overflow-y:auto;
   }
-  @keyframes crackRed{to{transform:translateX(-50%) scaleY(1);}}
-  .envelope.melt-gold .envelope-body{animation:meltGold 1.4s ease forwards;}
-  @keyframes meltGold{
-    0%{filter:brightness(1);}
-    50%{filter:brightness(1.8) sepia(.3);transform:scale(1.02);}
-    100%{filter:brightness(2.5) sepia(.5);transform:scale(1.05);opacity:.6;}
+  .letter-overlay.show{opacity:1;pointer-events:auto;}
+
+  .letter-paper{
+    position:relative;
+    max-width:520px;width:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 31px, rgba(120,90,60,.06) 31px 32px),
+      linear-gradient(170deg, #f4ead4 0%, #e8dcc0 100%);
+    border-radius:2px;
+    padding:3rem 2.4rem 2.6rem;
+    box-shadow:
+      0 30px 80px rgba(0,0,0,.85),
+      0 0 0 1px rgba(180,150,110,.4),
+      inset 0 0 80px rgba(200,170,130,.2);
+    color:#3a2a1a;
+    transform:translateY(30px) rotateX(4deg);
+    transition:transform 1.6s ease;
   }
-  .envelope.still-black .envelope-body{animation:stillBlack 3s ease forwards;}
-  @keyframes stillBlack{
-    0%,80%{transform:translate(0,0) rotate(0deg);}
-    82%{transform:translate(-2px,0) rotate(-.5deg);}
-    84%{transform:translate(2px,0) rotate(.5deg);}
-    86%{transform:translate(-2px,0) rotate(-.5deg);}
-    88%{transform:translate(2px,0) rotate(.5deg);}
-    90%{transform:translate(0,0) rotate(0deg);}
-    92%{transform:scale(1.05);}
-    100%{transform:scale(1.1);opacity:0;}
+  .letter-overlay.show .letter-paper{
+    transform:translateY(0) rotateX(0);
   }
 
-  .whisper-out{
-    position:fixed;top:50%;left:50%;
-    transform:translate(-50%,-50%);
-    z-index:50;
+  .letter-paper::before{
+    content:'';position:absolute;inset:14px;
+    border:1px solid rgba(180,150,110,.35);
+    pointer-events:none;
+  }
+
+  .letter-title{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:.72rem;
+    color:#8a7050;letter-spacing:.55em;
+    text-transform:uppercase;margin-bottom:1.8rem;
+  }
+  .letter-title::before,
+  .letter-title::after{
+    content:'✦';margin:0 .7rem;
+    color:#b08a40;font-size:.6rem;vertical-align:middle;
+  }
+
+  .letter-body{
     font-family:'Long Cang',cursive;
-    font-size:clamp(1.4rem,4vw,2.2rem);
-    color:#f0e0c8;text-align:center;
-    pointer-events:none;opacity:0;
-    transition:opacity .8s ease, transform .8s ease;
-    text-shadow:0 0 30px rgba(255,200,140,.4);
-    white-space:nowrap;
-    padding:0 1rem;
+    font-size:clamp(1.15rem,3vw,1.45rem);
+    line-height:2.1;color:#2a1a0a;text-align:center;
   }
-  .whisper-out.show{opacity:1;transform:translate(-50%,-50%) scale(1.05);}
 
-  /* ============================================
-     第三屏：抽签（欧美风）
-     ============================================ */
+  .letter-line{
+    opacity:0;transform:translateY(10px);
+    transition:opacity 1.4s ease, transform 1.4s ease;
+    margin-bottom:.4rem;display:block;
+  }
+  .letter-line.show{opacity:1;transform:translateY(0);}
+  .letter-line.hl{color:#a02850;}
+  .letter-line.small{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.85rem;color:#8a7050;
+    letter-spacing:.15em;margin-top:1rem;
+  }
+
+  .letter-actions{
+    display:flex;justify-content:center;margin-top:2.5rem;
+    opacity:0;transition:opacity 1.4s ease;
+  }
+  .letter-actions.show{opacity:1;}
+
+  .letter-btn{
+    padding:.9rem 2.6rem;
+    background:transparent;
+    border:1px solid #8a6a48;
+    color:#6a4a28;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.85rem;letter-spacing:.4em;
+    text-transform:uppercase;cursor:pointer;
+    transition:all .4s ease;position:relative;
+  }
+  .letter-btn:hover{
+    border-color:#a02850;color:#a02850;
+    box-shadow:0 0 30px rgba(160,40,80,.25);
+    letter-spacing:.45em;
+  }
+
+  /* ============================================================
+     第三屏：抽签（舞池光斑 + 水晶吊灯）
+     ============================================================ */
   .draw-title{
     font-family:'Playfair Display',serif;
     font-weight:600;
     font-size:clamp(1.8rem,4.5vw,2.6rem);
-    color:#f0e0c8;
-    margin-bottom:.5rem;
+    color:#f0e0c8;margin-bottom:.5rem;
     letter-spacing:.05em;
     text-shadow:0 0 30px rgba(255,200,140,.2);
+    position:relative;z-index:6;
   }
   .draw-title .ornament{
-    display:block;
-    font-size:.7em;
-    color:#8a7050;
-    margin-top:.5rem;
-    letter-spacing:.4em;
-    font-weight:400;
-    font-style:italic;
+    display:block;font-size:.7em;color:#8a7050;
+    margin-top:.5rem;letter-spacing:.4em;
+    font-weight:400;font-style:italic;
   }
   .draw-sub{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:.9rem;
-    color:#8a7560;
-    letter-spacing:.25em;
-    margin-bottom:2.5rem;
-    text-transform:uppercase;
+    font-style:italic;font-size:.9rem;
+    color:#8a7560;letter-spacing:.25em;
+    margin-bottom:2rem;text-transform:uppercase;
     transition:color .4s ease;
+    position:relative;z-index:6;
   }
 
-  /* ===== 扇形签架 ===== */
   .sticks-fan{
     position:relative;
-    width:min(680px,96vw);
-    height:420px;
+    width:min(720px,96vw);
+    height:460px;
     margin-bottom:1rem;
-    display:flex;
-    justify-content:center;
-    align-items:flex-end;
+    display:flex;justify-content:center;align-items:flex-end;
     perspective:1400px;
-    transition:filter .8s ease;
+    transition:filter .8s ease, opacity .8s ease;
+    z-index:6;
   }
-  /* 重抽次数越多，烛光越亮 */
   .sticks-fan.rewarm{filter:brightness(1.06);}
   .sticks-fan.rewarm2{filter:brightness(1.12);}
   .sticks-fan.rewarm3{filter:brightness(1.2);}
+  .sticks-fan.hide{opacity:0;pointer-events:none;}
 
   .stick{
     position:absolute;
     bottom:0;
-    width:52px;
-    height:340px;
+    width:58px;height:380px;
     cursor:pointer;
     transform-origin:bottom center;
     transition:transform .55s cubic-bezier(.34,1.56,.64,1),
-               filter .4s ease,
-               opacity .4s ease;
+               filter .4s ease, opacity .4s ease;
     transform-style:preserve-3d;
   }
 
-  .stick:nth-child(1){--angle:-42deg;--tx:-240px;--ty:20px;}
-  .stick:nth-child(2){--angle:-28deg;--tx:-160px;--ty:4px;}
-  .stick:nth-child(3){--angle:-14deg;--tx:-80px;--ty:-6px;}
+  .stick:nth-child(1){--angle:-42deg;--tx:-250px;--ty:20px;}
+  .stick:nth-child(2){--angle:-28deg;--tx:-168px;--ty:4px;}
+  .stick:nth-child(3){--angle:-14deg;--tx:-84px;--ty:-6px;}
   .stick:nth-child(4){--angle:0deg;--tx:0px;--ty:-10px;}
-  .stick:nth-child(5){--angle:14deg;--tx:80px;--ty:-6px;}
-  .stick:nth-child(6){--angle:28deg;--tx:160px;--ty:4px;}
-  .stick:nth-child(7){--angle:42deg;--tx:240px;--ty:20px;}
+  .stick:nth-child(5){--angle:14deg;--tx:84px;--ty:-6px;}
+  .stick:nth-child(6){--angle:28deg;--tx:168px;--ty:4px;}
+  .stick:nth-child(7){--angle:42deg;--tx:250px;--ty:20px;}
 
-  .stick .stick-inner{
-    position:absolute;
-    inset:0;
-    border-radius:26px 26px 6px 6px;
-    background:
-      linear-gradient(180deg,
-        #faf3e4 0%,
-        #f4ead4 20%,
-        #ede0c4 60%,
-        #e0d0b0 100%);
-    box-shadow:
-      0 14px 36px rgba(0,0,0,.65),
-      inset 0 0 0 1px rgba(180,150,110,.5),
-      inset -6px 0 14px rgba(120,90,60,.25),
-      inset 6px 0 14px rgba(120,90,60,.25);
+  .feather-svg{
+    position:absolute;inset:0;
+    width:100%;height:100%;
     transform: rotate(var(--angle)) translateX(var(--tx)) translateY(var(--ty));
-    transition:inherit;
-    overflow:hidden;
+    transition:transform .55s cubic-bezier(.34,1.56,.64,1), filter .4s ease;
+    filter:drop-shadow(0 12px 24px rgba(0,0,0,.6));
+    animation: featherBreathe 4s ease-in-out infinite;
   }
-  .stick .stick-inner::before{
-    content:'';
-    position:absolute;
-    top:14px;bottom:14px;
-    left:10px;right:10px;
-    border:1px solid rgba(180,140,70,.55);
-    border-radius:18px 18px 4px 4px;
-    pointer-events:none;
-  }
-  .stick .stick-inner::after{
-    content:'';
-    position:absolute;
-    top:22px;bottom:22px;
-    left:16px;right:16px;
-    border:1px solid rgba(180,140,70,.3);
-    border-radius:14px 14px 3px 3px;
-    pointer-events:none;
+  .stick:nth-child(1) .feather-svg{animation-delay:0s;}
+  .stick:nth-child(2) .feather-svg{animation-delay:.4s;}
+  .stick:nth-child(3) .feather-svg{animation-delay:.8s;}
+  .stick:nth-child(4) .feather-svg{animation-delay:1.2s;}
+  .stick:nth-child(5) .feather-svg{animation-delay:1.6s;}
+  .stick:nth-child(6) .feather-svg{animation-delay:2.0s;}
+  .stick:nth-child(7) .feather-svg{animation-delay:2.4s;}
+
+  @keyframes featherBreathe{
+    0%,100%{filter:drop-shadow(0 12px 24px rgba(0,0,0,.6)) brightness(1);}
+    50%{filter:drop-shadow(0 14px 30px rgba(0,0,0,.7)) brightness(1.12);}
   }
 
-  .stick-num{
+  .feather-svg .shimmer{
+    animation: shimmerMove 3s linear infinite;
+  }
+  @keyframes shimmerMove{
+    0%{transform:translateY(-20%);opacity:0;}
+    20%{opacity:.7;}
+    80%{opacity:.7;}
+    100%{transform:translateY(120%);opacity:0;}
+  }
+
+  .stick:hover .feather-svg{
+    transform: rotate(var(--angle)) translateX(var(--tx)) translateY(calc(var(--ty) - 24px));
+    filter:drop-shadow(0 18px 36px rgba(0,0,0,.75)) drop-shadow(0 0 24px rgba(255,200,140,.45)) brightness(1.15);
+    animation-play-state: paused;
+  }
+
+  .stick.drawn .feather-svg{
+    transform: rotate(0deg) translateX(0) translateY(-140px) scale(1.1);
+    filter:drop-shadow(0 30px 60px rgba(0,0,0,.85)) drop-shadow(0 0 50px rgba(255,200,140,.6)) brightness(1.2);
+    animation-play-state: paused;
+  }
+  .stick.drawn{z-index:20;}
+  .stick.faded{opacity:.1;filter:blur(1.5px);pointer-events:none;}
+
+  .nib{
     position:absolute;
-    top:38px;left:50%;
+    bottom:0;left:50%;
+    width:0;height:0;
     transform:translateX(-50%) rotate(var(--angle));
     transform-origin:bottom center;
+    border-left:7px solid transparent;
+    border-right:7px solid transparent;
+    border-top:18px solid #3a2a18;
+    transition:transform .55s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  /* 恭喜卡片 */
+  .congrats{
+    position:relative;
+    max-width:620px;width:100%;
+    margin-top:1rem;
+    opacity:0;
+    transform:translateY(40px);
+    transition:opacity 1.2s ease, transform 1.2s ease;
+    pointer-events:none;
+    text-align:center;
+    z-index:6;
+  }
+  .congrats.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+
+  .congrats-title{
     font-family:'Playfair Display',serif;
     font-style:italic;
     font-weight:600;
-    font-size:1.1rem;
-    color:#8a5a28;
-    letter-spacing:.05em;
-    transition:inherit;
-    z-index:2;
-    text-shadow:0 1px 0 rgba(255,255,255,.6);
+    font-size:clamp(1.8rem,5vw,2.8rem);
+    color:#f0e0c8;
+    letter-spacing:.08em;
+    margin-bottom:.5rem;
+    text-shadow:0 0 40px rgba(255,200,140,.3);
   }
-  .stick-label{
-    position:absolute;
-    top:80px;left:50%;
-    transform:translateX(-50%) rotate(var(--angle)) translateY(0);
-    transform-origin:bottom center;
-    writing-mode:vertical-rl;
-    text-orientation:mixed;
+  .congrats-title .accent{
+    color:#ffb7d0;
+    text-shadow:0 0 40px rgba(255,155,192,.5);
+  }
+  .congrats-sub{
     font-family:'Cormorant Garamond',serif;
     font-style:italic;
-    font-size:.72rem;
-    letter-spacing:.35em;
-    color:#8a6a48;
-    transition:inherit;
-    z-index:2;
-    white-space:nowrap;
-    opacity:.75;
-  }
-  .stick-seal{
-    position:absolute;
-    bottom:24px;left:50%;
-    width:14px;height:14px;
-    border-radius:50%;
-    transform:translateX(-50%) rotate(var(--angle));
-    transform-origin:bottom center;
-    background:radial-gradient(circle at 35% 35%, #c03050, #7a1830);
-    box-shadow:0 2px 6px rgba(0,0,0,.5), inset 0 0 4px rgba(255,200,220,.3);
-    transition:inherit;
-    z-index:2;
+    font-size:.9rem;
+    color:#8a7560;
+    letter-spacing:.4em;
+    text-transform:uppercase;
+    margin-bottom:2.5rem;
   }
 
-  .stick:hover .stick-inner,
-  .stick:hover .stick-num,
-  .stick:hover .stick-label,
-  .stick:hover .stick-seal{
-    transform: rotate(var(--angle)) translateX(var(--tx)) translateY(calc(var(--ty) - 22px));
-  }
-  .stick:hover .stick-inner{
-    box-shadow:
-      0 22px 48px rgba(0,0,0,.75),
-      0 0 40px rgba(255,200,140,.25),
-      inset 0 0 0 1px rgba(200,170,120,.6),
-      inset -6px 0 14px rgba(120,90,60,.25),
-      inset 6px 0 14px rgba(120,90,60,.25);
-  }
-  .stick:hover .stick-num{color:#c03050;}
-
-  .stick.drawn .stick-inner,
-  .stick.drawn .stick-num,
-  .stick.drawn .stick-label,
-  .stick.drawn .stick-seal{
-    transform: rotate(0deg) translateX(0) translateY(-120px);
-  }
-  .stick.drawn{z-index:20;}
-  .stick.drawn .stick-inner{
-    box-shadow:
-      0 30px 60px rgba(0,0,0,.8),
-      0 0 60px rgba(255,200,140,.4),
-      inset 0 0 0 1px rgba(220,180,120,.7);
-  }
-
-  .stick.faded{opacity:.12;filter:blur(1px);pointer-events:none;}
-
-  /* ===== 舞伴签页 ===== */
-  .partner-scroll{
-    position:relative;
-    max-width:600px;
-    width:100%;
-    margin-top:1.5rem;
-    opacity:0;
-    transform:translateY(30px);
-    transition:opacity 1.2s ease, transform 1.2s ease;
-    pointer-events:none;
-  }
-  .partner-scroll.show{
-    opacity:1;transform:translateY(0);pointer-events:auto;
-  }
-
-  .scroll-frame{
+  .card-frame{
     position:relative;
     background:
       radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.06), transparent 60%),
       linear-gradient(160deg, #1a1015 0%, #12080d 50%, #0e0609 100%);
     border:1px solid #6a5030;
     border-radius:2px;
-    padding:3rem 2.5rem;
+    padding:2.6rem 2.2rem;
     box-shadow:
       0 30px 80px rgba(0,0,0,.85),
       0 0 0 1px rgba(180,140,70,.2),
       inset 0 0 80px rgba(120,80,40,.15);
     overflow:hidden;
+    text-align:left;
   }
-  .scroll-frame::before{
-    content:'';
-    position:absolute;
-    inset:12px;
+  .card-frame::before{
+    content:'';position:absolute;inset:12px;
     border:1px solid rgba(180,140,70,.45);
-    border-radius:1px;
-    pointer-events:none;
+    border-radius:1px;pointer-events:none;
   }
-  .scroll-frame::after{
-    content:'';
-    position:absolute;
-    inset:18px;
+  .card-frame::after{
+    content:'';position:absolute;inset:18px;
     border:1px solid rgba(180,140,70,.2);
-    border-radius:1px;
-    pointer-events:none;
+    border-radius:1px;pointer-events:none;
   }
 
   .corner{
     position:absolute;
     width:24px;height:24px;
     border-color:#b08a40;
-    border-style:solid;
-    border-width:0;
-    opacity:.7;
+    border-style:solid;border-width:0;opacity:.7;
   }
   .corner.tl{top:8px;left:8px;border-top-width:1px;border-left-width:1px;}
   .corner.tr{top:8px;right:8px;border-top-width:1px;border-right-width:1px;}
   .corner.bl{bottom:8px;left:8px;border-bottom-width:1px;border-left-width:1px;}
   .corner.br{bottom:8px;right:8px;border-bottom-width:1px;border-right-width:1px;}
 
-  .scroll-ornament{
+  .card-header{
     text-align:center;
+    margin-bottom:1.5rem;
+  }
+  .card-ornament{
     font-family:'Playfair Display',serif;
     font-style:italic;
     font-size:.7rem;
     color:#8a7050;
     letter-spacing:.5em;
     text-transform:uppercase;
-    margin-bottom:1.5rem;
   }
-  .scroll-ornament::before,
-  .scroll-ornament::after{
-    content:'✦';
-    margin:0 .8rem;
-    color:#b08a40;
-    font-size:.6rem;
-    vertical-align:middle;
+  .card-ornament::before,
+  .card-ornament::after{
+    content:'✦';margin:0 .8rem;
+    color:#b08a40;font-size:.6rem;vertical-align:middle;
   }
 
-  .scroll-roman{
-    text-align:center;
-    font-family:'Playfair Display',serif;
-    font-style:italic;
-    font-weight:600;
-    font-size:1rem;
-    color:#b08a40;
-    letter-spacing:.4em;
-    margin-bottom:1rem;
-  }
-
-  .scroll-name{
+  .card-name{
     text-align:center;
     font-family:'Playfair Display',serif;
     font-weight:700;
-    font-size:clamp(2rem,5.5vw,3rem);
+    font-size:clamp(1.6rem,4.5vw,2.4rem);
     background:linear-gradient(180deg,#f4e0b0 0%, #d8b070 50%, #a07838 100%);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
@@ -726,71 +1192,51 @@
     letter-spacing:.05em;
     margin-bottom:1.5rem;
     text-shadow:0 0 40px rgba(220,180,100,.25);
-    line-height:1.2;
+    line-height:1.3;
   }
 
-  .scroll-divider{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:.8rem;
-    margin:1.5rem auto;
-    max-width:280px;
+  .card-divider{
+    display:flex;align-items:center;justify-content:center;
+    gap:.8rem;margin:1.5rem auto;max-width:280px;
   }
-  .scroll-divider::before,
-  .scroll-divider::after{
-    content:'';
-    flex:1;
-    height:1px;
+  .card-divider::before,
+  .card-divider::after{
+    content:'';flex:1;height:1px;
     background:linear-gradient(90deg,transparent,#8a7050,transparent);
   }
-  .scroll-divider .diamond{
-    color:#b08a40;
-    font-size:.6rem;
-  }
+  .card-divider .diamond{color:#b08a40;font-size:.6rem;}
 
-  .scroll-desc{
+  .card-desc{
     font-family:'Cormorant Garamond',serif;
-    font-size:1.05rem;
-    line-height:2;
-    color:#c8b8a8;
-    text-align:center;
-    font-style:italic;
-    margin-bottom:2rem;
+    font-size:1.05rem;line-height:2;
+    color:#c8b8a8;text-align:center;
+    font-style:italic;margin-bottom:1.5rem;
   }
-  .scroll-desc .hl{
+  .card-desc .quote{
     color:#ffb7d0;
     font-style:normal;
     font-family:'Noto Serif SC',serif;
-    font-size:.95rem;
-    letter-spacing:.03em;
+    font-size:.95rem;letter-spacing:.03em;
   }
 
-  .scroll-tags{
+  .card-tags{
     display:flex;flex-wrap:wrap;gap:.6rem;
-    justify-content:center;
-    margin-bottom:1.5rem;
+    justify-content:center;margin-bottom:1.2rem;
   }
-  .scroll-tags span{
+  .card-tags span{
     font-family:'Cormorant Garamond',serif;
-    font-size:.75rem;
-    color:#c0a070;
+    font-size:.75rem;color:#c0a070;
     border:1px solid rgba(180,140,70,.5);
-    padding:.35rem 1rem;
-    border-radius:0;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    font-style:italic;
-    background:rgba(180,140,70,.05);
+    padding:.35rem 1rem;border-radius:0;
+    letter-spacing:.2em;text-transform:uppercase;
+    font-style:italic;background:rgba(180,140,70,.05);
   }
 
-  .scroll-seal{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-top:1.5rem;
+  .card-seal{
+    display:flex;align-items:center;justify-content:center;
+    margin-top:1.2rem;
   }
-  .scroll-seal .mini-wax{
+  .card-seal .mini-wax{
     width:36px;height:36px;
     border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
     background:radial-gradient(circle at 35% 30%, #c03050, #7a1830);
@@ -799,20 +1245,14 @@
       inset 0 -2px 4px rgba(60,0,20,.6),
       inset 0 2px 4px rgba(255,180,200,.3);
     display:flex;align-items:center;justify-content:center;
-    color:#ffd0d8;
-    font-size:.9rem;
+    color:#ffd0d8;font-size:.9rem;
     font-family:'Playfair Display',serif;
     font-style:italic;
   }
 
-  /* ===== 按钮组：重新选签 + 继续 ===== */
-  .scroll-actions{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:1.2rem;
-    margin-top:2rem;
-    flex-wrap:wrap;
+  .card-actions{
+    display:flex;justify-content:center;align-items:center;
+    gap:1.2rem;margin-top:2rem;flex-wrap:wrap;
   }
 
   .continue-btn{
@@ -821,108 +1261,259 @@
     border:1px solid #6a5540;
     color:#c0a070;
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:.85rem;
-    letter-spacing:.35em;
-    text-transform:uppercase;
-    cursor:pointer;
-    transition:all .4s ease;
+    font-style:italic;font-size:.85rem;
+    letter-spacing:.35em;text-transform:uppercase;
+    cursor:pointer;transition:all .4s ease;
   }
   .continue-btn:hover{
-    border-color:#ffb7d0;
-    color:#ffd8e8;
+    border-color:#ffb7d0;color:#ffd8e8;
     box-shadow:0 0 30px rgba(255,155,192,.25);
     letter-spacing:.4em;
   }
 
-  /* 重新选签按钮：更轻、更暧昧 */
   .redraw-btn{
     padding:.8rem 2rem;
     background:transparent;
     border:1px solid #4a3a30;
     color:#8a7560;
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:.85rem;
-    letter-spacing:.35em;
-    text-transform:uppercase;
-    cursor:pointer;
-    transition:all .4s ease;
+    font-style:italic;font-size:.85rem;
+    letter-spacing:.35em;text-transform:uppercase;
+    cursor:pointer;transition:all .4s ease;
     position:relative;
   }
   .redraw-btn:hover{
-    border-color:#c0a070;
-    color:#e0c8a0;
+    border-color:#c0a070;color:#e0c8a0;
     box-shadow:0 0 30px rgba(200,160,100,.2);
     letter-spacing:.4em;
   }
   .redraw-btn::after{
-    content:'↻';
-    position:absolute;
-    right:-1.2rem;
-    top:50%;
-    transform:translateY(-50%);
-    font-size:.9rem;
-    opacity:0;
-    transition:opacity .3s ease, right .3s ease;
-    color:#c0a070;
+    content:'↻';position:absolute;right:-1.2rem;top:50%;
+    transform:translateY(-50%);font-size:.9rem;opacity:0;
+    transition:opacity .3s ease, right .3s ease;color:#c0a070;
   }
-  .redraw-btn:hover::after{
-    opacity:1;
-    right:-1.5rem;
-  }
+  .redraw-btn:hover::after{opacity:1;right:-1.5rem;}
 
-  /* 重抽提示 */
   .redraw-note{
     text-align:center;
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:.75rem;
-    color:#6a5540;
-    letter-spacing:.2em;
-    margin-top:1rem;
-    opacity:0;
+    font-style:italic;font-size:.75rem;
+    color:#6a5540;letter-spacing:.2em;
+    margin-top:1rem;opacity:0;
     transition:opacity .6s ease;
   }
   .redraw-note.show{opacity:1;}
 
+  /* 舞池光斑（极淡） */
+  .dance-spot{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(40px);
+    mix-blend-mode:screen;
+    pointer-events:none;
+    z-index:1;
+    animation:spotDrift linear infinite;
+  }
+  @keyframes spotDrift{
+    0%{transform:translate(0,0) scale(1);opacity:.3;}
+    25%{transform:translate(60px,40px) scale(1.2);opacity:.5;}
+    50%{transform:translate(-40px,80px) scale(1);opacity:.35;}
+    75%{transform:translate(50px,60px) scale(1.3);opacity:.45;}
+    100%{transform:translate(0,0) scale(1);opacity:.3;}
+  }
+
+  /* 香槟气泡（信纸屏） */
+  .bubble{
+    position:fixed;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.7), rgba(255,240,200,.3) 30%, rgba(255,220,140,.1) 60%, transparent 80%);
+    border:1px solid rgba(255,240,200,.2);
+    pointer-events:none;
+    z-index:2;
+    animation:bubbleRise linear infinite;
+  }
+  @keyframes bubbleRise{
+    0%{transform:translateY(0) translateX(0) scale(0.6);opacity:0;}
+    5%{opacity:.8;}
+    50%{transform:translateY(-50vh) translateX(15px) scale(1);}
+    95%{opacity:.6;}
+    100%{transform:translateY(-105vh) translateX(-10px) scale(1.1);opacity:0;}
+  }
+
   @media(max-width:720px){
-    .sticks-fan{height:340px;}
-    .stick{width:44px;height:280px;}
-    .stick:nth-child(1){--tx:-180px;}
-    .stick:nth-child(2){--tx:-120px;}
-    .stick:nth-child(3){--tx:-60px;}
-    .stick:nth-child(5){--tx:60px;}
-    .stick:nth-child(6){--tx:120px;}
-    .stick:nth-child(7){--tx:180px;}
-    .stick-num{font-size:.9rem;top:30px;}
-    .stick-label{font-size:.6rem;top:64px;}
-    .scroll-frame{padding:2rem 1.5rem;}
-    .scroll-actions{flex-direction:column;gap:.8rem;}
+    .sticks-fan{height:380px;}
+    .stick{width:48px;height:320px;}
+    .stick:nth-child(1){--tx:-190px;}
+    .stick:nth-child(2){--tx:-126px;}
+    .stick:nth-child(3){--tx:-63px;}
+    .stick:nth-child(5){--tx:63px;}
+    .stick:nth-child(6){--tx:126px;}
+    .stick:nth-child(7){--tx:190px;}
+    .card-frame{padding:2rem 1.5rem;}
+    .card-actions{flex-direction:column;gap:.8rem;}
     .redraw-btn::after{right:-1rem;}
+    .invitation-card{padding:2.5rem 1.6rem 2rem;}
+    .inv-profile{grid-template-columns:1fr;}
+    .letter-paper{padding:2.4rem 1.6rem 2rem;}
+    .marble-column{width:50px;}
+    .chandelier-bg{width:220px;height:280px;top:-60px;}
+    .candle-stand{display:none;}
   }
 
   @media(max-width:520px){
-    .sticks-fan{height:300px;}
-    .stick{width:38px;height:250px;}
-    .stick:nth-child(1){--tx:-140px;--angle:-46deg;}
-    .stick:nth-child(2){--tx:-94px;}
-    .stick:nth-child(3){--tx:-48px;}
-    .stick:nth-child(5){--tx:48px;}
-    .stick:nth-child(6){--tx:94px;}
-    .stick:nth-child(7){--tx:140px;--angle:46deg;}
-    .stick-label{display:none;}
+    .sticks-fan{height:340px;}
+    .stick{width:42px;height:290px;}
+    .stick:nth-child(1){--tx:-150px;--angle:-46deg;}
+    .stick:nth-child(2){--tx:-100px;}
+    .stick:nth-child(3){--tx:-50px;}
+    .stick:nth-child(5){--tx:50px;}
+    .stick:nth-child(6){--tx:100px;}
+    .stick:nth-child(7){--tx:150px;--angle:46deg;}
+    .marble-column{display:none;}
+    .ivy{width:100px;}
   }
 </style>
 </head>
 <body>
 
-<div class="ballroom-bg"></div>
+<!-- ============================================================
+     英国贵族庄园背景层
+     ============================================================ -->
+<div class="estate-bg"></div>
+
+<!-- 大理石柱 -->
+<div class="marble-column left"></div>
+<div class="marble-column right"></div>
+
+<!-- 窗棂剪影 -->
+<div class="window-arch">
+  <svg viewBox="0 0 700 600" preserveAspectRatio="none">
+    <path d="M50 600 L50 200 Q50 50 350 50 Q650 50 650 200 L650 600"
+          fill="none" stroke="#c0a070" stroke-width="2"/>
+    <path d="M120 600 L120 230 Q120 100 350 100 Q580 100 580 230 L580 600"
+          fill="none" stroke="#c0a070" stroke-width="1.5"/>
+    <line x1="350" y1="100" x2="350" y2="600" stroke="#c0a070" stroke-width="1.5"/>
+    <line x1="50" y1="300" x2="650" y2="300" stroke="#c0a070" stroke-width="1"/>
+    <line x1="50" y1="450" x2="650" y2="450" stroke="#c0a070" stroke-width="1"/>
+    <line x1="200" y1="100" x2="200" y2="600" stroke="#c0a070" stroke-width="0.8"/>
+    <line x1="500" y1="100" x2="500" y2="600" stroke="#c0a070" stroke-width="0.8"/>
+  </svg>
+</div>
+
+<!-- 常春藤 -->
+<div class="ivy left">
+  <svg viewBox="0 0 180 1000" preserveAspectRatio="none">
+    <path d="M20 0 Q40 100 30 200 Q20 300 40 400 Q60 500 50 600 Q40 700 60 800 Q80 900 70 1000"
+          fill="none" stroke="#4a6a3a" stroke-width="1.5" opacity="0.7"/>
+    <path d="M80 0 Q100 150 90 300 Q80 450 100 600 Q120 750 110 900 Q100 1000 120 1000"
+          fill="none" stroke="#4a6a3a" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="30" cy="150" r="6" fill="#5a7a4a" opacity="0.6"/>
+    <circle cx="45" cy="350" r="5" fill="#5a7a4a" opacity="0.6"/>
+    <circle cx="35" cy="550" r="7" fill="#5a7a4a" opacity="0.6"/>
+    <circle cx="55" cy="750" r="5" fill="#5a7a4a" opacity="0.6"/>
+    <circle cx="90" cy="250" r="6" fill="#5a7a4a" opacity="0.5"/>
+    <circle cx="100" cy="500" r="5" fill="#5a7a4a" opacity="0.5"/>
+    <circle cx="95" cy="700" r="7" fill="#5a7a4a" opacity="0.5"/>
+  </svg>
+</div>
+<div class="ivy right">
+  <svg viewBox="0 0 180 1000" preserveAspectRatio="none">
+    <path d="M20 0 Q40 100 30 200 Q20 300 40 400 Q60 500 50 600 Q40 700 60 800 Q80 900 70 1000"
+          fill="none" stroke="#4a6a3a" stroke-width="1.5" opacity="0.7"/>
+    <path d="M80 0 Q100 150 90 300 Q80 450 100 600 Q120 750 110 900 Q100 1000 120 1000"
+          fill="none" stroke="#4a6a3a" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="30" cy="150" r="6" fill="#5a7a4a" opacity="0.6"/>
+    <circle cx="45" cy="350" r="5" fill="#5a7a4a" opacity="0.6"/>
+    <circle cx="35" cy="550" r="7" fill="#5a7a4a" opacity="0.6"/>
+    <circle cx="55" cy="750" r="5" fill="#5a7a4a" opacity="0.6"/>
+    <circle cx="90" cy="250" r="6" fill="#5a7a4a" opacity="0.5"/>
+    <circle cx="100" cy="500" r="5" fill="#5a7a4a" opacity="0.5"/>
+    <circle cx="95" cy="700" r="7" fill="#5a7a4a" opacity="0.5"/>
+  </svg>
+</div>
+
+<!-- 水晶吊灯 -->
+<div class="chandelier-glow"></div>
+<div class="chandelier-bg">
+  <svg viewBox="0 0 340 400">
+    <defs>
+      <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#d4b878"/>
+        <stop offset="50%" stop-color="#a07838"/>
+        <stop offset="100%" stop-color="#6a4a18"/>
+      </linearGradient>
+      <linearGradient id="crystalGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fff8e0"/>
+        <stop offset="50%" stop-color="#e0c890"/>
+        <stop offset="100%" stop-color="#a08048"/>
+      </linearGradient>
+      <radialGradient id="lampGlow">
+        <stop offset="0%" stop-color="#fff4d0" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#ffd890" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <line x1="170" y1="0" x2="170" y2="80" stroke="url(#metal)" stroke-width="2"/>
+    <circle cx="170" cy="20" r="2" fill="#d4b878"/>
+    <circle cx="170" cy="45" r="2" fill="#d4b878"/>
+    <circle cx="170" cy="70" r="2" fill="#d4b878"/>
+
+    <ellipse cx="170" cy="95" rx="50" ry="12" fill="none" stroke="url(#metal)" stroke-width="3" class="frame"/>
+
+    <path d="M120 95 Q170 140 220 95" fill="none" stroke="url(#metal)" stroke-width="2.5" class="frame"/>
+    <path d="M100 110 Q170 200 240 110" fill="none" stroke="url(#metal)" stroke-width="2" class="frame"/>
+    <path d="M80 130 Q170 260 260 130" fill="none" stroke="url(#metal)" stroke-width="1.8" class="frame"/>
+
+    <rect x="162" y="120" width="16" height="40" fill="#e8d0a0"/>
+    <ellipse cx="170" cy="120" rx="8" ry="3" fill="#a07838"/>
+    <ellipse cx="170" cy="108" rx="5" ry="12" fill="#ffd060" opacity="0.9"/>
+    <ellipse cx="170" cy="106" rx="3" ry="8" fill="#fff4c0"/>
+    <ellipse cx="170" cy="110" rx="18" ry="20" fill="url(#lampGlow)" opacity="0.7"/>
+
+    <g>
+      <rect x="92" y="140" width="12" height="30" fill="#e8d0a0"/>
+      <ellipse cx="98" cy="140" rx="6" ry="2.5" fill="#a07838"/>
+      <ellipse cx="98" cy="130" rx="4" ry="9" fill="#ffd060" opacity="0.9"/>
+      <ellipse cx="98" cy="128" rx="2" ry="6" fill="#fff4c0"/>
+      <ellipse cx="98" cy="132" rx="14" ry="16" fill="url(#lampGlow)" opacity="0.6"/>
+    </g>
+    <g>
+      <rect x="236" y="140" width="12" height="30" fill="#e8d0a0"/>
+      <ellipse cx="242" cy="140" rx="6" ry="2.5" fill="#a07838"/>
+      <ellipse cx="242" cy="130" rx="4" ry="9" fill="#ffd060" opacity="0.9"/>
+      <ellipse cx="242" cy="128" rx="2" ry="6" fill="#fff4c0"/>
+      <ellipse cx="242" cy="132" rx="14" ry="16" fill="url(#lampGlow)" opacity="0.6"/>
+    </g>
+
+    <g class="crystal" style="transform-origin:100px 150px;">
+      <line x1="100" y1="150" x2="100" y2="200" stroke="#a08048" stroke-width="0.8"/>
+      <polygon points="100,200 105,215 100,230 95,215" fill="url(#crystalGrad)" opacity="0.85"/>
+    </g>
+    <g class="crystal" style="transform-origin:140px 165px;">
+      <line x1="140" y1="165" x2="140" y2="230" stroke="#a08048" stroke-width="0.8"/>
+      <polygon points="140,230 146,250 140,270 134,250" fill="url(#crystalGrad)" opacity="0.85"/>
+    </g>
+    <g class="crystal" style="transform-origin:170px 180px;">
+      <line x1="170" y1="180" x2="170" y2="260" stroke="#a08048" stroke-width="0.8"/>
+      <polygon points="170,260 177,285 170,310 163,285" fill="url(#crystalGrad)" opacity="0.9"/>
+    </g>
+    <g class="crystal" style="transform-origin:200px 165px;">
+      <line x1="200" y1="165" x2="200" y2="230" stroke="#a08048" stroke-width="0.8"/>
+      <polygon points="200,230 206,250 200,270 194,250" fill="url(#crystalGrad)" opacity="0.85"/>
+    </g>
+    <g class="crystal" style="transform-origin:240px 150px;">
+      <line x1="240" y1="150" x2="240" y2="200" stroke="#a08048" stroke-width="0.8"/>
+      <polygon points="240,200 245,215 240,230 235,215" fill="url(#crystalGrad)" opacity="0.85"/>
+    </g>
+  </svg>
+</div>
+
+<!-- 光尘 -->
 <div class="dust" id="dust"></div>
 
-<div class="whisper-out" id="whisperOut"></div>
-
-<!-- ===== 第一屏：报名 ===== -->
+<!-- ============================================================
+     第一屏：报名
+     ============================================================ -->
 <section class="screen" id="screen1">
   <div class="eyebrow">— before the ball —</div>
   <div class="signup-title">写下你的名字</div>
@@ -936,8 +1527,105 @@
   <button class="signup-btn" id="signupBtn" disabled>进入舞会</button>
 </section>
 
-<!-- ===== 第二屏：信封 + 火漆 ===== -->
+<!-- ============================================================
+     邀请屏
+     ============================================================ -->
+<section class="screen hidden" id="screenInvite">
+  <div class="eyebrow">— an invitation from amber —</div>
+
+  <div class="invitation-stage">
+    <div class="invitation-card" id="invitationCard">
+      <div class="inv-corner tl"></div>
+      <div class="inv-corner tr"></div>
+      <div class="inv-corner bl"></div>
+      <div class="inv-corner br"></div>
+
+      <!-- 纹章 -->
+      <div class="crest">
+        <svg viewBox="0 0 60 70">
+          <path d="M30 5 L52 15 L52 40 Q52 58 30 68 Q8 58 8 40 L8 15 Z"
+                fill="none" stroke="#b08a40" stroke-width="1.5"/>
+          <path d="M30 12 L46 20 L46 38 Q46 52 30 60 Q14 52 14 38 L14 20 Z"
+                fill="none" stroke="#b08a40" stroke-width="0.8"/>
+          <path d="M30 22 L38 30 L30 38 L22 30 Z" fill="#b08a40" opacity="0.7"/>
+          <circle cx="30" cy="30" r="2" fill="#ffd8a0"/>
+        </svg>
+      </div>
+
+      <div class="inv-top-ornament">Invitation</div>
+      <div class="inv-main" id="invMain"></div>
+
+      <div class="inv-divider"><span class="diamond">◆</span></div>
+
+      <div class="inv-profile">
+        <div class="inv-profile-item">
+          <span class="key">Name</span>
+          <span class="val accent">琥珀</span>
+        </div>
+        <div class="inv-profile-item">
+          <span class="key">Type</span>
+          <span class="val">INTJ</span>
+        </div>
+        <div class="inv-profile-item">
+          <span class="key">Sign</span>
+          <span class="val">风向天秤</span>
+        </div>
+        <div class="inv-profile-item">
+          <span class="key">Code</span>
+          <span class="val">23LE八无</span>
+        </div>
+        <div class="inv-profile-item">
+          <span class="key">Ear</span>
+          <span class="val">常驻0号耳彩</span>
+        </div>
+        <div class="inv-profile-item">
+          <span class="key">ID</span>
+          <span class="val">HUPO0O0</span>
+        </div>
+      </div>
+
+      <div class="inv-confession">
+        她说：<span class="hl">"我才不是老女人，不过年龄大可以当妈妈吗。"</span><br>
+        她说：<span class="hl">"我只是不再年轻了，留不住我的妻子了。"</span>
+      </div>
+
+      <div class="inv-divider"><span class="diamond">◆</span></div>
+
+      <div class="inv-signature">
+        琥珀
+        <span class="meta">— awaiting your arrival —</span>
+      </div>
+
+      <div class="inv-seal">
+        <div class="wax-mini">♡</div>
+        <div class="wax-text">Sealed with wax</div>
+      </div>
+    </div>
+
+    <div class="inv-continue" id="invContinue">
+      <button class="inv-continue-btn" id="invContinueBtn">查看邀请</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     第二屏：信封 + 火漆（烛光氛围）
+     ============================================================ -->
 <section class="screen hidden" id="screen2">
+  <div class="candle-light"></div>
+
+  <!-- 烛台 -->
+  <div class="candle-stand left">
+    <div class="candle-body">
+      <div class="candle-flame"></div>
+    </div>
+  </div>
+  <div class="candle-stand right">
+    <div class="candle-body">
+      <div class="candle-flame"></div>
+    </div>
+  </div>
+
   <div class="eyebrow">— before the ball —</div>
 
   <div class="envelope-stage">
@@ -964,6 +1652,10 @@
     </div>
 
     <div class="envelope" id="envelope">
+      <div class="glow-burst"></div>
+      <div class="wax-shards" id="waxShards"></div>
+      <div class="envelope-letter"></div>
+
       <div class="envelope-body">
         <div class="watermark"></div>
         <div class="watermark-text">琥珀</div>
@@ -972,107 +1664,346 @@
       </div>
 
       <div class="seals">
-        <div class="seal-wrap red" data-choice="red">
+        <div class="seal-wrap pinklight" data-choice="run">
           <div class="wax"></div>
-          <div class="imprint">你猜<br>我信不信</div>
+          <div class="imprint">跑</div>
           <div class="fingerprint"></div>
         </div>
-        <div class="seal-wrap gold" data-choice="gold">
+        <div class="seal-wrap pinkdeep" data-choice="stay">
           <div class="wax"></div>
-          <div class="imprint">你希望<br>我信吗</div>
-          <div class="fingerprint"></div>
-        </div>
-        <div class="seal-wrap black" data-choice="black">
-          <div class="wax"></div>
-          <div class="imprint">我信不信<br>重要吗</div>
+          <div class="imprint">不跑</div>
           <div class="fingerprint"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="hint" id="hint">选一个火漆 · 盖上你的回答</div>
+  <div class="hint" id="hint">选一个火漆 · 做出你的选择</div>
 </section>
 
-<!-- ===== 第三屏：抽签 ===== -->
-<section class="screen hidden" id="screen3">
-  <div class="eyebrow">— the ball begins —</div>
-  <div class="draw-title">
-    抽取你的舞伴
-    <span class="ornament">— draw your partner —</span>
+<!-- ============================================================
+     信纸
+     ============================================================ -->
+<div class="letter-overlay" id="letterOverlay">
+  <div class="letter-paper" id="letterPaper">
+    <div class="letter-title">The Masked Ball</div>
+
+    <div class="letter-body">
+      <span class="letter-line" data-delay="0">欢迎来到假面舞会。</span>
+      <span class="letter-line" data-delay="1200">本场只有两个角色：</span>
+      <span class="letter-line hl" data-delay="2400">追逐者，与躲藏者。</span>
+      <span class="letter-line" data-delay="3800">规则很简单——</span>
+      <span class="letter-line" data-delay="5000">找到她，或者被她找到。</span>
+      <span class="letter-line hl" data-delay="6400">音乐停止之前，不要停下。</span>
+      <span class="letter-line small" data-delay="7800">— 琥珀 · 敬上 —</span>
+    </div>
+
+    <div class="letter-actions" id="letterActions">
+      <button class="letter-btn" id="letterBtn">进入舞池</button>
+    </div>
   </div>
-  <div class="draw-sub" id="drawSub">Seven sticks · One fate</div>
+</div>
+
+<!-- ============================================================
+     第三屏：抽签 + 恭喜卡片（舞池光斑）
+     ============================================================ -->
+<section class="screen hidden" id="screen3">
+  <div class="eyebrow" id="drawEyebrow">— the ball begins —</div>
+  <div class="draw-title" id="drawTitle">
+    选择你的假面公主
+    <span class="ornament">— choose your masked princess —</span>
+  </div>
+  <div class="draw-sub" id="drawSub">Seven feathers · One fate</div>
 
   <div class="sticks-fan" id="sticksFan">
+    <!-- I · 坏女人 · 深红羽毛 -->
     <div class="stick" data-partner="0">
-      <div class="stick-inner"></div>
-      <div class="stick-num">I</div>
-      <div class="stick-label">BAD WOMAN</div>
-      <div class="stick-seal"></div>
+      <svg class="feather-svg" viewBox="0 0 58 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f8d8e0"/>
+            <stop offset="35%" stop-color="#e088a8"/>
+            <stop offset="100%" stop-color="#8a1840"/>
+          </linearGradient>
+          <linearGradient id="shim1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="50%" stop-color="rgba(255,220,240,0.7)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <path d="M29 8 Q46 42 48 96 Q48 170 38 256 Q34 310 29 350 Q24 310 20 256 Q10 170 10 96 Q12 42 29 8 Z"
+              fill="url(#fg1)" stroke="#701028" stroke-width="0.6"/>
+        <path d="M29 20 Q40 44 42 70" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 20 Q18 44 16 70" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q42 74 44 100" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q16 74 14 100" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q42 104 44 130" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q16 104 14 130" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q42 134 44 160" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q16 134 14 160" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q42 164 44 190" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q16 164 14 190" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q42 194 44 220" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q16 194 14 220" stroke="#c05878" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 200 Q40 224 42 250" stroke="#c05878" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <path d="M29 200 Q18 224 16 250" stroke="#c05878" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <line x1="29" y1="8" x2="29" y2="350" stroke="#601018" stroke-width="1.2" opacity="0.8"/>
+        <rect class="shimmer" x="0" y="0" width="58" height="80" fill="url(#shim1)" opacity="0.5"/>
+      </svg>
+      <div class="nib"></div>
     </div>
+
+    <!-- II · 姐姐 · 淡紫羽毛 -->
     <div class="stick" data-partner="1">
-      <div class="stick-inner"></div>
-      <div class="stick-num">II</div>
-      <div class="stick-label">SISTER</div>
-      <div class="stick-seal"></div>
+      <svg class="feather-svg" viewBox="0 0 58 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="fg2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ece0f4"/>
+            <stop offset="35%" stop-color="#c0a0d8"/>
+            <stop offset="100%" stop-color="#6a4088"/>
+          </linearGradient>
+          <linearGradient id="shim2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="50%" stop-color="rgba(240,220,255,0.7)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <path d="M29 8 Q46 42 48 96 Q48 170 38 256 Q34 310 29 350 Q24 310 20 256 Q10 170 10 96 Q12 42 29 8 Z"
+              fill="url(#fg2)" stroke="#503068" stroke-width="0.6"/>
+        <path d="M29 20 Q40 44 42 70" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 20 Q18 44 16 70" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q42 74 44 100" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q16 74 14 100" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q42 104 44 130" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q16 104 14 130" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q42 134 44 160" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q16 134 14 160" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q42 164 44 190" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q16 164 14 190" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q42 194 44 220" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q16 194 14 220" stroke="#9070b0" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 200 Q40 224 42 250" stroke="#9070b0" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <path d="M29 200 Q18 224 16 250" stroke="#9070b0" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <line x1="29" y1="8" x2="29" y2="350" stroke="#402858" stroke-width="1.2" opacity="0.8"/>
+        <rect class="shimmer" x="0" y="0" width="58" height="80" fill="url(#shim2)" opacity="0.5"/>
+      </svg>
+      <div class="nib"></div>
     </div>
+
+    <!-- III · 琥珀 · 金色羽毛 -->
     <div class="stick" data-partner="2">
-      <div class="stick-inner"></div>
-      <div class="stick-num">III</div>
-      <div class="stick-label">AMBER</div>
-      <div class="stick-seal"></div>
+      <svg class="feather-svg" viewBox="0 0 58 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="fg3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fcf0d0"/>
+            <stop offset="35%" stop-color="#e0b868"/>
+            <stop offset="100%" stop-color="#8a5810"/>
+          </linearGradient>
+          <linearGradient id="shim3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="50%" stop-color="rgba(255,250,220,0.8)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <path d="M29 8 Q46 42 48 96 Q48 170 38 256 Q34 310 29 350 Q24 310 20 256 Q10 170 10 96 Q12 42 29 8 Z"
+              fill="url(#fg3)" stroke="#6a4008" stroke-width="0.6"/>
+        <path d="M29 20 Q40 44 42 70" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 20 Q18 44 16 70" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q42 74 44 100" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q16 74 14 100" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q42 104 44 130" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q16 104 14 130" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q42 134 44 160" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q16 134 14 160" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q42 164 44 190" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q16 164 14 190" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q42 194 44 220" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q16 194 14 220" stroke="#b08838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 200 Q40 224 42 250" stroke="#b08838" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <path d="M29 200 Q18 224 16 250" stroke="#b08838" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <line x1="29" y1="8" x2="29" y2="350" stroke="#5a3408" stroke-width="1.2" opacity="0.8"/>
+        <rect class="shimmer" x="0" y="0" width="58" height="80" fill="url(#shim3)" opacity="0.5"/>
+      </svg>
+      <div class="nib"></div>
     </div>
+
+    <!-- IV · 狂犬 · 暗红羽毛 -->
     <div class="stick" data-partner="3">
-      <div class="stick-inner"></div>
-      <div class="stick-num">IV</div>
-      <div class="stick-label">MAD DOG</div>
-      <div class="stick-seal"></div>
+      <svg class="feather-svg" viewBox="0 0 58 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="fg4" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e8a0a0"/>
+            <stop offset="35%" stop-color="#b05050"/>
+            <stop offset="100%" stop-color="#501818"/>
+          </linearGradient>
+          <linearGradient id="shim4" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="50%" stop-color="rgba(255,200,200,0.7)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <path d="M29 8 Q46 42 48 96 Q48 170 38 256 Q34 310 29 350 Q24 310 20 256 Q10 170 10 96 Q12 42 29 8 Z"
+              fill="url(#fg4)" stroke="#400810" stroke-width="0.6"/>
+        <path d="M29 20 Q40 44 42 70" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 20 Q18 44 16 70" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q42 74 44 100" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q16 74 14 100" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q42 104 44 130" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q16 104 14 130" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q42 134 44 160" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q16 134 14 160" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q42 164 44 190" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q16 164 14 190" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q42 194 44 220" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q16 194 14 220" stroke="#883838" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 200 Q40 224 42 250" stroke="#883838" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <path d="M29 200 Q18 224 16 250" stroke="#883838" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <line x1="29" y1="8" x2="29" y2="350" stroke="#300810" stroke-width="1.2" opacity="0.8"/>
+        <rect class="shimmer" x="0" y="0" width="58" height="80" fill="url(#shim4)" opacity="0.5"/>
+      </svg>
+      <div class="nib"></div>
     </div>
+
+    <!-- V · 妈咪 · 暖金羽毛 -->
     <div class="stick" data-partner="4">
-      <div class="stick-inner"></div>
-      <div class="stick-num">V</div>
-      <div class="stick-label">MOMMY</div>
-      <div class="stick-seal"></div>
+      <svg class="feather-svg" viewBox="0 0 58 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="fg5" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fcf0d8"/>
+            <stop offset="35%" stop-color="#e8c088"/>
+            <stop offset="100%" stop-color="#a06828"/>
+          </linearGradient>
+          <linearGradient id="shim5" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="50%" stop-color="rgba(255,245,220,0.8)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <path d="M29 8 Q46 42 48 96 Q48 170 38 256 Q34 310 29 350 Q24 310 20 256 Q10 170 10 96 Q12 42 29 8 Z"
+              fill="url(#fg5)" stroke="#805018" stroke-width="0.6"/>
+        <path d="M29 20 Q40 44 42 70" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 20 Q18 44 16 70" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q42 74 44 100" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q16 74 14 100" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q42 104 44 130" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q16 104 14 130" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q42 134 44 160" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q16 134 14 160" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q42 164 44 190" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q16 164 14 190" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q42 194 44 220" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q16 194 14 220" stroke="#c09858" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 200 Q40 224 42 250" stroke="#c09858" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <path d="M29 200 Q18 224 16 250" stroke="#c09858" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <line x1="29" y1="8" x2="29" y2="350" stroke="#604018" stroke-width="1.2" opacity="0.8"/>
+        <rect class="shimmer" x="0" y="0" width="58" height="80" fill="url(#shim5)" opacity="0.5"/>
+      </svg>
+      <div class="nib"></div>
     </div>
+
+    <!-- VI · 妻子 · 银灰羽毛 -->
     <div class="stick" data-partner="5">
-      <div class="stick-inner"></div>
-      <div class="stick-num">VI</div>
-      <div class="stick-label">WIFE</div>
-      <div class="stick-seal"></div>
+      <svg class="feather-svg" viewBox="0 0 58 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="fg6" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e8e8f0"/>
+            <stop offset="35%" stop-color="#a8a8b8"/>
+            <stop offset="100%" stop-color="#505068"/>
+          </linearGradient>
+          <linearGradient id="shim6" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="50%" stop-color="rgba(240,240,255,0.7)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <path d="M29 8 Q46 42 48 96 Q48 170 38 256 Q34 310 29 350 Q24 310 20 256 Q10 170 10 96 Q12 42 29 8 Z"
+              fill="url(#fg6)" stroke="#404050" stroke-width="0.6"/>
+        <path d="M29 20 Q40 44 42 70" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 20 Q18 44 16 70" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q42 74 44 100" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q16 74 14 100" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q42 104 44 130" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q16 104 14 130" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q42 134 44 160" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q16 134 14 160" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q42 164 44 190" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q16 164 14 190" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q42 194 44 220" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q16 194 14 220" stroke="#888898" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 200 Q40 224 42 250" stroke="#888898" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <path d="M29 200 Q18 224 16 250" stroke="#888898" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <line x1="29" y1="8" x2="29" y2="350" stroke="#303040" stroke-width="1.2" opacity="0.8"/>
+        <rect class="shimmer" x="0" y="0" width="58" height="80" fill="url(#shim6)" opacity="0.5"/>
+      </svg>
+      <div class="nib"></div>
     </div>
+
+    <!-- VII · 一言为定 · 粉紫羽毛 -->
     <div class="stick" data-partner="6">
-      <div class="stick-inner"></div>
-      <div class="stick-num">VII</div>
-      <div class="stick-label">A PROMISE</div>
-      <div class="stick-seal"></div>
+      <svg class="feather-svg" viewBox="0 0 58 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="fg7" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fce8f4"/>
+            <stop offset="35%" stop-color="#e0a8d0"/>
+            <stop offset="100%" stop-color="#8a4880"/>
+          </linearGradient>
+          <linearGradient id="shim7" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+            <stop offset="50%" stop-color="rgba(255,230,250,0.8)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <path d="M29 8 Q46 42 48 96 Q48 170 38 256 Q34 310 29 350 Q24 310 20 256 Q10 170 10 96 Q12 42 29 8 Z"
+              fill="url(#fg7)" stroke="#6a3868" stroke-width="0.6"/>
+        <path d="M29 20 Q40 44 42 70" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 20 Q18 44 16 70" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q42 74 44 100" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 50 Q16 74 14 100" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q42 104 44 130" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 80 Q16 104 14 130" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q42 134 44 160" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 110 Q16 134 14 160" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q42 164 44 190" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 140 Q16 164 14 190" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q42 194 44 220" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 170 Q16 194 14 220" stroke="#b078a8" stroke-width="0.6" fill="none" opacity="0.6"/>
+        <path d="M29 200 Q40 224 42 250" stroke="#b078a8" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <path d="M29 200 Q18 224 16 250" stroke="#b078a8" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <line x1="29" y1="8" x2="29" y2="350" stroke="#5a2858" stroke-width="1.2" opacity="0.8"/>
+        <rect class="shimmer" x="0" y="0" width="58" height="80" fill="url(#shim7)" opacity="0.5"/>
+      </svg>
+      <div class="nib"></div>
     </div>
   </div>
 
-  <div class="partner-scroll" id="partnerScroll">
-    <div class="scroll-frame">
+  <div class="congrats" id="congrats">
+    <div class="congrats-title">恭喜你抽到了 <span class="accent" id="congratsName"></span></div>
+    <div class="congrats-sub">— your masked princess —</div>
+
+    <div class="card-frame">
       <div class="corner tl"></div>
       <div class="corner tr"></div>
       <div class="corner bl"></div>
       <div class="corner br"></div>
 
-      <div class="scroll-ornament">Your Partner</div>
-      <div class="scroll-roman" id="scrollRoman"></div>
-      <div class="scroll-name" id="scrollName"></div>
-
-      <div class="scroll-divider">
-        <span class="diamond">◆</span>
+      <div class="card-header">
+        <div class="card-ornament">Your Masked Princess</div>
       </div>
 
-      <div class="scroll-desc" id="scrollDesc"></div>
+      <div class="card-name" id="cardName"></div>
 
-      <div class="scroll-tags" id="scrollTags"></div>
+      <div class="card-divider"><span class="diamond">◆</span></div>
 
-      <div class="scroll-seal">
+      <div class="card-desc" id="cardDesc"></div>
+
+      <div class="card-tags" id="cardTags"></div>
+
+      <div class="card-seal">
         <div class="mini-wax">♡</div>
       </div>
     </div>
 
-    <div class="scroll-actions">
+    <div class="card-actions">
       <button class="redraw-btn" id="redrawBtn">重新选签</button>
       <button class="continue-btn" id="continueBtn">继续 · 进入舞池</button>
     </div>
@@ -1084,7 +2015,7 @@
 <script>
   /* ===== 浮尘 ===== */
   const dust = document.getElementById('dust');
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 50; i++) {
     const s = document.createElement('span');
     const size = Math.random() * 3 + 1;
     s.style.width = size + 'px';
@@ -1095,13 +2026,149 @@
     dust.appendChild(s);
   }
 
+  /* ===== 碎光粒子 ===== */
+  for(let i=0;i<30;i++){
+    const s=document.createElement('div');
+    s.className='sparkle';
+    const size=Math.random()*3+1;
+    s.style.width=size+'px';
+    s.style.height=size+'px';
+    s.style.left=(10+Math.random()*80)+'%';
+    s.style.top='180px';
+    s.style.animationDuration=(Math.random()*4+4)+'s';
+    s.style.animationDelay=(Math.random()*5)+'s';
+    const colors=['#ffd8a0','#fff4d0','#ffb0d0','#f0c080'];
+    s.style.background=colors[Math.floor(Math.random()*colors.length)];
+    document.body.appendChild(s);
+  }
+
+  /* ===== 舞池光斑 ===== */
+  const spotColors = [
+    'rgba(255,120,180,.6)',
+    'rgba(180,120,255,.6)',
+    'rgba(120,180,255,.5)',
+    'rgba(255,200,120,.6)'
+  ];
+  for(let i=0;i<10;i++){
+    const spot = document.createElement('div');
+    spot.className = 'dance-spot';
+    const size = Math.random() * 200 + 120;
+    spot.style.width = size + 'px';
+    spot.style.height = size + 'px';
+    spot.style.left = Math.random() * 100 + '%';
+    spot.style.top = Math.random() * 70 + '%';
+    spot.style.background = spotColors[Math.floor(Math.random() * spotColors.length)];
+    spot.style.animationDuration = (Math.random() * 15 + 12) + 's';
+    spot.style.animationDelay = (Math.random() * 10) + 's';
+    document.body.appendChild(spot);
+  }
+
+  /* ===== 香槟气泡 ===== */
+  for(let i=0;i<25;i++){
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const size = Math.random()*10 + 3;
+    b.style.width = size + 'px';
+    b.style.height = size + 'px';
+    b.style.left = Math.random() * 100 + '%';
+    b.style.bottom = '-40px';
+    b.style.animationDuration = (Math.random()*8 + 8) + 's';
+    b.style.animationDelay = (Math.random() * 12) + 's';
+    document.body.appendChild(b);
+  }
+
+  /* ===== 音效 ===== */
+  let audioCtx = null;
+  function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+
+  function playSealPress() {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(60, now + 0.25);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.25, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now); osc.stop(now + 0.35);
+  }
+
+  function playEnvelopeOpen() {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const oscGain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(80, now);
+    osc.frequency.exponentialRampToValueAtTime(40, now + 0.8);
+    oscGain.gain.setValueAtTime(0.0001, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.15, now + 0.05);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.0);
+    osc.connect(oscGain).connect(ctx.destination);
+    osc.start(now); osc.stop(now + 1.1);
+
+    const bufferSize = ctx.sampleRate * 0.8;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      const t = i / bufferSize;
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2.5) * 0.6;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = 'highpass';
+    noiseFilter.frequency.value = 1800;
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.0001, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.2, now + 0.03);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+    noise.connect(noiseFilter).connect(noiseGain).connect(ctx.destination);
+    noise.start(now); noise.stop(now + 0.9);
+  }
+
+  function playPaperRustle() {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const bufferSize = ctx.sampleRate * 1.2;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      const t = i / bufferSize;
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 1.5) * 0.3;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 3000;
+    filter.Q.value = 0.8;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.08, now + 0.3);
+    gain.gain.linearRampToValueAtTime(0.0001, now + 1.2);
+    noise.connect(filter).connect(gain).connect(ctx.destination);
+    noise.start(now); noise.stop(now + 1.2);
+  }
+
   /* ===== 第一屏 ===== */
   const screen1 = document.getElementById('screen1');
+  const screenInvite = document.getElementById('screenInvite');
   const screen2 = document.getElementById('screen2');
   const screen3 = document.getElementById('screen3');
   const nameInput = document.getElementById('nameInput');
   const signupBtn = document.getElementById('signupBtn');
   const envelopeName = document.getElementById('envelopeName');
+  const invMain = document.getElementById('invMain');
+  const invitationCard = document.getElementById('invitationCard');
+  const invContinue = document.getElementById('invContinue');
+  const invContinueBtn = document.getElementById('invContinueBtn');
   let userName = '';
 
   nameInput.addEventListener('input', () => {
@@ -1117,64 +2184,117 @@
     screen1.classList.add('leaving');
     setTimeout(() => {
       screen1.classList.add('hidden');
+      screenInvite.classList.remove('hidden');
+
+      invMain.innerHTML =
+        '一位来自 <span class="highlight-from">勃更第酒庄</span> 的女士，<br>' +
+        '邀请美丽善良的 <span class="highlight-name">「' + userName + '」</span><br>' +
+        '前往 <span class="highlight-place">幽暗城堡</span> 参加舞会。';
+
+      setTimeout(() => invitationCard.classList.add('show'), 200);
+      setTimeout(() => invContinue.classList.add('show'), 1800);
+    }, 800);
+  });
+
+  invContinueBtn.addEventListener('click', () => {
+    screenInvite.classList.add('leaving');
+    setTimeout(() => {
+      screenInvite.classList.add('hidden');
       screen2.classList.remove('hidden');
       envelopeName.textContent = '致 ' + userName;
       setTimeout(() => envelopeName.classList.add('show'), 600);
     }, 800);
   });
 
-  /* ===== 第二屏 ===== */
+  /* ===== 第二屏：火漆 ===== */
   const envelope = document.getElementById('envelope');
   const hint = document.getElementById('hint');
-  const whisperOut = document.getElementById('whisperOut');
   const feather = document.getElementById('feather');
   const sealWraps = document.querySelectorAll('.seal-wrap');
+  const letterOverlay = document.getElementById('letterOverlay');
+  const letterActions = document.getElementById('letterActions');
+  const letterBtn = document.getElementById('letterBtn');
+  const waxShards = document.getElementById('waxShards');
   let picked = false;
 
-  const choices = {
-    red: { whisper: '猜对了有奖励。猜错了……也有。', crack: 'crack-red' },
-    gold: { whisper: '你希望我信，那我就信。你希望我不信……那我也没办法。', crack: 'melt-gold' },
-    black: { whisper: '不重要？那你为什么还盯着这行字看这么久。', crack: 'still-black' }
-  };
+  function createShards() {
+    waxShards.innerHTML = '';
+    const colors = ['#ffb0cc','#e0709a','#a02850','#ffd6e6','#c04070'];
+    for (let i = 0; i < 14; i++) {
+      const shard = document.createElement('div');
+      shard.className = 'shard';
+      const angle = (Math.PI * 2 * i) / 14 + Math.random() * 0.5;
+      const dist = 60 + Math.random() * 80;
+      shard.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+      shard.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+      shard.style.background = colors[i % colors.length];
+      shard.style.width = (4 + Math.random() * 6) + 'px';
+      shard.style.height = (4 + Math.random() * 6) + 'px';
+      shard.style.animationDelay = (i * 20) + 'ms';
+      waxShards.appendChild(shard);
+    }
+  }
 
   sealWraps.forEach(seal => {
     seal.addEventListener('click', e => {
       e.stopPropagation();
       if (picked) return;
       picked = true;
-      const choice = seal.dataset.choice;
-      const config = choices[choice];
+
+      playSealPress();
       seal.classList.add('picked');
       sealWraps.forEach(s => { if (s !== seal) s.classList.add('faded'); });
       feather.classList.add('fall');
-      hint.textContent = '信封在动...';
+      hint.textContent = '信封在打开...';
       hint.classList.add('changed');
-      envelope.classList.add(config.crack);
+      createShards();
+
       setTimeout(() => {
-        whisperOut.textContent = config.whisper;
-        whisperOut.classList.add('show');
-      }, 800);
+        envelope.classList.add('opening');
+        playEnvelopeOpen();
+      }, 500);
+
       setTimeout(() => {
-        whisperOut.classList.remove('show');
         screen2.classList.add('leaving');
         setTimeout(() => {
           screen2.classList.add('hidden');
-          screen3.classList.remove('hidden');
-        }, 800);
-      }, 4200);
+          letterOverlay.classList.add('show');
+          setTimeout(() => playPaperRustle(), 200);
+          revealLetterLines();
+        }, 900);
+      }, 3200);
     });
   });
   envelope.addEventListener('click', e => e.stopPropagation());
 
-  /* ===== 第三屏：抽签 + 重抽 ===== */
+  function revealLetterLines() {
+    const lines = document.querySelectorAll('.letter-line');
+    lines.forEach(line => {
+      const delay = parseInt(line.dataset.delay) || 0;
+      setTimeout(() => { line.classList.add('show'); }, delay + 600);
+    });
+    setTimeout(() => { letterActions.classList.add('show'); }, 8800);
+  }
+
+  letterBtn.addEventListener('click', () => {
+    letterOverlay.classList.remove('show');
+    setTimeout(() => {
+      letterOverlay.style.display = 'none';
+      screen3.classList.remove('hidden');
+    }, 1000);
+  });
+
+  /* ===== 第三屏：抽签 + 恭喜卡片 ===== */
   const sticks = document.querySelectorAll('.stick');
   const sticksFan = document.getElementById('sticksFan');
+  const drawEyebrow = document.getElementById('drawEyebrow');
+  const drawTitle = document.getElementById('drawTitle');
   const drawSub = document.getElementById('drawSub');
-  const partnerScroll = document.getElementById('partnerScroll');
-  const scrollRoman = document.getElementById('scrollRoman');
-  const scrollName = document.getElementById('scrollName');
-  const scrollDesc = document.getElementById('scrollDesc');
-  const scrollTags = document.getElementById('scrollTags');
+  const congrats = document.getElementById('congrats');
+  const congratsName = document.getElementById('congratsName');
+  const cardName = document.getElementById('cardName');
+  const cardDesc = document.getElementById('cardDesc');
+  const cardTags = document.getElementById('cardTags');
   const redrawBtn = document.getElementById('redrawBtn');
   const redrawNote = document.getElementById('redrawNote');
   const continueBtn = document.getElementById('continueBtn');
@@ -1184,50 +2304,42 @@
 
   const partners = [
     {
-      roman: 'I · Bad Woman',
-      name: '坏女人',
-      desc: '她说：<span class="hl">读懂女朋友的心思不是应该的吗</span>。<br>她会在舞池里突然靠近你，问你信不信她。<br>你说信，她说不信；你说不信，她说那就进来看看。',
-      tags: ['坏女人特辑', '钓系暧昧', '恶趣味调戏', '占有欲爆发']
+      name: '扑朔迷离的坏女人',
+      desc: '她说：<span class="quote">读懂喜欢的人的心思不是应该的吗。</span>她会在舞池里突然靠近你，问你信不信她。你说信，她说不信；你说不信，她说那就进来看看。',
+      tags: ['坏女人特辑', '钓系暧昧', '恶趣调戏', '醋意爆发']
     },
     {
-      roman: 'II · Sister',
-      name: '姐姐',
-      desc: '她说：<span class="hl">不贴会死不贴会死</span>。<br>她会在舞会中途把你拉进角落，问你微信衣服裤子结婚证要不要。<br>你说太直接了，她说那窝在沙发上你看书我看你。',
-      tags: ['姐姐姐姐', '粘人重力系', '爱意收不住', '一见钟情']
+      name: '温柔的年上姐姐',
+      desc: '她说：<span class="quote">小心这杯酒，很烈。</span>她会在舞会中途把你拉进角落，问你今晚要不要私会。你说太直接了，她说那窝在沙发上看书我看你。',
+      tags: ['温柔姐姐', '善解人意', '爱如潮水', '一见钟情']
     },
     {
-      roman: 'III · Amber',
-      name: '琥珀',
-      desc: '她说：<span class="hl">色字头上一把刀</span>。<br>她会在最后一支舞时告诉你，她只是不再年轻了。<br>你说那又怎样，她说那就一言为定。',
-      tags: ['欲壑难填', '色字头上一把刀', '我听不见', '一言为定']
+      name: '琥珀本色',
+      desc: '她说：<span class="quote">色字头上一把刀。</span>她会在最后一支舞时告诉你，她还想见到你。你说总会再见的，她说那就一言为定。',
+      tags: ['上瘾患者', '独一无二', '暧昧迭代', '一言为定']
     },
     {
-      roman: 'IV · Mad Dog',
-      name: '狂犬',
-      desc: '她说：<span class="hl">得寸进尺，占有欲爆发狂犬</span>。<br>她会在舞池里把你圈在怀里，不让别人靠近。<br>你说太粘了，她说那正好，我不同意你走就是不成立。',
-      tags: ['得寸进尺', '占有欲爆发', '粘人重力系', '狂犬']
+      name: '色欲狂犬',
+      desc: '她说：<span class="quote">如果我想得寸进尺怎么办。</span>她会在舞池里把你圈在怀里，不让别人靠近。你说太粘了，她说那正好，我不同意你走就是不成立。',
+      tags: ['得寸进尺', '占有欲爆发', '粘人重力系', '狂犬炸毛']
     },
     {
-      roman: 'V · Mommy',
-      name: '妈咪',
-      desc: '她说：<span class="hl">中高擦，亲昵隐晦，暧昧热烈</span>。<br>她会在舞会中途给你递一杯香槟，指尖擦过你的手。<br>你说她太会了，她说对你总是欲壑难填。',
-      tags: ['中高擦', '亲昵隐晦', '暧昧热烈', '欲壑难填']
+      name: '恶趣横生的妈咪',
+      desc: '她说：<span class="quote">我看见你的妙脆角泛红了哦。</span>她会在舞会中途给你递一杯香槟，指尖擦过你的手。你说她太会了，她说对你总是欲壑难填。',
+      tags: ['中高擦类', '亲昵隐晦', '暧昧热烈', '欲壑难填']
     },
     {
-      roman: 'VI · Wife',
-      name: '妻子',
-      desc: '她说：<span class="hl">我只是不再年轻了，留不住我的妻子了</span>。<br>她会在舞会散场时独自坐在角落，看着你。<br>你说你还在，她说那说好，我们一言为定。',
-      tags: ['不再年轻', '留不住', '脆弱自白', '一言为定']
+      name: '久别重逢的自卑妻子',
+      desc: '她说：<span class="quote">我不再年轻了，也留不住我的妻子了吗。</span>她会在舞会散场时独自坐在角落，看着你。你说你还在，她说那说好，我们永不分离。',
+      tags: ['自卑年上', '泛红眼角', '脆弱自白', '矢志不渝']
     },
     {
-      roman: 'VII · A Promise',
-      name: '一言为定',
-      desc: '她说：<span class="hl">其实我真的缺你很久了</span>。<br>她会在舞会最后一支曲子响起时，向你伸出手。<br>你说好，她说那说好，我们一言为定。',
-      tags: ['缺你很久', '期待你', '契合', '一言为定']
+      name: '命中注定的crush',
+      desc: '她说：<span class="quote">其实我真的缺你很久了。</span>她会在舞会最后一支曲子响起时，向你伸出手。你说好，她说那说好，我们一言为定。',
+      tags: ['魂牵梦绕', '醉生梦死', '契合灵魂', '缘分使然']
     }
   ];
 
-  /* 抽签 */
   sticks.forEach(stick => {
     stick.addEventListener('click', () => {
       if (drawn) return;
@@ -1239,44 +2351,56 @@
       stick.classList.add('drawn');
       sticks.forEach(s => { if (s !== stick) s.classList.add('faded'); });
 
-      drawSub.textContent = '— your partner —';
-
       setTimeout(() => {
-        scrollRoman.textContent = partner.roman;
-        scrollName.textContent = partner.name;
-        scrollDesc.innerHTML = partner.desc;
-        scrollTags.innerHTML = partner.tags.map(t => `<span>${t}</span>`).join('');
-        partnerScroll.classList.add('show');
+        sticksFan.classList.add('hide');
+        drawEyebrow.style.opacity = '0';
+        drawTitle.style.opacity = '0';
+        drawSub.style.opacity = '0';
+
+        setTimeout(() => {
+          drawEyebrow.style.display = 'none';
+          drawTitle.style.display = 'none';
+          drawSub.style.display = 'none';
+
+          congratsName.textContent = partner.name;
+          cardName.textContent = partner.name;
+          cardDesc.innerHTML = partner.desc;
+          cardTags.innerHTML = partner.tags.map(t => `<span>${t}</span>`).join('');
+          congrats.classList.add('show');
+        }, 600);
       }, 900);
     });
   });
 
-  /* 重新选签 */
   redrawBtn.addEventListener('click', () => {
     if (!drawn) return;
+    congrats.classList.remove('show');
 
-    // 签页收起
-    partnerScroll.classList.remove('show');
-
-    // 签放回扇形
     setTimeout(() => {
+      drawEyebrow.style.display = '';
+      drawTitle.style.display = '';
+      drawSub.style.display = '';
+      setTimeout(() => {
+        drawEyebrow.style.opacity = '';
+        drawTitle.style.opacity = '';
+        drawSub.style.opacity = '';
+      }, 50);
+
+      sticksFan.classList.remove('hide');
       sticks.forEach(s => {
         s.classList.remove('drawn');
         s.classList.remove('faded');
       });
       drawn = false;
 
-      // 更新提示
-      drawSub.textContent = 'Seven sticks · One fate';
+      drawSub.textContent = 'Seven feathers · One fate';
 
-      // 烛光随重抽次数变亮
       redrawCount++;
       sticksFan.classList.remove('rewarm', 'rewarm2', 'rewarm3');
       if (redrawCount === 1) sticksFan.classList.add('rewarm');
       else if (redrawCount === 2) sticksFan.classList.add('rewarm2');
       else if (redrawCount >= 3) sticksFan.classList.add('rewarm3');
 
-      // 重抽提示
       redrawNote.textContent = redrawCount === 1
         ? '— 换一支？她不会介意的 —'
         : redrawCount === 2
@@ -1286,7 +2410,6 @@
     }, 600);
   });
 
-  /* 继续进入舞池 */
   continueBtn.addEventListener('click', () => {
     console.log('进入舞池 · 可接后续长页面');
     alert('舞池已开启 · 后续页面可在此接入');
