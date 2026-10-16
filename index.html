@@ -2,631 +2,1212 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>我的个人主页</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我和你belike↑ · 舞会邀请</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{width:100%;overflow-x:hidden;scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
-  body{font-family:"FangSong","仿宋","FangSong_GB2312","华文仿宋","STFangsong",serif;color:#4a3b45;line-height:1.9;background:#fdf6f8;}
-
-  #physics-bg{
-    position:fixed;
-    inset:0;
-    width:100vw;
-    height:100vh;
-    pointer-events:none;
-    z-index:0;
-    opacity:.7;
+  html{scroll-behavior:smooth;}
+  body{
+    background:#0a0608;
+    font-family:'Noto Serif SC',serif;
+    color:#e8dcc8;
+    overflow-x:hidden;
+    min-height:100vh;
   }
 
-  .page-wrap{
-    position:relative;
-    height:100vh;height:100dvh;
-    overflow-y:auto;overflow-x:hidden;
-    scroll-snap-type:y proximity;
-    -webkit-overflow-scrolling:touch;
-    z-index:1;
+  /* ===== 舞厅背景 ===== */
+  .ballroom-bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(180,130,80,.12), transparent 55%),
+      radial-gradient(ellipse at 20% 80%, rgba(120,60,100,.1), transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(80,60,120,.08), transparent 55%),
+      linear-gradient(180deg,#0a0608,#120a0e 50%,#0a0608);
+  }
+  .ballroom-bg::after{
+    content:'';position:absolute;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+    opacity:.4;
   }
 
-  section{
-    min-height:100vh;min-height:100dvh;
-    display:flex;flex-direction:column;justify-content:center;align-items:center;
-    padding:80px 20px;text-align:center;scroll-snap-align:start;position:relative;
+  .dust{position:fixed;inset:0;z-index:1;pointer-events:none;}
+  .dust span{
+    position:absolute;border-radius:50%;
+    background:#ffd8a0;opacity:.25;
+    animation:floatDust linear infinite;
   }
-  section:nth-child(odd){background:rgba(253,246,248,.82);}
-  section:nth-child(even){background:rgba(247,238,242,.82);}
-
-  h2{font-size:32px;font-weight:700;color:#6b4a58;margin-bottom:24px;position:relative;padding-bottom:16px;}
-  h2::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:50px;height:3px;background:#c98da8;border-radius:2px;}
-  p{font-size:17px;max-width:620px;color:#8a6a78;}
-
-  .tag{display:inline-block;background:#c98da8;color:#fff;padding:8px 20px;border-radius:24px;margin:6px;font-size:15px;font-weight:500;}
-
-  #home{background:rgba(253,246,248,.82);overflow:hidden;}
-  .glow{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55;pointer-events:none;z-index:0;}
-  .glow-1{width:320px;height:320px;background:#e8a8c0;top:-80px;left:-60px;animation:floatGlow1 18s ease-in-out infinite;}
-  .glow-2{width:260px;height:260px;background:#c98da8;bottom:-60px;right:-40px;animation:floatGlow2 22s ease-in-out infinite;}
-  .glow-3{width:200px;height:200px;background:#f0c8d8;top:40%;left:50%;animation:floatGlow3 20s ease-in-out infinite;}
-  @keyframes floatGlow1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(60px,40px) scale(1.15);}}
-  @keyframes floatGlow2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-50px,-30px) scale(1.2);}}
-  @keyframes floatGlow3{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-40%,-60%) scale(1.1);}}
-
-  .popup-box{
-    position:relative;z-index:2;
-    background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(249,232,239,.9));
-    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    border-radius:20px;
-    padding:56px 44px;
-    box-shadow:0 12px 40px rgba(201,141,168,.25),inset 0 0 30px rgba(255,255,255,.5);
-    max-width:440px;
-    width:calc(100% - 72px);
-    margin:0 36px;
-    border:1px solid rgba(201,141,168,.25);
-    opacity:0;transform:scale(.85) translateY(20px);
-    animation:popupIn .9s ease-out 1s forwards;
-    overflow:hidden;
+  @keyframes floatDust{
+    0%{transform:translateY(100vh) scale(0);opacity:0;}
+    10%{opacity:.35;}
+    90%{opacity:.35;}
+    100%{transform:translateY(-10vh) scale(1);opacity:0;}
   }
-  @keyframes popupIn{to{opacity:1;transform:scale(1) translateY(0);}}
 
-  .watermark-stage{
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    z-index:0;
-    overflow:hidden;
+  /* ===== 通用屏 ===== */
+  .screen{
+    position:relative;z-index:5;
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:3rem 1.5rem;
+    transition:opacity 1s ease, transform 1s ease;
   }
-  .danmaku-line{
-    position:absolute;
-    white-space:nowrap;
-    font-family:"Georgia",serif;
+  .screen.leaving{opacity:0;transform:scale(.94);pointer-events:none;}
+  .screen.hidden{display:none;}
+
+  .eyebrow{
+    font-family:'Cormorant Garamond',serif;
     font-style:italic;
-    font-size:14px;
-    letter-spacing:1px;
-    color:#a86988;
-    opacity:.5;
-    animation:danmakuMove linear infinite;
-    will-change:transform;
+    font-size:.85rem;
+    color:#8a7560;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    margin-bottom:2.5rem;
+    opacity:0;
+    animation:fadeIn 1.5s ease .3s forwards;
   }
-  @keyframes danmakuMove{
-    0%{transform:translateX(100%);}
-    100%{transform:translateX(-100%);}
+  @keyframes fadeIn{to{opacity:1;}}
+
+  /* ===== 第一屏：报名 ===== */
+  .signup-title{
+    font-family:'Long Cang',cursive;
+    font-size:clamp(1.6rem,4.5vw,2.4rem);
+    color:#f0e0c8;
+    margin-bottom:.8rem;
+    text-shadow:0 0 30px rgba(255,200,140,.2);
+    opacity:0;
+    animation:fadeIn 1.5s ease .6s forwards;
   }
-
-  .popup-box > *:not(.watermark-stage){position:relative;z-index:1;}
-
-  .popup-box h1{font-size:24px;color:#6b4a58;margin-bottom:32px;line-height:1.7;font-weight:700;min-height:2em;}
-
-  .sub-text{font-size:13px;color:#b58a9c;letter-spacing:2px;margin:-16px 0 24px;opacity:0;transition:opacity .8s ease 1.4s;font-weight:700;}
-  .popup-box.ready .sub-text{opacity:1;}
-
-  .cursor{display:inline-block;width:2px;height:1em;background:#c98da8;vertical-align:-.15em;margin-left:2px;animation:blink .8s infinite;}
-  @keyframes blink{50%{opacity:0;}}
-
-  .popup-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;transition:opacity .6s ease;}
-  .popup-btns.show{opacity:1;}
-  .popup-btns button{font-family:inherit;font-size:15px;font-weight:600;padding:12px 30px;border-radius:30px;border:2px solid #c98da8;cursor:pointer;transition:transform .3s ease,background .25s,color .25s;touch-action:manipulation;}
-  .btn-yes{background:#c98da8;color:#fff;}
-  .btn-yes:active{background:#b07a94;transform:scale(.97);}
-  .btn-no{background:transparent;color:#c98da8;position:relative;}
-  .btn-no:active{background:rgba(201,141,168,.12);}
-
-  #about{background:rgba(255,245,248,.82);padding:60px 20px;justify-content:flex-start;}
-  .about-page{width:100%;max-width:520px;display:flex;flex-direction:column;gap:28px;text-align:left;}
-  .part-one{display:flex;align-items:flex-end;gap:20px;}
-  .avatar-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
-  .avatar{width:110px;height:110px;object-fit:cover;border-radius:50%;border:4px solid #c98da8;box-shadow:0 8px 24px rgba(201,141,168,.3);}
-  .avatar-name-row{display:flex;align-items:center;gap:6px;margin-top:10px;}
-  .avatar-name{font-size:18px;font-weight:700;color:#6b4a58;letter-spacing:2px;}
-  .name-arrow{font-size:14px;color:#c98da8;line-height:1;}
-  .name-content{font-size:16px;color:#8a6a78;margin-left:4px;}
-  .one-line{font-family:"FangSong","仿宋","FangSong_GB2312","华文仿宋","STFangsong",serif;font-size:20px;color:#6b4a58;line-height:1.8;padding-bottom:8px;}
-
-  .dialog-box{position:relative;background:#fff;border:1px solid rgba(201,141,168,.25);border-radius:16px;padding:20px 24px 20px 56px;box-shadow:0 6px 20px rgba(201,141,168,.12);font-size:17px;color:#8a6a78;opacity:0;transform:translateY(16px);animation:fadeUp .7s ease-out forwards;}
-  .dialog-box .heart-icon{position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:18px;}
-  .dialog-box:nth-child(2) .heart-icon{color:#d9a7b0;}
-  .dialog-box:nth-child(3) .heart-icon{color:#cfa3b5;}
-  .dialog-box:nth-child(4) .heart-icon{color:#c48da4;}
-  .dialog-box:nth-child(2){animation-delay:.3s;}
-  .dialog-box:nth-child(3){animation-delay:.6s;}
-  .dialog-box:nth-child(4){animation-delay:.9s;}
-  @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
-
-  .click-paw{
-    position:fixed;
-    pointer-events:none;
-    z-index:9999;
-    transform:translate(-50%,-50%);
-    animation:clickPawFly ease-out forwards;
-    user-select:none;
-    opacity:.35;
-  }
-  @keyframes clickPawFly{
-    0%{opacity:.4;transform:translate(-50%,-50%) scale(0.4) rotate(var(--rot,0deg));}
-    60%{opacity:.3;}
-    100%{opacity:0;transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1.3) rotate(var(--rot,0deg));}
+  .signup-sub{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.9rem;
+    color:#8a7560;
+    letter-spacing:.2em;
+    margin-bottom:2.5rem;
+    opacity:0;
+    animation:fadeIn 1.5s ease .9s forwards;
   }
 
-  #musicToggle{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    width:48px;
-    height:48px;
-    border-radius:50%;
-    border:2px solid #b00020;
-    background:rgba(255,255,255,.92);
-    color:#b00020;
-    font-size:20px;
+  .name-input-wrap{
+    position:relative;
+    width:min(360px,85vw);
+    margin-bottom:2rem;
+    opacity:0;
+    animation:fadeIn 1.5s ease 1.2s forwards;
+  }
+  .name-input{
+    width:100%;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid #6a5540;
+    padding:1rem .5rem;
+    font-family:'Long Cang',cursive;
+    font-size:1.5rem;
+    color:#f0e0c8;
+    text-align:center;
+    outline:none;
+    transition:border-color .4s ease;
+  }
+  .name-input::placeholder{
+    color:#4a3a28;
+    font-style:italic;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1rem;
+  }
+  .name-input:focus{
+    border-bottom-color:#c0a070;
+    box-shadow:0 8px 20px -10px rgba(200,160,100,.4);
+  }
+  .name-underline{
+    position:absolute;
+    bottom:0;left:50%;
+    width:0;height:1px;
+    background:linear-gradient(90deg,transparent,#ffb7d0,transparent);
+    transition:width .6s ease, left .6s ease;
+  }
+  .name-input:focus ~ .name-underline{width:100%;left:0;}
+
+  .signup-btn{
+    margin-top:1rem;
+    padding:.9rem 2.5rem;
+    background:transparent;
+    border:1px solid #6a5540;
+    border-radius:40px;
+    color:#c0a070;
+    font-family:'Noto Serif SC',serif;
+    font-size:.85rem;
+    letter-spacing:.3em;
     cursor:pointer;
-    z-index:9998;
-    box-shadow:0 6px 20px rgba(176,0,32,.3);
-    transition:background .3s, color .3s, transform .3s;
+    transition:all .4s ease;
+    opacity:0;
+    animation:fadeIn 1.5s ease 1.5s forwards;
+  }
+  .signup-btn:hover:not(:disabled){
+    border-color:#ffb7d0;
+    color:#ffd8e8;
+    box-shadow:0 0 30px rgba(255,155,192,.3);
+    transform:translateY(-2px);
+  }
+  .signup-btn:disabled{opacity:.3;cursor:not-allowed;}
+
+  /* ===== 第二屏：信封 + 火漆 ===== */
+  .envelope-stage{
+    position:relative;
+    width:min(420px,90vw);
+    margin-bottom:4rem;
+    perspective:1200px;
+  }
+
+  .feather{
+    position:absolute;
+    top:-80px;right:-24px;
+    width:76px;height:200px;
+    z-index:10;
+    transform-origin:bottom center;
+    animation:featherSway 5s ease-in-out infinite;
+    pointer-events:none;
+    filter:drop-shadow(0 6px 12px rgba(0,0,0,.7));
+    transition:transform 1s ease, opacity 1s ease;
+  }
+  @keyframes featherSway{
+    0%,100%{transform:rotate(-6deg) translateY(0);}
+    50%{transform:rotate(4deg) translateY(-6px);}
+  }
+  .feather.fall{animation:featherFall 1.2s ease forwards;}
+  @keyframes featherFall{
+    0%{transform:rotate(-6deg) translateY(0);}
+    30%{transform:rotate(-40deg) translateY(20px) translateX(-30px);}
+    60%{transform:rotate(-80deg) translateY(60px) translateX(-60px);}
+    100%{transform:rotate(-110deg) translateY(140px) translateX(-80px);opacity:0;}
+  }
+
+  .envelope{
+    position:relative;
+    width:100%;
+    aspect-ratio:1.6/1;
+    transition:transform .6s ease;
+    transform-style:preserve-3d;
+  }
+  .envelope-body{
+    position:absolute;inset:0;
+    background:linear-gradient(160deg,#e8d8c0,#d4c0a0);
+    border-radius:6px;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,.8),
+      0 0 0 1px rgba(200,170,120,.3),
+      inset 0 0 60px rgba(180,140,90,.15);
+    overflow:hidden;
+  }
+  .envelope-body::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:60%;
+    background:linear-gradient(160deg,#f0e0c8,#dcc8a8);
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    box-shadow:inset 0 -2px 4px rgba(0,0,0,.1);
+    z-index:2;
+  }
+
+  .watermark{
+    position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.18;
+    background-image:
+      radial-gradient(circle at 25% 35%, transparent 0 18px, rgba(120,80,40,.35) 18px 19px, transparent 19px),
+      radial-gradient(circle at 75% 65%, transparent 0 22px, rgba(120,80,40,.3) 22px 23px, transparent 23px),
+      radial-gradient(circle at 50% 50%, transparent 0 40px, rgba(120,80,40,.15) 40px 41px, transparent 41px),
+      repeating-linear-gradient(45deg, transparent 0 12px, rgba(140,100,60,.08) 12px 13px);
+    mask-image:radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .watermark-text{
+    position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%) rotate(-18deg);
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:clamp(3rem,8vw,5rem);
+    color:rgba(140,90,50,.12);
+    letter-spacing:.3em;z-index:1;pointer-events:none;white-space:nowrap;font-weight:300;
+  }
+
+  .envelope-q{
+    position:absolute;bottom:14%;left:50%;transform:translateX(-50%);
+    font-family:'Long Cang',cursive;
+    font-size:clamp(1.1rem,3.2vw,1.5rem);
+    color:#5a3a28;white-space:nowrap;letter-spacing:.08em;z-index:4;
+    text-shadow:0 1px 2px rgba(255,255,255,.4);
+  }
+
+  .envelope-name{
+    position:absolute;top:18%;left:50%;transform:translateX(-50%);
+    font-family:'Long Cang',cursive;
+    font-size:clamp(1rem,2.8vw,1.3rem);
+    color:#8a2040;
+    letter-spacing:.05em;z-index:4;
+    opacity:0;
+    transition:opacity 1s ease;
+    text-shadow:0 1px 2px rgba(255,255,255,.3);
+  }
+  .envelope-name.show{opacity:1;}
+
+  /* ===== 火漆 ===== */
+  .seals{
+    position:absolute;
+    bottom:-50px;left:50%;transform:translateX(-50%);
+    display:flex;gap:1.6rem;
+    z-index:8;
+  }
+  .seal-wrap{
+    position:relative;
+    width:82px;height:82px;
+    cursor:pointer;
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+    transform-style:preserve-3d;
+  }
+  .seal-wrap:hover{transform:translateY(-10px) scale(1.1) rotateX(-8deg);}
+  .seal-wrap:active{transform:translateY(-5px) scale(1.03) rotateX(-4deg);}
+
+  .wax{
+    position:absolute;inset:0;
+    border-radius:52% 48% 50% 50% / 48% 52% 48% 52%;
+    transition:all .35s ease;
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)' opacity='0.25'/%3E%3C/svg%3E"),
+      radial-gradient(circle at 38% 32%, rgba(255,255,255,.25), transparent 45%);
+  }
+  .wax::before{
+    content:'';position:absolute;inset:-5px -3px -4px -3px;
+    border-radius:48% 52% 46% 54% / 52% 46% 54% 46%;
+    opacity:.75;filter:blur(1.5px);z-index:-1;
+  }
+  .wax::after{
+    content:'';position:absolute;bottom:-6px;left:18%;
+    width:20px;height:26px;
+    border-radius:48% 52% 50% 50% / 60% 60% 40% 40%;
+    opacity:.85;filter:blur(1.2px);
+    box-shadow:0 2px 4px rgba(0,0,0,.4);
+  }
+
+  .seal-wrap.red .wax{
+    background:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n1)' opacity='0.22'/%3E%3C/svg%3E"),
+      radial-gradient(circle at 35% 28%, #e04868 0%, #c03050 30%, #8a1830 75%, #5a0a18 100%);
+    box-shadow:
+      0 8px 20px rgba(140,20,50,.6), 0 2px 4px rgba(0,0,0,.4),
+      inset 0 -4px 10px rgba(60,0,20,.7), inset 0 4px 8px rgba(255,180,200,.35),
+      inset 0 0 20px rgba(255,100,140,.2);
+  }
+  .seal-wrap.red .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,180,200,.5), transparent 65%);}
+  .seal-wrap.red .wax::after{background:linear-gradient(180deg,#a02848,#7a1830);}
+  .seal-wrap.red:hover .wax{
+    box-shadow:0 12px 32px rgba(200,40,80,.8), 0 2px 4px rgba(0,0,0,.4),
+      inset 0 -4px 10px rgba(60,0,20,.7), inset 0 4px 10px rgba(255,200,220,.45),
+      inset 0 0 30px rgba(255,120,160,.3);
+  }
+
+  .seal-wrap.gold .wax{
+    background:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)' opacity='0.22'/%3E%3C/svg%3E"),
+      radial-gradient(circle at 35% 28%, #f4d070 0%, #e0b040 30%, #a07818 75%, #6a4a08 100%);
+    box-shadow:
+      0 8px 20px rgba(140,100,20,.6), 0 2px 4px rgba(0,0,0,.4),
+      inset 0 -4px 10px rgba(60,40,0,.7), inset 0 4px 8px rgba(255,250,200,.45),
+      inset 0 0 20px rgba(255,220,120,.25);
+  }
+  .seal-wrap.gold .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,250,200,.6), transparent 65%);}
+  .seal-wrap.gold .wax::after{background:linear-gradient(180deg,#c0a030,#8a6010);}
+  .seal-wrap.gold:hover .wax{
+    box-shadow:0 12px 32px rgba(220,180,60,.8), 0 2px 4px rgba(0,0,0,.4),
+      inset 0 -4px 10px rgba(60,40,0,.7), inset 0 4px 10px rgba(255,250,220,.55),
+      inset 0 0 30px rgba(255,230,140,.35);
+  }
+
+  .seal-wrap.black .wax{
+    background:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n3'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n3)' opacity='0.3'/%3E%3C/svg%3E"),
+      radial-gradient(circle at 35% 28%, #6a5a68 0%, #4a3a48 30%, #2a1e28 75%, #0e080e 100%);
+    box-shadow:
+      0 8px 20px rgba(0,0,0,.75), 0 2px 4px rgba(0,0,0,.5),
+      inset 0 -4px 10px rgba(0,0,0,.9), inset 0 4px 8px rgba(180,160,180,.25),
+      inset 0 0 20px rgba(140,120,150,.15);
+  }
+  .seal-wrap.black .wax::before{background:radial-gradient(circle at 40% 35%, rgba(180,160,180,.3), transparent 65%);}
+  .seal-wrap.black .wax::after{background:linear-gradient(180deg,#2a1e28,#0e080e);}
+  .seal-wrap.black:hover .wax{
+    box-shadow:0 12px 32px rgba(80,60,80,.85), 0 2px 4px rgba(0,0,0,.5),
+      inset 0 -4px 10px rgba(0,0,0,.9), inset 0 4px 10px rgba(200,180,200,.35),
+      inset 0 0 30px rgba(160,140,170,.25);
+  }
+
+  .imprint{
+    position:absolute;inset:14px;
+    border-radius:48% 52% 50% 50% / 52% 48% 52% 48%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Noto Serif SC',serif;
+    font-size:.68rem;line-height:1.2;text-align:center;
+    letter-spacing:.03em;z-index:3;font-weight:500;
+    transition:all .3s ease;
+  }
+  .seal-wrap.red .imprint{color:#ffd8e0;text-shadow:0 1px 1px rgba(0,0,0,.6),0 -1px 0 rgba(255,200,220,.3);}
+  .seal-wrap.gold .imprint{color:#3a2a08;text-shadow:0 1px 1px rgba(255,250,200,.5),0 -1px 0 rgba(60,40,0,.4);}
+  .seal-wrap.black .imprint{color:#d0c0d0;text-shadow:0 1px 1px rgba(0,0,0,.8),0 -1px 0 rgba(200,180,200,.2);}
+  .imprint::before{
+    content:'';position:absolute;inset:7px;
+    border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
+    border:1px solid rgba(0,0,0,.3);
+    box-shadow:inset 0 2px 3px rgba(0,0,0,.35), inset 0 -1px 2px rgba(255,255,255,.15);
+    transition:all .3s ease;
+  }
+  .seal-wrap.gold .imprint::before{
+    border-color:rgba(80,60,0,.4);
+    box-shadow:inset 0 2px 3px rgba(80,60,0,.4), inset 0 -1px 2px rgba(255,250,200,.3);
+  }
+  .seal-wrap.black .imprint::before{border-color:rgba(0,0,0,.5);}
+
+  .fingerprint{
+    position:absolute;top:22%;right:18%;
+    width:18px;height:14px;border-radius:50%;opacity:.15;
+    background:repeating-radial-gradient(circle at 50% 50%, transparent 0 1.5px, rgba(0,0,0,.5) 1.5px 2px);
+    transform:rotate(-20deg);pointer-events:none;z-index:4;
+  }
+
+  .seal-wrap.picked{
+    transform:translateY(-18px) scale(1.18) rotateX(-12deg);
+    animation:sealPress .7s ease;
+  }
+  @keyframes sealPress{
+    0%{transform:translateY(-18px) scale(1.18) rotateX(-12deg);}
+    25%{transform:translateY(-8px) scale(.94) rotateX(0deg);}
+    55%{transform:translateY(-18px) scale(1.2) rotateX(-12deg);}
+    100%{transform:translateY(-18px) scale(1.18) rotateX(-12deg);}
+  }
+  .seal-wrap.picked .wax{
+    border-radius:54% 46% 50% 50% / 46% 54% 46% 54%;
+    transform:scale(.95);
+  }
+  .seal-wrap.picked .wax::after{transform:scale(1.5) translateY(2px);opacity:1;}
+  .seal-wrap.picked .imprint{transform:scale(.98);}
+  .seal-wrap.faded{opacity:.2;transform:scale(.85);pointer-events:none;filter:blur(.5px);}
+
+  .hint{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.9rem;
+    color:#8a7560;
+    letter-spacing:.2em;
+    text-align:center;
+    transition:opacity .5s ease;
+  }
+  .hint.changed{color:#c0a070;}
+
+  .envelope.crack-red .envelope-body::after{
+    content:'';position:absolute;top:0;bottom:0;left:50%;
+    width:2px;
+    background:linear-gradient(180deg,transparent,#ff6a8a,#c03050,transparent);
+    box-shadow:0 0 20px #ff6a8a;
+    transform:translateX(-50%) scaleY(0);
+    animation:crackRed 1.2s ease forwards;z-index:5;
+  }
+  @keyframes crackRed{to{transform:translateX(-50%) scaleY(1);}}
+  .envelope.melt-gold .envelope-body{animation:meltGold 1.4s ease forwards;}
+  @keyframes meltGold{
+    0%{filter:brightness(1);}
+    50%{filter:brightness(1.8) sepia(.3);transform:scale(1.02);}
+    100%{filter:brightness(2.5) sepia(.5);transform:scale(1.05);opacity:.6;}
+  }
+  .envelope.still-black .envelope-body{animation:stillBlack 3s ease forwards;}
+  @keyframes stillBlack{
+    0%,80%{transform:translate(0,0) rotate(0deg);}
+    82%{transform:translate(-2px,0) rotate(-.5deg);}
+    84%{transform:translate(2px,0) rotate(.5deg);}
+    86%{transform:translate(-2px,0) rotate(-.5deg);}
+    88%{transform:translate(2px,0) rotate(.5deg);}
+    90%{transform:translate(0,0) rotate(0deg);}
+    92%{transform:scale(1.05);}
+    100%{transform:scale(1.1);opacity:0;}
+  }
+
+  .whisper-out{
+    position:fixed;top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    z-index:50;
+    font-family:'Long Cang',cursive;
+    font-size:clamp(1.4rem,4vw,2.2rem);
+    color:#f0e0c8;text-align:center;
+    pointer-events:none;opacity:0;
+    transition:opacity .8s ease, transform .8s ease;
+    text-shadow:0 0 30px rgba(255,200,140,.4);
+    white-space:nowrap;
+    padding:0 1rem;
+  }
+  .whisper-out.show{opacity:1;transform:translate(-50%,-50%) scale(1.05);}
+
+  /* ============================================
+     第三屏：抽签（欧美风升级版）
+     ============================================ */
+  .draw-title{
+    font-family:'Playfair Display',serif;
+    font-weight:600;
+    font-size:clamp(1.8rem,4.5vw,2.6rem);
+    color:#f0e0c8;
+    margin-bottom:.5rem;
+    letter-spacing:.05em;
+    text-shadow:0 0 30px rgba(255,200,140,.2);
+  }
+  .draw-title .ornament{
+    display:block;
+    font-size:.7em;
+    color:#8a7050;
+    margin-top:.5rem;
+    letter-spacing:.4em;
+    font-weight:400;
+    font-style:italic;
+  }
+  .draw-sub{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.9rem;
+    color:#8a7560;
+    letter-spacing:.25em;
+    margin-bottom:2.5rem;
+    text-transform:uppercase;
+  }
+
+  /* ===== 扇形签架 ===== */
+  .sticks-fan{
+    position:relative;
+    width:min(680px,96vw);
+    height:420px;
+    margin-bottom:1rem;
     display:flex;
     justify-content:center;
-    align-items:center;
-    font-family:"Georgia",serif;
-    line-height:1;
-    user-select:none;
-    -webkit-tap-highlight-color:transparent;
+    align-items:flex-end;
+    perspective:1400px;
   }
-  #musicToggle:hover{background:#b00020;color:#fff;transform:scale(1.08);}
-  #musicToggle.playing .icon{animation:musicSpin 3s linear infinite;display:inline-block;}
-  @keyframes musicSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 
-  @media (max-width:600px){
-    section{padding:50px 16px;}
-    .popup-box{padding:44px 24px;border-radius:18px;width:calc(100% - 72px);margin:0 36px;}
-    .popup-box h1{font-size:20px;}
-    .popup-btns button{font-size:14px;padding:11px 22px;}
-    h2{font-size:26px;}
-    p{font-size:16px;}
-    #about{padding:50px 18px;}
-    .about-page{gap:22px;}
-    .part-one{flex-direction:column;align-items:flex-start;gap:14px;}
-    .avatar-wrap{flex-direction:row;align-items:center;gap:12px;}
-    .avatar{width:80px;height:80px;}
-    .avatar-name-row{margin-top:0;}
-    .avatar-name{font-size:17px;}
-    .name-content{font-size:15px;}
-    .one-line{font-size:18px;padding-bottom:0;}
-    .dialog-box{font-size:16px;padding:18px 20px 18px 48px;}
-    .dialog-box .heart-icon{left:16px;font-size:16px;}
-    .danmaku-line{font-size:12px;}
-    #musicToggle{right:14px;bottom:14px;width:44px;height:44px;font-size:18px;}
+  /* 每支签 */
+  .stick{
+    position:absolute;
+    bottom:0;
+    width:52px;
+    height:340px;
+    cursor:pointer;
+    transform-origin:bottom center;
+    transition:transform .55s cubic-bezier(.34,1.56,.64,1),
+               filter .4s ease,
+               opacity .4s ease;
+    transform-style:preserve-3d;
+  }
+
+  /* 7 支签的扇形角度 */
+  .stick:nth-child(1){--angle:-42deg;--tx:-240px;--ty:20px;}
+  .stick:nth-child(2){--angle:-28deg;--tx:-160px;--ty:4px;}
+  .stick:nth-child(3){--angle:-14deg;--tx:-80px;--ty:-6px;}
+  .stick:nth-child(4){--angle:0deg;--tx:0px;--ty:-10px;}
+  .stick:nth-child(5){--angle:14deg;--tx:80px;--ty:-6px;}
+  .stick:nth-child(6){--angle:28deg;--tx:160px;--ty:4px;}
+  .stick:nth-child(7){--angle:42deg;--tx:240px;--ty:20px;}
+
+  .stick .stick-inner{
+    position:absolute;
+    inset:0;
+    border-radius:26px 26px 6px 6px;
+    background:
+      linear-gradient(180deg,
+        #faf3e4 0%,
+        #f4ead4 20%,
+        #ede0c4 60%,
+        #e0d0b0 100%);
+    box-shadow:
+      0 14px 36px rgba(0,0,0,.65),
+      inset 0 0 0 1px rgba(180,150,110,.5),
+      inset -6px 0 14px rgba(120,90,60,.25),
+      inset 6px 0 14px rgba(120,90,60,.25);
+    transform: rotate(var(--angle)) translateX(var(--tx)) translateY(var(--ty));
+    transition:inherit;
+    overflow:hidden;
+  }
+
+  /* 烫金边 */
+  .stick .stick-inner::before{
+    content:'';
+    position:absolute;
+    top:14px;bottom:14px;
+    left:10px;right:10px;
+    border:1px solid rgba(180,140,70,.55);
+    border-radius:18px 18px 4px 4px;
+    pointer-events:none;
+  }
+  /* 烫金双线 */
+  .stick .stick-inner::after{
+    content:'';
+    position:absolute;
+    top:22px;bottom:22px;
+    left:16px;right:16px;
+    border:1px solid rgba(180,140,70,.3);
+    border-radius:14px 14px 3px 3px;
+    pointer-events:none;
+  }
+
+  /* 顶部装饰：花体编号 */
+  .stick-num{
+    position:absolute;
+    top:38px;left:50%;
+    transform:translateX(-50%) rotate(var(--angle));
+    transform-origin:bottom center;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:1.1rem;
+    color:#8a5a28;
+    letter-spacing:.05em;
+    transition:inherit;
+    z-index:2;
+    text-shadow:0 1px 0 rgba(255,255,255,.6);
+  }
+
+  /* 签上竖排小字 */
+  .stick-label{
+    position:absolute;
+    top:80px;left:50%;
+    transform:translateX(-50%) rotate(var(--angle)) translateY(0);
+    transform-origin:bottom center;
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.72rem;
+    letter-spacing:.35em;
+    color:#8a6a48;
+    transition:inherit;
+    z-index:2;
+    white-space:nowrap;
+    opacity:.75;
+  }
+
+  /* 底部火漆小点 */
+  .stick-seal{
+    position:absolute;
+    bottom:24px;left:50%;
+    width:14px;height:14px;
+    border-radius:50%;
+    transform:translateX(-50%) rotate(var(--angle));
+    transform-origin:bottom center;
+    background:radial-gradient(circle at 35% 35%, #c03050, #7a1830);
+    box-shadow:0 2px 6px rgba(0,0,0,.5), inset 0 0 4px rgba(255,200,220,.3);
+    transition:inherit;
+    z-index:2;
+  }
+
+  /* hover：整支签抽出一点 */
+  .stick:hover .stick-inner,
+  .stick:hover .stick-num,
+  .stick:hover .stick-label,
+  .stick:hover .stick-seal{
+    transform: rotate(var(--angle)) translateX(var(--tx)) translateY(calc(var(--ty) - 22px));
+  }
+  .stick:hover .stick-inner{
+    box-shadow:
+      0 22px 48px rgba(0,0,0,.75),
+      0 0 40px rgba(255,200,140,.25),
+      inset 0 0 0 1px rgba(200,170,120,.6),
+      inset -6px 0 14px rgba(120,90,60,.25),
+      inset 6px 0 14px rgba(120,90,60,.25);
+  }
+  .stick:hover .stick-num{
+    color:#c03050;
+  }
+
+  /* 抽中的签：完全抽出 */
+  .stick.drawn .stick-inner,
+  .stick.drawn .stick-num,
+  .stick.drawn .stick-label,
+  .stick.drawn .stick-seal{
+    transform: rotate(0deg) translateX(0) translateY(-120px);
+  }
+  .stick.drawn{z-index:20;}
+  .stick.drawn .stick-inner{
+    box-shadow:
+      0 30px 60px rgba(0,0,0,.8),
+      0 0 60px rgba(255,200,140,.4),
+      inset 0 0 0 1px rgba(220,180,120,.7);
+  }
+
+  /* 未抽中的签：淡出 */
+  .stick.faded{opacity:.12;filter:blur(1px);pointer-events:none;}
+
+  /* ===== 舞伴签页（欧美风） ===== */
+  .partner-scroll{
+    position:relative;
+    max-width:600px;
+    width:100%;
+    margin-top:1.5rem;
+    opacity:0;
+    transform:translateY(30px);
+    transition:opacity 1.2s ease, transform 1.2s ease;
+    pointer-events:none;
+  }
+  .partner-scroll.show{
+    opacity:1;transform:translateY(0);pointer-events:auto;
+  }
+
+  /* 签页外框：多层边框 + 烫金 */
+  .scroll-frame{
+    position:relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.06), transparent 60%),
+      linear-gradient(160deg, #1a1015 0%, #12080d 50%, #0e0609 100%);
+    border:1px solid #6a5030;
+    border-radius:2px;
+    padding:3rem 2.5rem;
+    box-shadow:
+      0 30px 80px rgba(0,0,0,.85),
+      0 0 0 1px rgba(180,140,70,.2),
+      inset 0 0 80px rgba(120,80,40,.15);
+    overflow:hidden;
+  }
+
+  /* 内层金线框 */
+  .scroll-frame::before{
+    content:'';
+    position:absolute;
+    inset:12px;
+    border:1px solid rgba(180,140,70,.45);
+    border-radius:1px;
+    pointer-events:none;
+  }
+  .scroll-frame::after{
+    content:'';
+    position:absolute;
+    inset:18px;
+    border:1px solid rgba(180,140,70,.2);
+    border-radius:1px;
+    pointer-events:none;
+  }
+
+  /* 四角装饰 */
+  .corner{
+    position:absolute;
+    width:24px;height:24px;
+    border-color:#b08a40;
+    border-style:solid;
+    border-width:0;
+    opacity:.7;
+  }
+  .corner.tl{top:8px;left:8px;border-top-width:1px;border-left-width:1px;}
+  .corner.tr{top:8px;right:8px;border-top-width:1px;border-right-width:1px;}
+  .corner.bl{bottom:8px;left:8px;border-bottom-width:1px;border-left-width:1px;}
+  .corner.br{bottom:8px;right:8px;border-bottom-width:1px;border-right-width:1px;}
+
+  /* 顶部小装饰 */
+  .scroll-ornament{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:.7rem;
+    color:#8a7050;
+    letter-spacing:.5em;
+    text-transform:uppercase;
+    margin-bottom:1.5rem;
+  }
+  .scroll-ornament::before,
+  .scroll-ornament::after{
+    content:'✦';
+    margin:0 .8rem;
+    color:#b08a40;
+    font-size:.6rem;
+    vertical-align:middle;
+  }
+
+  /* 舞伴编号 */
+  .scroll-roman{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:1rem;
+    color:#b08a40;
+    letter-spacing:.4em;
+    margin-bottom:1rem;
+  }
+
+  /* 舞伴名（花体大字） */
+  .scroll-name{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:clamp(2rem,5.5vw,3rem);
+    background:linear-gradient(180deg,#f4e0b0 0%, #d8b070 50%, #a07838 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    letter-spacing:.05em;
+    margin-bottom:1.5rem;
+    text-shadow:0 0 40px rgba(220,180,100,.25);
+    line-height:1.2;
+  }
+
+  /* 分隔线 */
+  .scroll-divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.8rem;
+    margin:1.5rem auto;
+    max-width:280px;
+  }
+  .scroll-divider::before,
+  .scroll-divider::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg,transparent,#8a7050,transparent);
+  }
+  .scroll-divider .diamond{
+    color:#b08a40;
+    font-size:.6rem;
+  }
+
+  /* 描述 */
+  .scroll-desc{
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.05rem;
+    line-height:2;
+    color:#c8b8a8;
+    text-align:center;
+    font-style:italic;
+    margin-bottom:2rem;
+  }
+  .scroll-desc .hl{
+    color:#ffb7d0;
+    font-style:normal;
+    font-family:'Noto Serif SC',serif;
+    font-size:.95rem;
+    letter-spacing:.03em;
+  }
+
+  /* 标签 */
+  .scroll-tags{
+    display:flex;flex-wrap:wrap;gap:.6rem;
+    justify-content:center;
+    margin-bottom:1.5rem;
+  }
+  .scroll-tags span{
+    font-family:'Cormorant Garamond',serif;
+    font-size:.75rem;
+    color:#c0a070;
+    border:1px solid rgba(180,140,70,.5);
+    padding:.35rem 1rem;
+    border-radius:0;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    font-style:italic;
+    background:rgba(180,140,70,.05);
+  }
+
+  /* 底部火漆 */
+  .scroll-seal{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:1.5rem;
+  }
+  .scroll-seal .mini-wax{
+    width:36px;height:36px;
+    border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
+    background:radial-gradient(circle at 35% 30%, #c03050, #7a1830);
+    box-shadow:
+      0 4px 10px rgba(0,0,0,.6),
+      inset 0 -2px 4px rgba(60,0,20,.6),
+      inset 0 2px 4px rgba(255,180,200,.3);
+    display:flex;align-items:center;justify-content:center;
+    color:#ffd0d8;
+    font-size:.9rem;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+  }
+
+  /* 继续按钮 */
+  .continue-btn{
+    margin-top:2rem;
+    padding:.8rem 2rem;
+    background:transparent;
+    border:1px solid #6a5540;
+    color:#c0a070;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.85rem;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all .4s ease;
+  }
+  .continue-btn:hover{
+    border-color:#ffb7d0;
+    color:#ffd8e8;
+    box-shadow:0 0 30px rgba(255,155,192,.25);
+    letter-spacing:.4em;
+  }
+
+  @media(max-width:720px){
+    .sticks-fan{height:340px;}
+    .stick{width:44px;height:280px;}
+    .stick:nth-child(1){--tx:-180px;}
+    .stick:nth-child(2){--tx:-120px;}
+    .stick:nth-child(3){--tx:-60px;}
+    .stick:nth-child(5){--tx:60px;}
+    .stick:nth-child(6){--tx:120px;}
+    .stick:nth-child(7){--tx:180px;}
+    .stick-num{font-size:.9rem;top:30px;}
+    .stick-label{font-size:.6rem;top:64px;}
+    .scroll-frame{padding:2rem 1.5rem;}
+  }
+
+  @media(max-width:520px){
+    .sticks-fan{height:300px;}
+    .stick{width:38px;height:250px;}
+    .stick:nth-child(1){--tx:-140px;--angle:-46deg;}
+    .stick:nth-child(2){--tx:-94px;}
+    .stick:nth-child(3){--tx:-48px;}
+    .stick:nth-child(5){--tx:48px;}
+    .stick:nth-child(6){--tx:94px;}
+    .stick:nth-child(7){--tx:140px;--angle:46deg;}
+    .stick-label{display:none;}
   }
 </style>
 </head>
 <body>
 
-<canvas id="physics-bg"></canvas>
+<div class="ballroom-bg"></div>
+<div class="dust" id="dust"></div>
 
-<iframe
-  id="musicPlayer"
-  frameborder="no"
-  border="0"
-  marginwidth="0"
-  marginheight="0"
-  width="0"
-  height="0"
-  src="//music.163.com/outchain/player?type=2&id=1890530686&auto=1&height=0"
-  style="position:fixed;width:0;height:0;border:0;visibility:hidden;">
-</iframe>
+<div class="whisper-out" id="whisperOut"></div>
 
-<button id="musicToggle" class="playing" aria-label="播放/暂停音乐">
-  <span class="icon">❚❚</span>
-</button>
+<!-- ===== 第一屏：报名 ===== -->
+<section class="screen" id="screen1">
+  <div class="eyebrow">— before the ball —</div>
+  <div class="signup-title">写下你的名字</div>
+  <div class="signup-sub">— sign here to enter —</div>
 
-<div class="page-wrap">
+  <div class="name-input-wrap">
+    <input type="text" class="name-input" id="nameInput" placeholder="你的名字" maxlength="12" autocomplete="off">
+    <div class="name-underline"></div>
+  </div>
 
-  <section id="home">
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
-    <div class="glow glow-3"></div>
-    <div class="popup-box" id="popupBox">
-      <div class="watermark-stage" id="danmakuStage" aria-hidden="true"></div>
+  <button class="signup-btn" id="signupBtn" disabled>进入舞会</button>
+</section>
 
-      <h1><span id="typeText"></span><span class="cursor" id="typeCursor"></span></h1>
-      <p class="sub-text">怕也没用</p>
-      <div class="popup-btns" id="popupBtns">
-        <button class="btn-yes" onclick="chooseYes()">我不怕</button>
-        <button class="btn-no" id="btnNo">我怕了</button>
-      </div>
+<!-- ===== 第二屏：信封 + 火漆 ===== -->
+<section class="screen hidden" id="screen2">
+  <div class="eyebrow">— before the ball —</div>
+
+  <div class="envelope-stage">
+    <div class="feather" id="feather">
+      <svg viewBox="0 0 76 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="featherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f4e8d0"/>
+            <stop offset="50%" stop-color="#d8c0a0"/>
+            <stop offset="100%" stop-color="#a08868"/>
+          </linearGradient>
+        </defs>
+        <path d="M38 12 Q54 44 56 88 Q56 132 44 176 Q40 188 38 194 Q36 188 32 176 Q20 132 20 88 Q22 44 38 12 Z"
+              fill="url(#featherGrad)" stroke="#8a7050" stroke-width=".6"/>
+        <line x1="38" y1="12" x2="38" y2="194" stroke="#7a6040" stroke-width="1.3"/>
+        <path d="M38 34 Q46 50 48 66" stroke="#9a8060" stroke-width=".5" fill="none" opacity=".6"/>
+        <path d="M38 34 Q30 50 28 66" stroke="#9a8060" stroke-width=".5" fill="none" opacity=".6"/>
+        <path d="M38 66 Q47 82 49 98" stroke="#9a8060" stroke-width=".5" fill="none" opacity=".6"/>
+        <path d="M38 66 Q29 82 27 98" stroke="#9a8060" stroke-width=".5" fill="none" opacity=".6"/>
+        <path d="M38 98 Q46 114 47 130" stroke="#9a8060" stroke-width=".5" fill="none" opacity=".6"/>
+        <path d="M38 98 Q30 114 29 130" stroke="#9a8060" stroke-width=".5" fill="none" opacity=".6"/>
+        <path d="M38 182 L41 196 L38 192 L35 196 Z" fill="#3a2a18"/>
+      </svg>
     </div>
-  </section>
 
-  <section id="about">
-    <div class="about-page">
-      <div class="part-one">
-        <div class="avatar-wrap">
-          <img src="avatar.jpg" alt="琥珀" class="avatar">
-          <div class="avatar-name-row">
-            <span class="avatar-name">琥珀</span>
-            <span class="name-arrow">▶</span>
-            <span class="name-content">11111111</span>
-          </div>
+    <div class="envelope" id="envelope">
+      <div class="envelope-body">
+        <div class="watermark"></div>
+        <div class="watermark-text">琥珀</div>
+        <div class="envelope-name" id="envelopeName"></div>
+        <div class="envelope-q">有传言说我是坏女人？</div>
+      </div>
+
+      <div class="seals">
+        <div class="seal-wrap red" data-choice="red">
+          <div class="wax"></div>
+          <div class="imprint">你猜<br>我信不信</div>
+          <div class="fingerprint"></div>
         </div>
-        <div class="one-line">直到世界毁灭，独留你我二人</div>
+        <div class="seal-wrap gold" data-choice="gold">
+          <div class="wax"></div>
+          <div class="imprint">你希望<br>我信吗</div>
+          <div class="fingerprint"></div>
+        </div>
+        <div class="seal-wrap black" data-choice="black">
+          <div class="wax"></div>
+          <div class="imprint">我信不信<br>重要吗</div>
+          <div class="fingerprint"></div>
+        </div>
       </div>
-      <div class="dialog-box"><span class="heart-icon">❤</span>“aaaa”</div>
-      <div class="dialog-box"><span class="heart-icon">❤</span>“bbbbb”</div>
-      <div class="dialog-box"><span class="heart-icon">❤</span>“cccc”</div>
     </div>
-  </section>
+  </div>
 
-  <section id="skills">
-    <h2>我的标签</h2>
-    <div>
-      <span class="tag">爱学习</span>
-      <span class="tag">爱折腾</span>
-      <span class="tag">GitHub 新手</span>
+  <div class="hint" id="hint">选一个火漆 · 盖上你的回答</div>
+</section>
+
+<!-- ===== 第三屏：抽签（欧美风） ===== -->
+<section class="screen hidden" id="screen3">
+  <div class="eyebrow">— the ball begins —</div>
+  <div class="draw-title">
+    抽取你的舞伴
+    <span class="ornament">— draw your partner —</span>
+  </div>
+  <div class="draw-sub" id="drawSub">Seven sticks · One fate</div>
+
+  <!-- 扇形签架 -->
+  <div class="sticks-fan" id="sticksFan">
+    <div class="stick" data-partner="0">
+      <div class="stick-inner"></div>
+      <div class="stick-num">I</div>
+      <div class="stick-label">BAD WOMAN</div>
+      <div class="stick-seal"></div>
     </div>
-  </section>
+    <div class="stick" data-partner="1">
+      <div class="stick-inner"></div>
+      <div class="stick-num">II</div>
+      <div class="stick-label">SISTER</div>
+      <div class="stick-seal"></div>
+    </div>
+    <div class="stick" data-partner="2">
+      <div class="stick-inner"></div>
+      <div class="stick-num">III</div>
+      <div class="stick-label">AMBER</div>
+      <div class="stick-seal"></div>
+    </div>
+    <div class="stick" data-partner="3">
+      <div class="stick-inner"></div>
+      <div class="stick-num">IV</div>
+      <div class="stick-label">MAD DOG</div>
+      <div class="stick-seal"></div>
+    </div>
+    <div class="stick" data-partner="4">
+      <div class="stick-inner"></div>
+      <div class="stick-num">V</div>
+      <div class="stick-label">MOMMY</div>
+      <div class="stick-seal"></div>
+    </div>
+    <div class="stick" data-partner="5">
+      <div class="stick-inner"></div>
+      <div class="stick-num">VI</div>
+      <div class="stick-label">WIFE</div>
+      <div class="stick-seal"></div>
+    </div>
+    <div class="stick" data-partner="6">
+      <div class="stick-inner"></div>
+      <div class="stick-num">VII</div>
+      <div class="stick-label">A PROMISE</div>
+      <div class="stick-seal"></div>
+    </div>
+  </div>
 
-  <section id="contact">
-    <h2>联系我</h2>
-    <p>邮箱：你的邮箱@example.com</p>
-  </section>
+  <!-- 舞伴签页 -->
+  <div class="partner-scroll" id="partnerScroll">
+    <div class="scroll-frame">
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
 
-</div>
+      <div class="scroll-ornament">Your Partner</div>
+      <div class="scroll-roman" id="scrollRoman"></div>
+      <div class="scroll-name" id="scrollName"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+      <div class="scroll-divider">
+        <span class="diamond">◆</span>
+      </div>
+
+      <div class="scroll-desc" id="scrollDesc"></div>
+
+      <div class="scroll-tags" id="scrollTags"></div>
+
+      <div class="scroll-seal">
+        <div class="mini-wax">♡</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="continue-btn" id="continueBtn">继续 · 进入舞池</button>
+    </div>
+  </div>
+</section>
 
 <script>
-  /* ============================================================
-     一、物理引擎：100 个普通字符（不含 LOVE）+ 3 组 LOVE
-     ============================================================ */
-  (function initPhysics(){
-    const canvas = document.getElementById('physics-bg');
-    const ctx = canvas.getContext('2d');
-
-    let W = window.innerWidth;
-    let H = window.innerHeight;
-    canvas.width = W;
-    canvas.height = H;
-
-    const { Engine, World, Bodies, Body } = Matter;
-
-    const engine = Engine.create();
-    engine.gravity.x = 0;
-    engine.gravity.y = 0.75;
-
-    const world = engine.world;
-
-    const wallOpts = { isStatic: true, render: { visible: false } };
-    let walls = [
-      Bodies.rectangle(W / 2, H + 30, W + 200, 60, wallOpts),
-      Bodies.rectangle(-30, H / 2, 60, H * 2, wallOpts),
-      Bodies.rectangle(W + 30, H / 2, 60, H * 2, wallOpts),
-    ];
-    World.add(world, walls);
-
-    /* 普通字符池：不含 L O V E */
-    const LETTERS = ['Y','U','M','I','S','H','R','T','W','N','C','F','D','G','B','K','P','A','X','Z'];
-
-    /* 普通字符：暗酒红 */
-    const normalColors = ['#722f37','#8b3a44','#5c1f2a','#6b2530','#8e3540','#4f1a24','#5a2028'];
-
-    /* LOVE 字符：深黑红 */
-    const LOVE_COLOR = '#2b0000';
-
-    const bodies = [];
-
-    function makeNormalLetter(x, y){
-      const size = 28 + Math.random() * 10;
-      const ch = LETTERS[Math.floor(Math.random() * LETTERS.length)];
-      const color = normalColors[Math.floor(Math.random() * normalColors.length)];
-
-      const body = Bodies.circle(x, y, size / 2, {
-        restitution: 0.35,
-        friction: 0.4,
-        frictionAir: 0.015,
-        render: { visible: false }
-      });
-      body.customChar = ch;
-      body.customColor = color;
-      body.customSize = size;
-      body.customIsLove = false;
-      body.customAngle = (Math.random() - 0.5) * 1.2;
-
-      Body.setAngle(body, body.customAngle);
-      bodies.push(body);
-      return body;
-    }
-
-    function makeLoveLetter(x, y, ch){
-      const size = 44 + Math.random() * 10;
-
-      const body = Bodies.circle(x, y, size / 2, {
-        restitution: 0.35,
-        friction: 0.4,
-        frictionAir: 0.015,
-        render: { visible: false }
-      });
-      body.customChar = ch;
-      body.customColor = LOVE_COLOR;
-      body.customSize = size;
-      body.customIsLove = true;
-      body.customAngle = (Math.random() - 0.5) * 0.4;
-
-      Body.setAngle(body, body.customAngle);
-      bodies.push(body);
-      return body;
-    }
-
-    /* ===== 100 个普通字符（不含 LOVE）===== */
-    const INITIAL_COUNT = 100;
-    for (let i = 0; i < INITIAL_COUNT; i++) {
-      const x = 40 + Math.random() * (W - 80);
-      const y = -100 - Math.random() * 1800;
-      World.add(world, makeNormalLetter(x, y));
-    }
-
-    /* ===== 仅 3 组 LOVE ===== */
-    const LOVE_GROUPS = 3;
-    for (let g = 0; g < LOVE_GROUPS; g++) {
-      const baseX = 60 + Math.random() * (W - 120);
-      const baseY = -200 - g * 600 - Math.random() * 300;
-      const word = ['L','O','V','E'];
-      for (let k = 0; k < 4; k++){
-        const x = baseX + (k - 1.5) * 40 + (Math.random() - 0.5) * 20;
-        const y = baseY - k * 30;
-        World.add(world, makeLoveLetter(x, y, word[k]));
-      }
-    }
-
-    /* ===== 每 1.2 秒补充 3~4 个普通字符，上限 180（不含 LOVE）===== */
-    setInterval(() => {
-      const normalCount = bodies.filter(b => !b.customIsLove).length;
-      if (normalCount >= 180) return;
-      const batch = 3 + Math.floor(Math.random() * 2);
-      for (let i = 0; i < batch; i++) {
-        const x = 40 + Math.random() * (W - 80);
-        const y = -60 - Math.random() * 120;
-        World.add(world, makeNormalLetter(x, y));
-      }
-    }, 1200);
-
-    function renderLetters(){
-      ctx.clearRect(0, 0, W, H);
-      for (const b of bodies){
-        const { x, y } = b.position;
-        const angle = b.angle;
-        const size = b.customSize;
-        const isLove = b.customIsLove;
-
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-
-        if (isLove){
-          ctx.font = `italic 900 ${size}px Georgia, serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = b.customColor;
-          ctx.globalAlpha = 1;
-          ctx.fillText(b.customChar, 0, 0);
-        } else {
-          ctx.font = `italic bold ${size}px Georgia, serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = b.customColor;
-          ctx.globalAlpha = 0.85;
-          ctx.fillText(b.customChar, 0, 0);
-        }
-
-        ctx.restore();
-      }
-    }
-
-    function loop(){
-      Engine.update(engine, 1000 / 60);
-      renderLetters();
-      requestAnimationFrame(loop);
-    }
-    loop();
-
-    window.addEventListener('resize', () => {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      canvas.width = W;
-      canvas.height = H;
-
-      World.remove(world, walls);
-      walls = [
-        Bodies.rectangle(W / 2, H + 30, W + 200, 60, wallOpts),
-        Bodies.rectangle(-30, H / 2, 60, H * 2, wallOpts),
-        Bodies.rectangle(W + 30, H / 2, 60, H * 2, wallOpts)
-      ];
-      World.add(world, walls);
-    });
-
-    function handleOrientation(e){
-      const gamma = e.gamma || 0;
-      const beta  = e.beta  || 0;
-      const gx = Math.max(-1, Math.min(1, gamma / 45));
-      const gy = Math.max(-1, Math.min(1, beta  / 90)) + 1;
-      engine.gravity.x = gx * 0.8 * 0.75;
-      engine.gravity.y = Math.max(0.15, gy * 0.75);
-    }
-
-    function requestOrientationPermission(){
-      if (typeof DeviceOrientationEvent !== 'undefined' &&
-          typeof DeviceOrientationEvent.requestPermission === 'function'){
-        DeviceOrientationEvent.requestPermission()
-          .then(state => {
-            if (state === 'granted'){
-              window.addEventListener('deviceorientation', handleOrientation);
-            }
-          })
-          .catch(() => {});
-      } else {
-        window.addEventListener('deviceorientation', handleOrientation);
-      }
-    }
-
-    window.addEventListener('touchstart', requestOrientationPermission, { once: true });
-    window.addEventListener('click', requestOrientationPermission, { once: true });
-
-  })();
-
-  /* ============================================================
-     二、弹幕水印
-     ============================================================ */
-  (function initDanmaku(){
-    const stage = document.getElementById('danmakuStage');
-
-    const phrases = [
-      'Stay with me','Hold me tight','You and I','Just tonight',
-      'Don\'t let go','Come closer','Only us','Be mine',
-      'Say it again','One more time','I\'m yours','Stay a little',
-      'Look at me','Don\'t look away','Just us two','Almost there'
-    ];
-
-    const LINE_COUNT = 6;
-    for (let i = 0; i < LINE_COUNT; i++){
-      const line = document.createElement('div');
-      line.className = 'danmaku-line';
-
-      const count = 2 + Math.floor(Math.random() * 2);
-      let text = '';
-      for (let k = 0; k < count; k++){
-        text += phrases[Math.floor(Math.random() * phrases.length)];
-        if (k < count - 1) text += '  ·  ';
-      }
-      line.textContent = text;
-
-      line.style.top = (8 + i * 15) + '%';
-
-      const dur = 14 + Math.random() * 12;
-      line.style.animationDuration = dur + 's';
-      line.style.animationDelay = (-Math.random() * dur) + 's';
-      line.style.opacity = (0.35 + Math.random() * 0.25).toFixed(2);
-
-      stage.appendChild(line);
-    }
-  })();
-
-  /* ============================================================
-     三、打字机
-     ============================================================ */
-  const fullText='“如果我是坏女人怎么办”';
-  const typeEl=document.getElementById('typeText');
-  const cursorEl=document.getElementById('typeCursor');
-  const btnsEl=document.getElementById('popupBtns');
-  const popupBox=document.getElementById('popupBox');
-  let ti=0;
-  (function typeLoop(){
-    if(ti<=fullText.length){
-      typeEl.textContent=fullText.slice(0,ti++);
-      setTimeout(typeLoop,120);
-    }else{
-      cursorEl.style.display='none';
-      popupBox.classList.add('ready');
-      btnsEl.classList.add('show');
-    }
-  })();
-
-  /* ============================================================
-     四、按钮躲避
-     ============================================================ */
-  const btnNo=document.getElementById('btnNo');
-  let dodgeCount=0;
-  btnNo.addEventListener('mouseenter',()=>{
-    btnNo.style.transform=`translate(${(Math.random()-.5)*140}px,${(Math.random()-.5)*80}px)`;
-  });
-  btnNo.addEventListener('touchstart',e=>{
-    e.preventDefault();
-    btnNo.style.transform=`translate(${(Math.random()-.5)*140}px,${(Math.random()-.5)*80}px)`;
-  },{passive:false});
-  btnNo.addEventListener('click',()=>{
-    dodgeCount++;
-    if(dodgeCount>=3){chooseYes();}
-  });
-
-  function chooseYes(){document.getElementById('about').scrollIntoView({behavior:'smooth'});}
-  function chooseNo(){document.getElementById('about').scrollIntoView({behavior:'smooth'});}
-
-  /* ============================================================
-     五、点击特效：淡淡的猫爪印记
-     ============================================================ */
-  const pawColors = ['#722f37','#8b3a44','#a04a55','#6b2530','#8e3540'];
-
-  function pawSVG(color, opacity){
-    return `
-      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-        <g fill="${color}" fill-opacity="${opacity}">
-          <ellipse cx="20" cy="26" rx="9" ry="7.5"/>
-          <ellipse cx="10" cy="14" rx="3.6" ry="4.6"/>
-          <ellipse cx="17" cy="9"  rx="3.6" ry="4.6"/>
-          <ellipse cx="24" cy="9"  rx="3.6" ry="4.6"/>
-          <ellipse cx="31" cy="14" rx="3.6" ry="4.6"/>
-        </g>
-      </svg>
-    `;
+  /* ===== 浮尘 ===== */
+  const dust = document.getElementById('dust');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('span');
+    const size = Math.random() * 3 + 1;
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.animationDuration = (Math.random() * 20 + 15) + 's';
+    s.style.animationDelay = (Math.random() * 20) + 's';
+    dust.appendChild(s);
   }
 
-  document.addEventListener('click', function (e) {
-    const num = 3 + Math.floor(Math.random() * 3);
+  /* ===== 第一屏 ===== */
+  const screen1 = document.getElementById('screen1');
+  const screen2 = document.getElementById('screen2');
+  const screen3 = document.getElementById('screen3');
+  const nameInput = document.getElementById('nameInput');
+  const signupBtn = document.getElementById('signupBtn');
+  const envelopeName = document.getElementById('envelopeName');
+  let userName = '';
 
-    for (let i = 0; i < num; i++) {
-      const paw = document.createElement('span');
-      paw.className = 'click-paw';
-
-      const color = pawColors[Math.floor(Math.random() * pawColors.length)];
-      const svgOpacity = 0.25 + Math.random() * 0.25;
-      paw.innerHTML = pawSVG(color, svgOpacity);
-
-      const offsetX = (Math.random() - 0.5) * 80;
-      const offsetY = (Math.random() - 0.5) * 80;
-
-      paw.style.left = (e.clientX + offsetX) + 'px';
-      paw.style.top  = (e.clientY + offsetY) + 'px';
-
-      const rot = (Math.random() - 0.5) * 70;
-      paw.style.setProperty('--rot', rot + 'deg');
-
-      paw.style.setProperty('--tx', (Math.random() - 0.5) * 80 + 'px');
-      paw.style.setProperty('--ty', (-10 - Math.random() * 50) + 'px');
-
-      const scale = 0.6 + Math.random() * 0.5;
-      paw.style.width  = (40 * scale) + 'px';
-      paw.style.height = (40 * scale) + 'px';
-
-      paw.style.animationDuration = (0.9 + Math.random() * 0.6) + 's';
-
-      document.body.appendChild(paw);
-      setTimeout(() => paw.remove(), 1600);
-    }
+  nameInput.addEventListener('input', () => {
+    userName = nameInput.value.trim();
+    signupBtn.disabled = userName.length === 0;
+  });
+  nameInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && userName.length > 0) signupBtn.click();
   });
 
-  /* ============================================================
-     六、音乐播放按钮
-     ============================================================ */
-  (function initMusicToggle(){
-    const btn = document.getElementById('musicToggle');
-    const player = document.getElementById('musicPlayer');
-    const icon = btn.querySelector('.icon');
-    let playing = true;
+  signupBtn.addEventListener('click', () => {
+    if (!userName) return;
+    screen1.classList.add('leaving');
+    setTimeout(() => {
+      screen1.classList.add('hidden');
+      screen2.classList.remove('hidden');
+      envelopeName.textContent = '致 ' + userName;
+      setTimeout(() => envelopeName.classList.add('show'), 600);
+    }, 800);
+  });
 
-    function tryAutoPlay(){
-      player.src = "//music.163.com/outchain/player?type=2&id=1890530686&auto=1&height=0";
-    }
-    tryAutoPlay();
+  /* ===== 第二屏 ===== */
+  const envelope = document.getElementById('envelope');
+  const hint = document.getElementById('hint');
+  const whisperOut = document.getElementById('whisperOut');
+  const feather = document.getElementById('feather');
+  const sealWraps = document.querySelectorAll('.seal-wrap');
+  let picked = false;
 
-    btn.addEventListener('click', () => {
-      playing = !playing;
-      if (playing){
-        player.src = "//music.163.com/outchain/player?type=2&id=1890530686&auto=1&height=0";
-        icon.textContent = '❚❚';
-        btn.classList.add('playing');
-      } else {
-        player.src = "";
-        icon.textContent = '♪';
-        btn.classList.remove('playing');
-      }
+  const choices = {
+    red: { whisper: '猜对了有奖励。猜错了……也有。', crack: 'crack-red' },
+    gold: { whisper: '你希望我信，那我就信。你希望我不信……那我也没办法。', crack: 'melt-gold' },
+    black: { whisper: '不重要？那你为什么还盯着这行字看这么久。', crack: 'still-black' }
+  };
+
+  sealWraps.forEach(seal => {
+    seal.addEventListener('click', e => {
+      e.stopPropagation();
+      if (picked) return;
+      picked = true;
+      const choice = seal.dataset.choice;
+      const config = choices[choice];
+      seal.classList.add('picked');
+      sealWraps.forEach(s => { if (s !== seal) s.classList.add('faded'); });
+      feather.classList.add('fall');
+      hint.textContent = '信封在动...';
+      hint.classList.add('changed');
+      envelope.classList.add(config.crack);
+      setTimeout(() => {
+        whisperOut.textContent = config.whisper;
+        whisperOut.classList.add('show');
+      }, 800);
+      setTimeout(() => {
+        whisperOut.classList.remove('show');
+        screen2.classList.add('leaving');
+        setTimeout(() => {
+          screen2.classList.add('hidden');
+          screen3.classList.remove('hidden');
+        }, 800);
+      }, 4200);
     });
-  })();
-</script>
+  });
+  envelope.addEventListener('click', e => e.stopPropagation());
 
+  /* ===== 第三屏：抽签 ===== */
+  const sticks = document.querySelectorAll('.stick');
+  const drawSub = document.getElementById('drawSub');
+  const partnerScroll = document.getElementById('partnerScroll');
+  const scrollRoman = document.getElementById('scrollRoman');
+  const scrollName = document.getElementById('scrollName');
+  const scrollDesc = document.getElementById('scrollDesc');
+  const scrollTags = document.getElementById('scrollTags');
+  let drawn = false;
+
+  const partners = [
+    {
+      roman: 'I · Bad Woman',
+      name: '坏女人',
+      desc: '她说：<span class="hl">读懂女朋友的心思不是应该的吗</span>。<br>她会在舞池里突然靠近你，问你信不信她。<br>你说信，她说不信；你说不信，她说那就进来看看。',
+      tags: ['坏女人特辑', '钓系暧昧', '恶趣味调戏', '占有欲爆发']
+    },
+    {
+      roman: 'II · Sister',
+      name: '姐姐',
+      desc: '她说：<span class="hl">不贴会死不贴会死</span>。<br>她会在舞会中途把你拉进角落，问你微信衣服裤子结婚证要不要。<br>你说太直接了，她说那窝在沙发上你看书我看你。',
+      tags: ['姐姐姐姐', '粘人重力系', '爱意收不住', '一见钟情']
+    },
+    {
+      roman: 'III · Amber',
+      name: '琥珀',
+      desc: '她说：<span class="hl">色字头上一把刀</span>。<br>她会在最后一支舞时告诉你，她只是不再年轻了。<br>你说那又怎样，她说那就一言为定。',
+      tags: ['欲壑难填', '色字头上一把刀', '我听不见', '一言为定']
+    },
+    {
+      roman: 'IV · Mad Dog',
+      name: '狂犬',
+      desc: '她说：<span class="hl">得寸进尺，占有欲爆发狂犬</span>。<br>她会在舞池里把你圈在怀里，不让别人靠近。<br>你说太粘了，她说那正好，我不同意你走就是不成立。',
+      tags: ['得寸进尺', '占有欲爆发', '粘人重力系', '狂犬']
+    },
+    {
+      roman: 'V · Mommy',
+      name: '妈咪',
+      desc: '她说：<span class="hl">中高擦，亲昵隐晦，暧昧热烈</span>。<br>她会在舞会中途给你递一杯香槟，指尖擦过你的手。<br>你说她太会了，她说对你总是欲壑难填。',
+      tags: ['中高擦', '亲昵隐晦', '暧昧热烈', '欲壑难填']
+    },
+    {
+      roman: 'VI · Wife',
+      name: '妻子',
+      desc: '她说：<span class="hl">我只是不再年轻了，留不住我的妻子了</span>。<br>她会在舞会散场时独自坐在角落，看着你。<br>你说你还在，她说那说好，我们一言为定。',
+      tags: ['不再年轻', '留不住', '脆弱自白', '一言为定']
+    },
+    {
+      roman: 'VII · A Promise',
+      name: '一言为定',
+      desc: '她说：<span class="hl">其实我真的缺你很久了</span>。<br>她会在舞会最后一支曲子响起时，向你伸出手。<br>你说好，她说那说好，我们一言为定。',
+      tags: ['缺你很久', '期待你', '契合', '一言为定']
+    }
+  ];
+
+  sticks.forEach(stick => {
+    stick.addEventListener('click', () => {
+      if (drawn) return;
+      drawn = true;
+
+      const idx = parseInt(stick.dataset.partner);
+      const partner = partners[idx];
+
+      stick.classList.add('drawn');
+      sticks.forEach(s => { if (s !== stick) s.classList.add('faded'); });
+
+      drawSub.textContent = '— your partner —';
+
+      setTimeout(() => {
+        scrollRoman.textContent = partner.roman;
+        scrollName.textContent = partner.name;
+        scrollDesc.innerHTML = partner.desc;
+        scrollTags.innerHTML = partner.tags.map(t => `<span>${t}</span>`).join('');
+        partnerScroll.classList.add('show');
+      }, 900);
+    });
+  });
+
+  /* 继续按钮：后续可接舞池长页面 */
+  document.getElementById('continueBtn').addEventListener('click', () => {
+    console.log('进入舞池 · 可接后续长页面');
+    // 预留：此处可跳转到完整舞池页面
+    alert('舞池已开启 · 后续页面可在此接入');
+  });
+</script>
 </body>
 </html>
