@@ -2,22 +2,24 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>幽暗城堡 · 假面舞会</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500;1,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+  html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    position:fixed;
     background:#050303;
     font-family:'Noto Serif SC',serif;
     color:#e8dcc8;
-    overflow-x:hidden;
-    min-height:100vh;
     cursor:crosshair;
+    overscroll-behavior:none;
   }
 
-  /* ========= 背景：黑金奢靡 ========= */
   .painting-bg{
     position:fixed;inset:0;z-index:0;pointer-events:none;
     background:
@@ -27,13 +29,6 @@
       radial-gradient(ellipse at 80% 80%, rgba(140,90,40,.2), transparent 50%),
       radial-gradient(ellipse at 50% 50%, rgba(100,60,60,.15), transparent 60%),
       linear-gradient(160deg, #0e0705 0%, #1a0e08 30%, #0e0608 70%, #050303 100%);
-  }
-  .painting-bg::before{
-    content:'';position:absolute;inset:0;
-    background-image:
-      repeating-linear-gradient(35deg, rgba(255,200,140,.02) 0 2px, transparent 2px 8px),
-      repeating-linear-gradient(-50deg, rgba(180,120,80,.02) 0 3px, transparent 3px 10px);
-    mix-blend-mode:overlay;opacity:.6;
   }
   .painting-glow{
     position:fixed;top:30%;left:50%;
@@ -60,8 +55,6 @@
     90%{opacity:.5;}
     100%{transform:translateY(-10vh) scale(1);opacity:0;}
   }
-
-  /* 背景散落玫瑰 */
   .rose-float{
     position:fixed;pointer-events:none;z-index:1;opacity:.2;
     animation:roseFloatBg linear infinite;
@@ -72,28 +65,24 @@
     90%{opacity:.3;}
     100%{transform:translateY(-15vh) rotate(360deg);opacity:0;}
   }
-
-  /* 英文短句水印 */
   .whisper-marquee{
     position:fixed;z-index:1;pointer-events:none;white-space:nowrap;
     font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:1.2rem;letter-spacing:.3em;
+    font-size:1.1rem;letter-spacing:.3em;
     color:rgba(224,176,96,.05);
-    text-shadow:0 0 20px rgba(224,176,96,.04);
     animation:marqueeSlide linear infinite;user-select:none;
   }
   @keyframes marqueeSlide{
     0%{transform:translateX(-100%);}
     100%{transform:translateX(100vw);}
   }
-  .whisper-marquee.w1{top:12%;animation-duration:38s;animation-delay:0s;font-size:1.1rem;}
-  .whisper-marquee.w2{top:28%;animation-duration:46s;animation-delay:5s;font-size:1.4rem;}
-  .whisper-marquee.w3{top:45%;animation-duration:42s;animation-delay:10s;font-size:1rem;}
-  .whisper-marquee.w4{top:62%;animation-duration:52s;animation-delay:3s;font-size:1.3rem;}
-  .whisper-marquee.w5{top:78%;animation-duration:44s;animation-delay:8s;font-size:1.15rem;}
-  .whisper-marquee.w6{top:90%;animation-duration:48s;animation-delay:14s;font-size:1.25rem;}
+  .whisper-marquee.w1{top:12%;animation-duration:38s;}
+  .whisper-marquee.w2{top:28%;animation-duration:46s;animation-delay:5s;}
+  .whisper-marquee.w3{top:45%;animation-duration:42s;animation-delay:10s;}
+  .whisper-marquee.w4{top:62%;animation-duration:52s;animation-delay:3s;}
+  .whisper-marquee.w5{top:78%;animation-duration:44s;animation-delay:8s;}
+  .whisper-marquee.w6{top:90%;animation-duration:48s;animation-delay:14s;}
 
-  /* 猫爪点击 */
   .paw-print{
     position:fixed;pointer-events:none;z-index:9999;
     width:32px;height:32px;opacity:0;
@@ -108,36 +97,44 @@
   }
   .paw-print svg{width:100%;height:100%;display:block;}
 
-  /* ========= 通用屏 ========= */
   .screen{
-    position:relative;z-index:5;min-height:100vh;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    padding:3rem 1.5rem;
-    transition:opacity 1s ease, transform 1s ease;
+    position:fixed;
+    inset:0;
+    z-index:5;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:1.5rem 1.2rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .8s ease;
+    overflow:hidden;
   }
-  .screen.leaving{opacity:0;transform:scale(.94);pointer-events:none;}
-  .screen.hidden{display:none;}
+  .screen.active{
+    opacity:1;
+    pointer-events:auto;
+  }
 
   .eyebrow{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;
+    font-style:italic;font-size:.75rem;
     color:#c8a878;letter-spacing:.35em;
-    text-transform:uppercase;margin-bottom:2.5rem;
-    opacity:0;animation:fadeIn 1.5s ease .3s forwards;
+    text-transform:uppercase;margin-bottom:1.5rem;
     text-shadow:0 2px 8px rgba(0,0,0,.8);
     text-align:center;
   }
-  @keyframes fadeIn{to{opacity:1;}}
 
-  /* ========= 第一屏：报名 ========= */
+  /* 第一屏：报名 */
   .signup-stage{
-    position:relative;width:100%;max-width:520px;
+    position:relative;width:100%;max-width:480px;
     display:flex;flex-direction:column;
-    align-items:center;padding:4rem 0 2rem;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
   }
   .floating-card{
-    position:absolute;width:70px;height:100px;
+    position:absolute;width:60px;height:86px;
     background:linear-gradient(160deg, rgba(30,18,12,.95), rgba(18,10,8,.98));
     border:1px solid #8a6838;border-radius:4px;
     box-shadow:
@@ -146,32 +143,21 @@
       inset 0 0 20px rgba(120,80,40,.15);
     z-index:3;animation:cardFloat 8s ease-in-out infinite;opacity:.7;
   }
-  .floating-card::before{
-    content:'';position:absolute;inset:5px;
-    border:1px solid rgba(200,160,90,.35);border-radius:2px;
-  }
   .floating-card .card-symbol{
     position:absolute;top:50%;left:50%;
     transform:translate(-50%,-50%);
-    font-size:1.6rem;color:#e0b060;opacity:.8;
+    font-size:1.4rem;color:#e0b060;opacity:.8;
   }
-  .floating-card .card-corner{
-    position:absolute;font-family:'Playfair Display',serif;
-    font-size:.55rem;color:#e0b060;letter-spacing:.05em;
-  }
-  .floating-card .card-corner.tl{top:8px;left:8px;}
-  .floating-card .card-corner.br{bottom:8px;right:8px;transform:rotate(180deg);}
-  .floating-card.c1{top:5%;left:-6%;animation-delay:0s;transform:rotate(-15deg);}
-  .floating-card.c2{top:12%;right:-8%;animation-delay:1.5s;transform:rotate(12deg);}
-  .floating-card.c3{bottom:18%;left:-8%;animation-delay:3s;transform:rotate(-8deg);}
-  .floating-card.c4{bottom:10%;right:-5%;animation-delay:4.5s;transform:rotate(18deg);}
-  .floating-card.c5{top:45%;left:-12%;animation-delay:6s;transform:rotate(22deg);width:55px;height:80px;}
+  .floating-card.c1{top:-5%;left:-8%;animation-delay:0s;transform:rotate(-15deg);}
+  .floating-card.c2{top:5%;right:-10%;animation-delay:1.5s;transform:rotate(12deg);}
+  .floating-card.c3{bottom:-5%;left:-10%;animation-delay:3s;transform:rotate(-8deg);}
+  .floating-card.c4{bottom:5%;right:-8%;animation-delay:4.5s;transform:rotate(18deg);}
   @keyframes cardFloat{
     0%,100%{transform:translateY(0) rotate(var(--r,0deg));}
-    50%{transform:translateY(-15px) rotate(calc(var(--r,0deg) + 5deg));}
+    50%{transform:translateY(-12px) rotate(calc(var(--r,0deg) + 5deg));}
   }
   .card-glow{
-    position:absolute;width:140px;height:140px;border-radius:50%;
+    position:absolute;width:120px;height:120px;border-radius:50%;
     background:radial-gradient(circle, rgba(224,176,96,.15), transparent 70%);
     z-index:1;pointer-events:none;
     animation:glowDrift 6s ease-in-out infinite alternate;
@@ -185,124 +171,105 @@
 
   .signup-title{
     font-family:'Long Cang',cursive;
-    font-size:clamp(1.6rem,4.5vw,2.4rem);
-    color:#f4e4c8;margin-bottom:.8rem;
+    font-size:clamp(1.5rem,5vw,2.2rem);
+    color:#f4e4c8;margin-bottom:.6rem;
     text-shadow:0 0 30px rgba(255,200,140,.4), 0 2px 8px rgba(0,0,0,.9);
-    opacity:0;animation:fadeIn 1.5s ease .6s forwards;
     position:relative;z-index:4;
   }
   .signup-sub{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.9rem;
+    font-style:italic;font-size:.85rem;
     color:#c8a878;letter-spacing:.2em;
-    margin-bottom:2.5rem;
-    opacity:0;animation:fadeIn 1.5s ease .9s forwards;
+    margin-bottom:2rem;
     text-shadow:0 2px 6px rgba(0,0,0,.8);
     position:relative;z-index:4;
   }
   .name-input-wrap{
-    position:relative;width:min(360px,85vw);
-    margin-bottom:2rem;
-    opacity:0;animation:fadeIn 1.5s ease 1.2s forwards;
+    position:relative;width:min(320px,85vw);
+    margin-bottom:1.5rem;
     z-index:4;
   }
   .name-input{
     width:100%;background:transparent;
     border:none;border-bottom:1px solid #a08050;
-    padding:1rem .5rem;
+    padding:.9rem .5rem;
     font-family:'Long Cang',cursive;
-    font-size:1.5rem;color:#f4e4c8;
+    font-size:1.4rem;color:#f4e4c8;
     text-align:center;outline:none;
     transition:border-color .4s ease;
     text-shadow:0 2px 6px rgba(0,0,0,.8);
   }
   .name-input::placeholder{
     color:#8a7050;font-style:italic;
-    font-family:'Cormorant Garamond',serif;font-size:1rem;
-  }
-  .name-input:focus{
-    border-bottom-color:#e0b060;
-    box-shadow:0 8px 20px -10px rgba(224,176,96,.5);
+    font-family:'Cormorant Garamond',serif;font-size:.95rem;
   }
   .signup-btn{
-    margin-top:1rem;padding:.9rem 2.5rem;
+    margin-top:.5rem;padding:.85rem 2.2rem;
     background:rgba(20,10,8,.4);
     border:1px solid #a08050;border-radius:40px;
     color:#e0b060;font-family:'Noto Serif SC',serif;
-    font-size:.85rem;letter-spacing:.3em;
+    font-size:.8rem;letter-spacing:.3em;
     cursor:pointer;transition:all .4s ease;
-    opacity:0;animation:fadeIn 1.5s ease 1.5s forwards;
     backdrop-filter:blur(4px);
     z-index:4;position:relative;
   }
-  .signup-btn:hover:not(:disabled){
-    border-color:#e0b060;color:#fff4d0;
-    box-shadow:0 0 40px rgba(224,176,96,.5);
-    transform:translateY(-2px);
-  }
   .signup-btn:disabled{opacity:.3;cursor:not-allowed;}
 
-  /* ========= 邀请屏 ========= */
-  .invitation-stage{position:relative;max-width:620px;width:100%;perspective:1200px;}
+  /* 邀请屏 */
+  .invitation-stage{
+    position:relative;
+    width:100%;max-width:520px;
+    max-height:90vh;
+    display:flex;
+    flex-direction:column;
+  }
   .invitation-card{
     position:relative;
     background:
       radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.12), transparent 60%),
       linear-gradient(165deg, rgba(30,18,12,.95) 0%, rgba(20,12,10,.97) 40%, rgba(12,8,6,.98) 100%);
     border:1px solid #8a6838;border-radius:2px;
-    padding:3.5rem 2.8rem 2.8rem;
+    padding:2rem 1.6rem 1.6rem;
     box-shadow:
       0 40px 90px rgba(0,0,0,.9),
       0 0 0 1px rgba(224,176,96,.3),
       inset 0 0 100px rgba(120,80,40,.2);
-    overflow:hidden;opacity:0;
-    transform:translateY(30px) rotateX(4deg);
-    transition:opacity 1.4s ease, transform 1.4s ease;
-    backdrop-filter:blur(2px);
+    overflow:hidden;
   }
-  .invitation-card.show{opacity:1;transform:translateY(0) rotateX(0);}
   .invitation-card::before{
-    content:'';position:absolute;inset:12px;
+    content:'';position:absolute;inset:10px;
     border:1px solid rgba(224,176,96,.5);pointer-events:none;
   }
   .invitation-card::after{
-    content:'';position:absolute;inset:18px;
+    content:'';position:absolute;inset:15px;
     border:1px solid rgba(224,176,96,.25);pointer-events:none;
   }
   .crest{
-    position:absolute;top:1rem;left:50%;
-    transform:translateX(-50%);width:60px;height:70px;opacity:.9;
+    position:absolute;top:.6rem;left:50%;
+    transform:translateX(-50%);width:44px;height:52px;opacity:.9;
   }
   .crest svg{width:100%;height:100%;}
-  .inv-corner{
-    position:absolute;width:26px;height:26px;
-    border-color:#e0b060;border-style:solid;border-width:0;opacity:.85;
-  }
-  .inv-corner.tl{top:8px;left:8px;border-top-width:1px;border-left-width:1px;}
-  .inv-corner.tr{top:8px;right:8px;border-top-width:1px;border-right-width:1px;}
-  .inv-corner.bl{bottom:8px;left:8px;border-bottom-width:1px;border-left-width:1px;}
-  .inv-corner.br{bottom:8px;right:8px;border-bottom-width:1px;border-right-width:1px;}
   .inv-top-ornament{
     text-align:center;font-family:'Playfair Display',serif;
-    font-style:italic;font-size:.7rem;color:#e0b060;
+    font-style:italic;font-size:.6rem;color:#e0b060;
     letter-spacing:.55em;text-transform:uppercase;
-    margin-bottom:2rem;margin-top:3rem;
+    margin-bottom:1.2rem;margin-top:2rem;
   }
   .inv-top-ornament::before,
   .inv-top-ornament::after{
-    content:'✦';margin:0 .8rem;color:#e0b060;
-    font-size:.6rem;vertical-align:middle;
+    content:'✦';margin:0 .6rem;color:#e0b060;
+    font-size:.5rem;vertical-align:middle;
   }
   .inv-main{
     text-align:center;font-family:'Long Cang',cursive;
-    font-size:clamp(1.15rem,3vw,1.6rem);
-    line-height:1.9;color:#f4e4c8;
-    margin-bottom:2rem;letter-spacing:.02em;
+    font-size:clamp(1rem,3.6vw,1.35rem);
+    line-height:1.8;color:#f4e4c8;
+    margin-bottom:1.2rem;letter-spacing:.02em;
     text-shadow:0 2px 8px rgba(0,0,0,.8);
   }
   .inv-main .highlight-name{
     color:#e0b060;
-    text-shadow:0 0 24px rgba(224,176,96,.6), 0 2px 6px rgba(0,0,0,.8);
+    text-shadow:0 0 24px rgba(224,176,96,.6);
     font-size:1.1em;padding:0 .2em;
   }
   .inv-main .highlight-place{
@@ -317,132 +284,77 @@
   }
   .inv-divider{
     display:flex;align-items:center;justify-content:center;
-    gap:.8rem;margin:1.8rem auto;max-width:320px;
+    gap:.6rem;margin:1rem auto;max-width:220px;
   }
   .inv-divider::before,.inv-divider::after{
     content:'';flex:1;height:1px;
     background:linear-gradient(90deg,transparent,#a08050,transparent);
   }
-  .inv-divider .diamond{color:#e0b060;font-size:.55rem;}
+  .inv-divider .diamond{color:#e0b060;font-size:.5rem;}
   .inv-profile{
     display:grid;grid-template-columns:1fr 1fr;
-    gap:.7rem 1.2rem;margin:1.8rem 0;padding:1.4rem 1rem;
+    gap:.5rem .8rem;margin:1rem 0;padding:.9rem .6rem;
     background:rgba(224,176,96,.05);
     border-top:1px solid rgba(224,176,96,.25);
     border-bottom:1px solid rgba(224,176,96,.25);
   }
   .inv-profile-item{
-    display:flex;align-items:baseline;gap:.6rem;
+    display:flex;align-items:baseline;gap:.4rem;
     font-family:'Cormorant Garamond',serif;
-    font-size:.85rem;letter-spacing:.05em;
+    font-size:.75rem;letter-spacing:.05em;
     min-width:0;
   }
   .inv-profile-item .key{
     color:#e0b060;font-style:italic;text-transform:uppercase;
-    font-size:.7rem;letter-spacing:.15em;min-width:52px;flex-shrink:0;
+    font-size:.6rem;letter-spacing:.15em;min-width:40px;flex-shrink:0;
   }
   .inv-profile-item .val{
     color:#f0d8a0;font-family:'Noto Serif SC',serif;
-    font-size:.88rem;letter-spacing:.03em;
+    font-size:.78rem;letter-spacing:.03em;
     word-break:break-all;
   }
   .inv-profile-item .val.accent{color:#ffb7d0;}
   .inv-confession{
     text-align:center;font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:1rem;line-height:2;
-    color:#d0b090;margin:1.8rem 0 1rem;padding:1rem 0;
+    font-style:italic;font-size:.9rem;line-height:1.8;
+    color:#d0b090;margin:1rem 0 .6rem;padding:.6rem 0;
   }
   .inv-confession .hl{
     color:#e0b060;font-style:normal;
-    font-family:'Noto Serif SC',serif;font-size:.92rem;
+    font-family:'Noto Serif SC',serif;font-size:.85rem;
     text-shadow:0 0 20px rgba(224,176,96,.5);
   }
   .inv-signature{
-    text-align:right;margin-top:2rem;
+    text-align:right;margin-top:1rem;
     font-family:'Long Cang',cursive;
-    font-size:1.5rem;color:#f0d8a0;letter-spacing:.05em;
+    font-size:1.3rem;color:#f0d8a0;letter-spacing:.05em;
   }
   .inv-signature .meta{
     display:block;font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.7rem;color:#e0b060;
-    letter-spacing:.25em;margin-top:.5rem;text-transform:uppercase;
-  }
-  .inv-seal{
-    display:flex;align-items:center;justify-content:center;
-    gap:1rem;margin-top:1.8rem;
-  }
-  .inv-seal .wax-mini{
-    width:44px;height:44px;
-    border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
-    background:radial-gradient(circle at 35% 30%, #c01838 0%, #7a1028 30%, #40060e 80%);
-    box-shadow:
-      0 6px 16px rgba(100,10,40,.8),
-      inset 0 -3px 6px rgba(30,0,10,.9),
-      inset 0 3px 6px rgba(255,180,200,.3);
-    display:flex;align-items:center;justify-content:center;
-    color:#ffd0d8;font-family:'Playfair Display',serif;
-    font-style:italic;font-size:1rem;flex-shrink:0;
-    border:1px solid #e0b060;
-  }
-  .inv-seal .wax-text{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.78rem;
-    color:#e0b060;letter-spacing:.25em;text-transform:uppercase;
+    font-style:italic;font-size:.65rem;color:#e0b060;
+    letter-spacing:.25em;margin-top:.4rem;text-transform:uppercase;
   }
   .inv-continue{
-    display:flex;justify-content:center;margin-top:2.5rem;
-    opacity:0;transform:translateY(15px);
-    transition:opacity 1s ease 1.2s, transform 1s ease 1.2s;
-    pointer-events:none;
-  }
-  .invitation-card.show ~ .inv-continue,
-  .inv-continue.show{
-    opacity:1;transform:translateY(0);pointer-events:auto;
+    display:flex;justify-content:center;margin-top:1.2rem;
   }
   .inv-continue-btn{
-    padding:1rem 3rem;
+    padding:.85rem 2.4rem;
     background:rgba(20,10,8,.5);
     border:1px solid #a08050;color:#e0b060;
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.88rem;
+    font-style:italic;font-size:.8rem;
     letter-spacing:.4em;text-transform:uppercase;
     cursor:pointer;transition:all .4s ease;
-    position:relative;backdrop-filter:blur(4px);
   }
-  .inv-continue-btn:hover{
-    border-color:#e0b060;color:#fff4d0;
-    box-shadow:0 0 40px rgba(224,176,96,.5);
-    letter-spacing:.45em;
-  }
-  .inv-continue-btn::after{
-    content:'→';position:absolute;right:1.2rem;top:50%;
-    transform:translateY(-50%);opacity:0;
-    transition:opacity .3s ease, right .3s ease;
-  }
-  .inv-continue-btn:hover::after{opacity:1;right:.8rem;}
 
-  /* ========= 悬浮骰子 ========= */
-  .dice-float{
-    position:fixed;pointer-events:none;z-index:3;
-    animation:diceFloat 8s ease-in-out infinite;
-    filter:drop-shadow(0 8px 20px rgba(0,0,0,.85)) drop-shadow(0 0 24px rgba(224,176,96,.4));
-  }
-  .dice-float svg{width:100%;height:100%;display:block;}
-  @keyframes diceFloat{
-    0%,100%{transform:translateY(0) rotate(var(--rot,0deg));}
-    50%{transform:translateY(-18px) rotate(calc(var(--rot,0deg) + 8deg));}
-  }
-  .dice-float.d1{top:12%;left:6%;width:80px;height:80px;--rot:-8deg;animation-delay:0s;}
-  .dice-float.d2{top:60%;right:8%;width:70px;height:70px;--rot:12deg;animation-delay:2s;}
-  .dice-float.d3{bottom:10%;left:12%;width:60px;height:60px;--rot:-15deg;animation-delay:4s;}
-
-  .dice-pip{animation:pipPulse 2s ease-in-out infinite alternate;}
-  @keyframes pipPulse{from{opacity:.5;}to{opacity:1;}}
-
-  /* ========= 信封 ========= */
+  /* 信封 */
   .envelope-stage{
-    position:relative;width:min(440px,90vw);
-    margin-bottom:4rem;perspective:1200px;
+    position:relative;
+    width:min(360px,80vw);
+    max-height:70vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
   .envelope{
     position:relative;width:100%;aspect-ratio:1.6/1;
@@ -474,7 +386,6 @@
     transform:rotateX(180deg);opacity:0;
   }
   .envelope.opening .envelope-body{transform:translateY(-10px);}
-
   .wax-shards{
     position:absolute;top:50%;left:50%;
     transform:translate(-50%,-50%);
@@ -525,15 +436,13 @@
       radial-gradient(circle at 25% 35%, transparent 0 18px, rgba(120,80,40,.35) 18px 19px, transparent 19px),
       radial-gradient(circle at 75% 65%, transparent 0 22px, rgba(120,80,40,.3) 22px 23px, transparent 23px),
       repeating-linear-gradient(45deg, transparent 0 12px, rgba(140,100,60,.08) 12px 13px);
-    mask-image:radial-gradient(ellipse at center, black 30%, transparent 80%);
-    -webkit-mask-image:radial-gradient(ellipse at center, black 30%, transparent 80%);
   }
   .watermark-text{
     position:absolute;top:50%;left:50%;
     transform:translate(-50%,-50%) rotate(-18deg);
     font-family:'Cormorant Garamond',serif;
     font-style:italic;
-    font-size:clamp(3rem,8vw,5rem);
+    font-size:clamp(2rem,6vw,3.5rem);
     color:rgba(140,90,50,.12);
     letter-spacing:.3em;z-index:1;pointer-events:none;
     white-space:nowrap;font-weight:300;
@@ -542,7 +451,7 @@
     position:absolute;bottom:14%;left:50%;
     transform:translateX(-50%);
     font-family:'Long Cang',cursive;
-    font-size:clamp(.85rem,2.4vw,1.2rem);
+    font-size:clamp(.75rem,2.4vw,1rem);
     color:#5a3a28;white-space:nowrap;
     letter-spacing:.08em;z-index:4;
     text-shadow:0 1px 2px rgba(255,255,255,.4);
@@ -551,38 +460,30 @@
     position:absolute;top:18%;left:50%;
     transform:translateX(-50%);
     font-family:'Long Cang',cursive;
-    font-size:clamp(1rem,2.8vw,1.3rem);
+    font-size:clamp(.9rem,2.6vw,1.1rem);
     color:#8a2040;letter-spacing:.05em;z-index:4;
     opacity:0;transition:opacity 1s ease;
     text-shadow:0 1px 2px rgba(255,255,255,.3);
   }
   .envelope-name.show{opacity:1;}
 
-  /* 火漆 */
   .seals{
-    position:absolute;bottom:-50px;left:50%;
+    position:absolute;bottom:-42px;left:50%;
     transform:translateX(-50%);
-    display:flex;gap:2rem;z-index:8;
+    display:flex;gap:1.5rem;z-index:8;
     transition:opacity .6s ease, transform .6s ease;
   }
-  .envelope.opening ~ .seals{
-    opacity:0;transform:translateX(-50%) translateY(20px);
-  }
   .seal-wrap{
-    position:relative;width:86px;height:86px;
+    position:relative;width:70px;height:70px;
     cursor:pointer;
     transition:transform .4s cubic-bezier(.34,1.56,.64,1);
     transform-style:preserve-3d;
   }
-  .seal-wrap:hover{transform:translateY(-10px) scale(1.1) rotateX(-8deg);}
-  .seal-wrap:active{transform:translateY(-5px) scale(1.03) rotateX(-4deg);}
+  .seal-wrap:active{transform:translateY(-5px) scale(1.03);}
   .wax{
     position:absolute;inset:0;
     border-radius:52% 48% 50% 50% / 48% 52% 48% 52%;
     transition:all .35s ease;
-    background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)' opacity='0.25'/%3E%3C/svg%3E"),
-      radial-gradient(circle at 38% 32%, rgba(255,255,255,.25), transparent 45%);
   }
   .wax::before{
     content:'';position:absolute;inset:-5px -3px -4px -3px;
@@ -597,87 +498,48 @@
     box-shadow:0 2px 4px rgba(0,0,0,.4);
   }
   .seal-wrap.pinklight .wax{
-    background:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n1)' opacity='0.22'/%3E%3C/svg%3E"),
-      radial-gradient(circle at 35% 28%, #ffd6e6 0%, #ffb0cc 30%, #e0709a 75%, #a03860 100%);
+    background:radial-gradient(circle at 35% 28%, #ffd6e6 0%, #ffb0cc 30%, #e0709a 75%, #a03860 100%);
     box-shadow:
       0 8px 20px rgba(200,100,140,.6), 0 2px 4px rgba(0,0,0,.4),
       inset 0 -4px 10px rgba(140,50,90,.7), inset 0 4px 8px rgba(255,220,235,.55);
   }
   .seal-wrap.pinklight .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,240,245,.7), transparent 65%);}
   .seal-wrap.pinklight .wax::after{background:linear-gradient(180deg,#ffb0cc,#e0709a);}
-  .seal-wrap.pinklight:hover .wax{
-    box-shadow:0 12px 32px rgba(255,150,190,.8), 0 2px 4px rgba(0,0,0,.4),
-      inset 0 -4px 10px rgba(140,50,90,.7), inset 0 4px 10px rgba(255,230,240,.65);
-  }
   .seal-wrap.pinkdeep .wax{
-    background:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)' opacity='0.22'/%3E%3C/svg%3E"),
-      radial-gradient(circle at 35% 28%, #d04070 0%, #a02850 30%, #701838 75%, #400a20 100%);
+    background:radial-gradient(circle at 35% 28%, #d04070 0%, #a02850 30%, #701838 75%, #400a20 100%);
     box-shadow:
       0 8px 20px rgba(120,20,60,.7), 0 2px 4px rgba(0,0,0,.5),
       inset 0 -4px 10px rgba(60,0,25,.8), inset 0 4px 8px rgba(255,160,190,.3);
   }
   .seal-wrap.pinkdeep .wax::before{background:radial-gradient(circle at 40% 35%, rgba(255,180,210,.45), transparent 65%);}
   .seal-wrap.pinkdeep .wax::after{background:linear-gradient(180deg,#a02850,#701838);}
-  .seal-wrap.pinkdeep:hover .wax{
-    box-shadow:0 12px 32px rgba(200,40,90,.85), 0 2px 4px rgba(0,0,0,.5),
-      inset 0 -4px 10px rgba(60,0,25,.8), inset 0 4px 10px rgba(255,180,210,.45);
-  }
   .imprint{
-    position:absolute;inset:14px;
+    position:absolute;inset:12px;
     border-radius:48% 52% 50% 50% / 52% 48% 52% 48%;
     display:flex;align-items:center;justify-content:center;
     font-family:'Long Cang',cursive;
-    font-size:1.15rem;letter-spacing:.1em;
+    font-size:1rem;letter-spacing:.1em;
     text-align:center;z-index:3;font-weight:500;
-    transition:all .3s ease;
   }
-  .seal-wrap.pinklight .imprint{color:#fff0f5;text-shadow:0 1px 1px rgba(160,50,90,.6),0 -1px 0 rgba(255,255,255,.4);}
-  .seal-wrap.pinkdeep .imprint{color:#ffd8e5;text-shadow:0 1px 1px rgba(0,0,0,.7),0 -1px 0 rgba(255,200,220,.3);}
+  .seal-wrap.pinklight .imprint{color:#fff0f5;text-shadow:0 1px 1px rgba(160,50,90,.6);}
+  .seal-wrap.pinkdeep .imprint{color:#ffd8e5;text-shadow:0 1px 1px rgba(0,0,0,.7);}
   .imprint::before{
-    content:'';position:absolute;inset:7px;
-    border-radius:50% 48% 52% 50% / 48% 52% 48% 52%;
+    content:'';position:absolute;inset:6px;
+    border-radius:50%;
     border:1px solid rgba(0,0,0,.3);
-    box-shadow:inset 0 2px 3px rgba(0,0,0,.35), inset 0 -1px 2px rgba(255,255,255,.15);
+    box-shadow:inset 0 2px 3px rgba(0,0,0,.35);
   }
-  .seal-wrap.pinklight .imprint::before{border-color:rgba(160,60,100,.4);}
-  .seal-wrap.pinkdeep .imprint::before{border-color:rgba(0,0,0,.5);}
   .fingerprint{
     position:absolute;top:22%;right:18%;
-    width:18px;height:14px;border-radius:50%;opacity:.15;
+    width:16px;height:12px;border-radius:50%;opacity:.15;
     background:repeating-radial-gradient(circle at 50% 50%, transparent 0 1.5px, rgba(0,0,0,.5) 1.5px 2px);
     transform:rotate(-20deg);pointer-events:none;z-index:4;
   }
   .seal-wrap.picked{
-    transform:translateY(-18px) scale(1.18) rotateX(-12deg);
-    animation:sealPress .7s ease;
+    transform:translateY(-15px) scale(1.15);
   }
-  @keyframes sealPress{
-    0%{transform:translateY(-18px) scale(1.18) rotateX(-12deg);}
-    25%{transform:translateY(-8px) scale(.94) rotateX(0deg);}
-    55%{transform:translateY(-18px) scale(1.2) rotateX(-12deg);}
-    100%{transform:translateY(-18px) scale(1.18) rotateX(-12deg);}
-  }
-  .seal-wrap.picked .wax{
-    border-radius:54% 46% 50% 50% / 46% 54% 46% 54%;
-    transform:scale(.95);
-  }
-  .seal-wrap.picked .wax::after{transform:scale(1.5) translateY(2px);opacity:1;}
   .seal-wrap.faded{opacity:.2;transform:scale(.85);pointer-events:none;filter:blur(.5px);}
-
-  .hint{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.9rem;
-    color:#c8a878;letter-spacing:.2em;
-    text-align:center;transition:opacity .5s ease;
-    position:relative;z-index:5;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
-  }
-  .hint.changed{color:#e0b060;}
-
   .seal-wrap.disabled-run{cursor:not-allowed;}
-  .seal-wrap.disabled-run:hover{transform:translateY(-3px) scale(1.02);}
 
   /* 弹窗 */
   .modal-overlay{
@@ -685,122 +547,91 @@
     background:rgba(5,3,6,.92);
     backdrop-filter:blur(8px);
     display:flex;align-items:center;justify-content:center;
-    padding:2rem 1.5rem;
+    padding:1.5rem;
     opacity:0;pointer-events:none;
     transition:opacity .6s ease;
   }
   .modal-overlay.show{opacity:1;pointer-events:auto;}
   .modal-card{
     position:relative;
-    max-width:400px;width:100%;
+    max-width:340px;width:100%;
     background:
       radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.12), transparent 60%),
       linear-gradient(160deg, rgba(30,18,12,.98) 0%, rgba(20,12,10,.99) 100%);
     border:1px solid #8a6838;
     border-radius:4px;
-    padding:3rem 2.4rem 2.4rem;
+    padding:2.4rem 1.8rem 2rem;
     box-shadow:
       0 30px 80px rgba(0,0,0,.95),
-      0 0 0 1px rgba(224,176,96,.3),
-      0 0 60px rgba(224,176,96,.2);
+      0 0 0 1px rgba(224,176,96,.3);
     text-align:center;
-    transform:translateY(20px) scale(.94);
-    transition:transform .6s cubic-bezier(.34,1.56,.64,1);
   }
-  .modal-overlay.show .modal-card{transform:translateY(0) scale(1);}
   .modal-card::before{
     content:'';position:absolute;inset:10px;
     border:1px solid rgba(224,176,96,.4);pointer-events:none;
   }
-  .modal-card::after{
-    content:'';position:absolute;inset:15px;
-    border:1px solid rgba(224,176,96,.18);pointer-events:none;
-  }
-  .modal-dice{
-    width:70px;height:70px;
-    margin:0 auto 1.5rem;
-    opacity:.9;
-    filter:drop-shadow(0 0 15px rgba(224,176,96,.6));
-    position:relative;z-index:1;
-  }
-  .modal-dice svg{width:100%;height:100%;display:block;}
   .modal-text{
     font-family:'Long Cang',cursive;
-    font-size:clamp(1.4rem,4vw,1.8rem);
-    color:#f4e4c8;margin-bottom:2rem;
-    letter-spacing:.05em;line-height:1.5;
-    text-shadow:0 0 30px rgba(224,176,96,.4), 0 2px 8px rgba(0,0,0,.9);
-    position:relative;z-index:1;
+    font-size:clamp(1.2rem,4vw,1.6rem);
+    color:#f4e4c8;margin-bottom:1.5rem;
+    line-height:1.5;
+    text-shadow:0 0 30px rgba(224,176,96,.4);
   }
-  .modal-text .accent{
-    color:#e0b060;
-    text-shadow:0 0 30px rgba(224,176,96,.6);
-  }
+  .modal-text .accent{color:#e0b060;}
   .modal-btn{
-    padding:.9rem 2.8rem;
+    padding:.8rem 2.2rem;
     background:rgba(20,10,8,.5);
     border:1px solid #a08050;
     color:#e0b060;
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;
+    font-style:italic;font-size:.8rem;
     letter-spacing:.4em;text-transform:uppercase;
-    cursor:pointer;transition:all .4s ease;
-    backdrop-filter:blur(4px);
-    position:relative;z-index:1;
-  }
-  .modal-btn:hover{
-    border-color:#e0b060;color:#fff4d0;
-    box-shadow:0 0 40px rgba(224,176,96,.5);
-    letter-spacing:.45em;
+    cursor:pointer;
+    transition:all .4s ease;
   }
 
   /* 信纸 */
   .letter-overlay{
     position:fixed;inset:0;z-index:80;
-    background:rgba(5,3,6,.94);
-    backdrop-filter:blur(8px);
+    background:rgba(5,3,6,.96);
     display:flex;align-items:center;justify-content:center;
-    padding:2rem 1.5rem;
+    padding:1.5rem;
     opacity:0;pointer-events:none;
     transition:opacity 1.2s ease;
-    overflow-y:auto;
   }
   .letter-overlay.show{opacity:1;pointer-events:auto;}
   .letter-paper{
-    position:relative;max-width:520px;width:100%;
+    position:relative;
+    width:100%;max-width:440px;
     background:
-      repeating-linear-gradient(0deg, transparent 0 31px, rgba(120,90,60,.06) 31px 32px),
+      repeating-linear-gradient(0deg, transparent 0 28px, rgba(120,90,60,.06) 28px 29px),
       linear-gradient(170deg, #f4ead4 0%, #e8dcc0 100%);
     border-radius:2px;
-    padding:3.5rem 2.4rem;
+    padding:2.5rem 1.8rem 2rem;
     box-shadow:
       0 30px 80px rgba(0,0,0,.9),
-      0 0 0 1px rgba(180,150,110,.5),
-      inset 0 0 80px rgba(200,170,130,.2);
+      0 0 0 1px rgba(180,150,110,.5);
     color:#3a2a1a;
-    transform:translateY(30px) rotateX(4deg);
-    transition:transform 1.6s ease;
   }
-  .letter-overlay.show .letter-paper{transform:translateY(0) rotateX(0);}
   .letter-paper::before{
-    content:'';position:absolute;inset:14px;
+    content:'';position:absolute;inset:12px;
     border:1px solid rgba(180,150,110,.35);pointer-events:none;
   }
   .letter-title{
     text-align:center;font-family:'Playfair Display',serif;
-    font-style:italic;font-size:.72rem;
+    font-style:italic;font-size:.65rem;
     color:#8a7050;letter-spacing:.55em;
-    text-transform:uppercase;margin-bottom:3rem;
+    text-transform:uppercase;margin-bottom:2rem;
   }
   .letter-title::before,
   .letter-title::after{
-    content:'✦';margin:0 .7rem;color:#b08a40;
-    font-size:.6rem;vertical-align:middle;
+    content:'✦';margin:0 .6rem;color:#b08a40;
+    font-size:.5rem;vertical-align:middle;
   }
   .letter-body{
     font-family:'Long Cang',cursive;
-    font-size:clamp(1.15rem,3vw,1.45rem);
-    line-height:2.2;color:#2a1a0a;text-align:center;
+    font-size:clamp(1rem,3vw,1.3rem);
+    line-height:2;color:#2a1a0a;text-align:center;
   }
   .letter-line{
     opacity:0;transform:translateY(10px);
@@ -811,86 +642,70 @@
   .letter-line.hl{color:#a02850;margin-bottom:1rem;}
   .letter-line.small{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;color:#8a7050;
-    letter-spacing:.15em;margin-top:2rem;
+    font-style:italic;font-size:.8rem;color:#8a7050;
+    letter-spacing:.15em;margin-top:1.5rem;
   }
   .letter-actions{
-    display:flex;justify-content:center;margin-top:3rem;
+    display:flex;justify-content:center;margin-top:2rem;
     opacity:0;transition:opacity 1.4s ease;
   }
   .letter-actions.show{opacity:1;}
   .letter-btn{
-    padding:.9rem 2.6rem;
+    padding:.8rem 2.2rem;
     background:transparent;
     border:1px solid #8a6a48;color:#6a4a28;
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;
+    font-style:italic;font-size:.8rem;
     letter-spacing:.4em;text-transform:uppercase;
     cursor:pointer;transition:all .4s ease;
-    position:relative;
-  }
-  .letter-btn:hover{
-    border-color:#a02850;color:#a02850;
-    box-shadow:0 0 30px rgba(160,40,80,.3);
-    letter-spacing:.45em;
   }
 
   /* 玩法介绍页 */
   .intro-rose-wrap{
-    position:relative;max-width:640px;width:100%;
+    position:relative;
+    width:100%;max-width:440px;
     text-align:center;z-index:6;
   }
   .intro-rose-title{
     font-family:'Playfair Display',serif;
     font-style:italic;font-weight:600;
-    font-size:clamp(1.6rem,4.5vw,2.4rem);
-    color:#f4e4c8;margin-bottom:.5rem;
-    letter-spacing:.06em;
-    text-shadow:0 0 40px rgba(224,176,96,.5), 0 2px 12px rgba(0,0,0,.9);
+    font-size:clamp(1.4rem,4.5vw,2rem);
+    color:#f4e4c8;margin-bottom:.4rem;
+    text-shadow:0 0 40px rgba(224,176,96,.5);
   }
   .intro-rose-title .accent{
     color:#e0b060;
-    text-shadow:0 0 50px rgba(224,176,96,.7), 0 2px 10px rgba(0,0,0,.8);
+    text-shadow:0 0 50px rgba(224,176,96,.7);
   }
   .intro-rose-sub{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.9rem;
+    font-style:italic;font-size:.8rem;
     color:#c8a878;letter-spacing:.3em;
-    text-transform:uppercase;margin-bottom:2rem;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
+    text-transform:uppercase;margin-bottom:1.5rem;
   }
   .intro-rose-desc{
     font-family:'Cormorant Garamond',serif;
-    font-size:clamp(1rem,2.4vw,1.15rem);
-    line-height:2;color:#d8c8b0;
+    font-size:clamp(.9rem,2.4vw,1rem);
+    line-height:1.8;color:#d8c8b0;
     font-style:italic;
-    margin-bottom:2.5rem;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
+    margin-bottom:1.5rem;
   }
   .intro-steps{
     display:flex;flex-direction:column;
-    gap:1rem;max-width:480px;
-    margin:0 auto 2.5rem;width:100%;
+    gap:.7rem;width:100%;
+    margin-bottom:1.5rem;
   }
   .intro-step{
-    display:flex;align-items:flex-start;gap:1rem;
-    padding:1.2rem 1.4rem;
+    display:flex;align-items:flex-start;gap:.8rem;
+    padding:.9rem 1rem;
     background:rgba(20,10,8,.5);
     border:1px solid #6a5540;
     border-radius:4px;
     text-align:left;
-    backdrop-filter:blur(4px);
-    transition:all .4s ease;
-  }
-  .intro-step:hover{
-    border-color:#e0b060;
-    background:rgba(40,20,15,.7);
-    transform:translateX(6px);
-    box-shadow:0 0 30px rgba(224,176,96,.3);
   }
   .intro-step .is-num{
     flex-shrink:0;
-    width:32px;height:32px;
+    width:26px;height:26px;
     border-radius:50%;
     background:radial-gradient(circle at 35% 30%, #c01838, #6a0a20);
     border:1px solid #e0b060;
@@ -898,91 +713,99 @@
     color:#ffd0d8;
     font-family:'Playfair Display',serif;
     font-style:italic;font-weight:700;
-    font-size:1rem;
-    box-shadow:0 4px 12px rgba(140,20,50,.5);
+    font-size:.85rem;
   }
   .intro-step .is-content{flex:1;min-width:0;}
   .intro-step .is-title{
     font-family:'Long Cang',cursive;
-    font-size:1.1rem;color:#f0d8a0;
-    margin-bottom:.3rem;letter-spacing:.02em;
+    font-size:.95rem;color:#f0d8a0;
+    margin-bottom:.2rem;
   }
   .intro-step .is-desc{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;
-    color:#c8a878;line-height:1.6;
+    font-style:italic;font-size:.75rem;
+    color:#c8a878;line-height:1.5;
+  }
+  .interlude-continue{
+    padding:.9rem 2.4rem;
+    background:rgba(20,10,8,.5);
+    border:1px solid #6a5540;
+    color:#8a7560;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.8rem;
+    letter-spacing:.4em;text-transform:uppercase;
+    cursor:not-allowed;
+    transition:all .4s ease;
+  }
+  .interlude-continue.enabled{
+    border-color:#e0b060;color:#fff4d0;
+    cursor:pointer;
   }
 
-  /* ============================================================
-     抽签阶段
-     ============================================================ */
+  /* 抽签阶段 */
   .draw-stage{
-    position:relative;
-    z-index:6;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:2rem 1rem;
-    transition:opacity .8s ease, transform .8s ease;
+    position:fixed;inset:0;z-index:6;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:1.2rem;
   }
-  .draw-stage.leaving{
-    opacity:0;
-    transform:scale(.9);
-    pointer-events:none;
-  }
-
   .draw-title{
-    position:relative;z-index:6;
     font-family:'Playfair Display',serif;
     font-weight:600;
-    font-size:clamp(1.8rem,4.5vw,2.6rem);
+    font-size:clamp(1.3rem,4.5vw,1.8rem);
     color:#f4e4c8;
-    margin-bottom:.5rem;
-    letter-spacing:.05em;
-    text-shadow:0 0 30px rgba(224,176,96,.4), 0 2px 10px rgba(0,0,0,.9);
+    margin-bottom:.3rem;
     text-align:center;
+    text-shadow:0 0 30px rgba(224,176,96,.4);
   }
   .draw-title .ornament{
     display:block;
-    font-size:.7em;
+    font-size:.6em;
     color:#e0b060;
-    margin-top:.5rem;
-    letter-spacing:.4em;
+    margin-top:.4rem;
+    letter-spacing:.3em;
     font-weight:400;
     font-style:italic;
   }
   .draw-sub{
-    position:relative;z-index:6;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.8rem;
+    color:#c8a878;letter-spacing:.25em;
+    margin-bottom:1rem;
+    text-transform:uppercase;text-align:center;
+  }
+  .hint-top{
     font-family:'Cormorant Garamond',serif;
     font-style:italic;
-    font-size:.9rem;
-    color:#c8a878;
-    letter-spacing:.25em;
-    margin-bottom:2rem;
-    text-transform:uppercase;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
+    font-size:.8rem;
+    color:#e0b060;
+    letter-spacing:.2em;
+    margin-bottom:1rem;
     text-align:center;
+    animation:hintPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes hintPulse{
+    0%,100%{opacity:.5;}
+    50%{opacity:1;}
   }
 
   .sticks-fan{
     position:relative;
-    width:min(680px,95vw);
-    height:520px;
-    margin-bottom:2rem;
+    width:100%;
+    max-width:520px;
+    height:min(60vh,420px);
+    margin-bottom:1rem;
     display:flex;
     justify-content:center;
     align-items:flex-end;
     perspective:1400px;
-    z-index:6;
   }
 
   .stick{
     position:absolute;
     bottom:0;
-    width:56px;
-    height:400px;
+    width:50px;
+    height:min(55vh,360px);
     cursor:pointer;
     transform-origin:bottom center;
     transition:transform .55s cubic-bezier(.34,1.56,.64,1),
@@ -992,13 +815,13 @@
     z-index:1;
   }
 
-  .stick:nth-child(1){--angle:-32deg;--tx:-180px;--ty:10px; z-index:1;}
-  .stick:nth-child(2){--angle:-21deg;--tx:-120px;--ty:2px; z-index:2;}
-  .stick:nth-child(3){--angle:-10deg;--tx:-60px;--ty:-3px; z-index:3;}
-  .stick:nth-child(4){--angle:0deg;--tx:0px;--ty:-6px; z-index:7;}
-  .stick:nth-child(5){--angle:10deg;--tx:60px;--ty:-3px; z-index:3;}
-  .stick:nth-child(6){--angle:21deg;--tx:120px;--ty:2px; z-index:2;}
-  .stick:nth-child(7){--angle:32deg;--tx:180px;--ty:10px; z-index:1;}
+  .stick:nth-child(1){--angle:-30deg;--tx:-150px;--ty:8px; z-index:1;}
+  .stick:nth-child(2){--angle:-20deg;--tx:-100px;--ty:2px; z-index:2;}
+  .stick:nth-child(3){--angle:-10deg;--tx:-50px;--ty:-2px; z-index:3;}
+  .stick:nth-child(4){--angle:0deg;--tx:0px;--ty:-5px; z-index:7;}
+  .stick:nth-child(5){--angle:10deg;--tx:50px;--ty:-2px; z-index:3;}
+  .stick:nth-child(6){--angle:20deg;--tx:100px;--ty:2px; z-index:2;}
+  .stick:nth-child(7){--angle:30deg;--tx:150px;--ty:8px; z-index:1;}
 
   .stick-inner{
     position:absolute;inset:0;
@@ -1016,7 +839,7 @@
     display:flex;flex-direction:column;
     align-items:center;
     justify-content:space-between;
-    padding:1rem .5rem;
+    padding:.8rem .4rem;
     box-shadow:
       0 14px 30px rgba(0,0,0,.9),
       0 0 0 1px rgba(224,176,96,.4),
@@ -1028,11 +851,6 @@
     content:'';position:absolute;inset:5px;
     border:1px solid rgba(224,176,96,.5);
     border-radius:4px;pointer-events:none;
-  }
-  .stick-front::after, .stick-back::after{
-    content:'';position:absolute;inset:9px;
-    border:1px solid rgba(224,176,96,.2);
-    border-radius:3px;pointer-events:none;
   }
   .stick-front{
     background:
@@ -1051,20 +869,17 @@
     font-family:'Playfair Display',serif;
     font-style:italic;
     font-weight:600;
-    font-size:1.1rem;
+    font-size:.95rem;
     letter-spacing:.4em;
     color:#e0b060;
     writing-mode:vertical-rl;
     text-orientation:mixed;
-    text-shadow:
-      0 0 20px rgba(224,176,96,.8),
-      0 0 40px rgba(224,176,96,.4);
-    position:relative;z-index:2;
+    text-shadow:0 0 20px rgba(224,176,96,.8);
   }
 
   .stick-top-mark{
     position:relative;
-    width:22px;height:22px;
+    width:20px;height:20px;
     flex-shrink:0;
     display:flex;align-items:center;justify-content:center;
     pointer-events:auto;
@@ -1075,19 +890,16 @@
   .stick-top-mark::before{
     content:'';
     position:absolute;
-    width:14px;height:14px;
+    width:12px;height:12px;
     border-radius:50%;
     background:radial-gradient(circle at 35% 30%, #c01838, #6a0a20);
-    box-shadow:
-      0 0 10px rgba(200,40,80,.8),
-      0 0 20px rgba(200,40,80,.5),
-      inset 0 0 4px rgba(255,220,200,.3);
+    box-shadow:0 0 10px rgba(200,40,80,.8), 0 0 20px rgba(200,40,80,.5);
     animation:markPulse 2s ease-in-out infinite alternate;
   }
   .stick-top-mark::after{
     content:'';
     position:absolute;
-    width:5px;height:5px;
+    width:4px;height:4px;
     border-radius:50%;
     background:#ffe0c0;
     box-shadow:0 0 8px #ffe0c0;
@@ -1097,55 +909,31 @@
     from{opacity:.8;transform:scale(.9);}
     to{opacity:1;transform:scale(1.15);}
   }
-  .stick:hover .stick-top-mark::before{
-    box-shadow:
-      0 0 16px rgba(220,60,100,1),
-      0 0 30px rgba(220,60,100,.6),
-      inset 0 0 6px rgba(255,255,255,.5);
-    animation-duration:1s;
-  }
 
   .stick-num{
     font-family:'Playfair Display',serif;
     font-style:italic;font-weight:700;
-    font-size:1.8rem;
+    font-size:1.4rem;
     background:linear-gradient(180deg, #f8e8c0 0%, #d8b070 50%, #8a6020 100%);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     background-clip:text;
-    text-shadow:0 0 20px rgba(224,176,96,.5);
     position:relative;z-index:2;
     flex:1;
     display:flex;align-items:center;
-    letter-spacing:.05em;
   }
   .stick-label{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.55rem;
-    letter-spacing:.25em;color:#c8a058;
+    font-style:italic;font-size:.45rem;
+    letter-spacing:.2em;color:#c8a058;
     text-transform:uppercase;text-align:center;
     position:relative;z-index:2;
-    opacity:.85;
     flex-shrink:0;
-  }
-
-  .stick:hover{z-index:10;}
-  .stick:hover .stick-inner{
-    transform: rotate(var(--angle)) translateX(var(--tx)) translateY(calc(var(--ty) - 20px));
-    filter:brightness(1.2);
-  }
-  .stick:hover .stick-front,
-  .stick:hover .stick-back{
-    box-shadow:
-      0 22px 44px rgba(0,0,0,.95),
-      0 0 0 1px rgba(224,176,96,.7),
-      0 0 50px rgba(224,176,96,.5),
-      inset 0 0 40px rgba(120,80,40,.3);
   }
 
   .stick.drawn{z-index:30;}
   .stick.drawn .stick-inner{
-    transform: rotate(0deg) translateX(0) translateY(-80px) scale(1.4) rotateY(180deg);
+    transform: rotate(0deg) translateX(0) translateY(-60px) scale(1.3) rotateY(180deg);
     transform-origin:center center;
   }
   .stick.drawn.gone{
@@ -1154,57 +942,30 @@
     pointer-events:none;
   }
 
-  .hint-top{
-    position:relative;z-index:6;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:.9rem;
-    color:#e0b060;
-    letter-spacing:.25em;
-    margin-bottom:1rem;
-    text-shadow:0 0 15px rgba(224,176,96,.7);
-    animation:hintPulse 2.5s ease-in-out infinite;
-    text-align:center;
-  }
-  @keyframes hintPulse{
-    0%,100%{opacity:.5;}
-    50%{opacity:1;}
-  }
-
-  /* ============================================================
-     结果卡：高奢靡黑金
-     ============================================================ */
+  /* 结果卡 */
   .card-stage{
-    position:fixed;
-    inset:0;
+    position:fixed;inset:0;
     z-index:100;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:2rem 1.5rem;
+    padding:1rem;
     opacity:0;
     pointer-events:none;
     transition:opacity 1s ease;
-    overflow-y:auto;
+    overflow:hidden;
   }
-  .card-stage.show{
-    opacity:1;
-    pointer-events:auto;
-  }
-  .card-stage.leaving{
-    opacity:0;
-  }
-
+  .card-stage.show{opacity:1;pointer-events:auto;}
   .card-frame{
     position:relative;
     width:100%;
-    max-width:640px;
+    max-width:440px;
+    max-height:95vh;
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:1.5rem;
     opacity:0;
-    transform:translateY(80px) scale(.85);
+    transform:translateY(60px) scale(.85);
     transition:opacity .9s cubic-bezier(.34,1.56,.64,1),
                transform .9s cubic-bezier(.34,1.56,.64,1);
   }
@@ -1213,10 +974,8 @@
     transform:translateY(0) scale(1);
   }
 
-  /* 签作为卡面背景（高奢靡黑金） */
   .card-bg-stick{
-    position:absolute;
-    inset:0;
+    position:absolute;inset:0;
     border-radius:8px;
     overflow:hidden;
     z-index:0;
@@ -1231,7 +990,6 @@
       0 0 80px rgba(224,176,96,.15),
       inset 0 0 120px rgba(120,80,40,.15);
   }
-  /* ROSE —— 横向表达 */
   .card-bg-stick::before{
     content:'ROSE';
     position:absolute;
@@ -1240,176 +998,121 @@
     font-family:'Playfair Display',serif;
     font-style:italic;
     font-weight:700;
-    font-size:clamp(6rem,18vw,11rem);
+    font-size:clamp(4rem,20vw,8rem);
     letter-spacing:.25em;
     color:rgba(224,176,96,.06);
-    text-shadow:
-      0 0 60px rgba(224,176,96,.1),
-      0 0 120px rgba(224,176,96,.05);
     pointer-events:none;
     user-select:none;
     white-space:nowrap;
-    z-index:0;
   }
   .card-bg-stick::after{
-    content:'';
-    position:absolute;
-    inset:14px;
+    content:'';position:absolute;inset:10px;
     border:1px solid rgba(224,176,96,.4);
-    border-radius:6px;
-    pointer-events:none;
-    box-shadow:
-      inset 0 0 40px rgba(224,176,96,.08),
-      inset 0 0 0 1px rgba(224,176,96,.15);
-  }
-  .card-bg-stick .inner-line{
-    position:absolute;
-    inset:22px;
-    border:1px solid rgba(224,176,96,.2);
-    border-radius:4px;
-    pointer-events:none;
+    border-radius:6px;pointer-events:none;
   }
   .card-corner-deco{
     position:absolute;
-    width:32px;height:32px;
+    width:24px;height:24px;
     border-color:#e0b060;
-    border-style:solid;
-    border-width:0;
-    opacity:.9;
-    z-index:1;
+    border-style:solid;border-width:0;opacity:.9;
     pointer-events:none;
   }
-  .card-corner-deco.tl{top:8px;left:8px;border-top-width:2px;border-left-width:2px;}
-  .card-corner-deco.tr{top:8px;right:8px;border-top-width:2px;border-right-width:2px;}
-  .card-corner-deco.bl{bottom:8px;left:8px;border-bottom-width:2px;border-left-width:2px;}
-  .card-corner-deco.br{bottom:8px;right:8px;border-bottom-width:2px;border-right-width:2px;}
+  .card-corner-deco.tl{top:6px;left:6px;border-top-width:2px;border-left-width:2px;}
+  .card-corner-deco.tr{top:6px;right:6px;border-top-width:2px;border-right-width:2px;}
+  .card-corner-deco.bl{bottom:6px;left:6px;border-bottom-width:2px;border-left-width:2px;}
+  .card-corner-deco.br{bottom:6px;right:6px;border-bottom-width:2px;border-right-width:2px;}
 
   .card-content{
     position:relative;
     z-index:2;
-    padding:2.8rem 2.2rem;
+    padding:1.8rem 1.2rem;
     text-align:center;
     width:100%;
   }
 
-  /* 礼物标识 */
   .gift-badge{
     position:absolute;
-    top:-18px;left:-18px;
-    width:60px;height:60px;
+    top:-14px;left:-14px;
+    width:50px;height:50px;
     z-index:10;
     opacity:0;
     transform:scale(.5) rotate(-15deg);
     transition:opacity .8s ease, transform .8s cubic-bezier(.34,1.56,.64,1);
     pointer-events:none;
   }
-  .gift-badge.show{
-    opacity:1;
-    transform:scale(1) rotate(0deg);
-  }
+  .gift-badge.show{opacity:1;transform:scale(1) rotate(0deg);}
   .gift-badge .gb-bg{
     position:absolute;inset:0;
     border-radius:50%;
     background:radial-gradient(circle at 35% 30%, #c01838, #6a0a20);
     box-shadow:
       0 6px 20px rgba(140,20,50,.8),
-      0 0 40px rgba(200,60,100,.5),
-      inset 0 -3px 8px rgba(30,0,10,.7),
-      inset 0 3px 6px rgba(255,200,180,.3);
+      0 0 40px rgba(200,60,100,.5);
     border:2px solid #e0b060;
-  }
-  .gift-badge .gb-bg::before{
-    content:'';position:absolute;inset:6px;
-    border-radius:50%;
-    border:1px solid rgba(255,240,200,.5);
   }
   .gift-badge .gb-icon{
     position:absolute;top:50%;left:50%;
     transform:translate(-50%,-50%);
-    width:32px;height:32px;
-    filter:drop-shadow(0 0 8px rgba(255,240,200,.8));
+    width:26px;height:26px;
   }
   .gift-badge .gb-icon svg{width:100%;height:100%;display:block;}
-  .gift-badge.show .gb-bg{
-    animation:giftPulse 2.5s ease-in-out infinite alternate;
-  }
-  @keyframes giftPulse{
-    from{box-shadow:
-      0 6px 20px rgba(140,20,50,.8),
-      0 0 40px rgba(200,60,100,.5),
-      inset 0 -3px 8px rgba(30,0,10,.7),
-      inset 0 3px 6px rgba(255,200,180,.3);}
-    to{box-shadow:
-      0 6px 20px rgba(180,30,70,.95),
-      0 0 60px rgba(220,80,120,.8),
-      inset 0 -3px 8px rgba(30,0,10,.7),
-      inset 0 3px 6px rgba(255,200,180,.4);}
-  }
 
   .draw-result-ornament{
     font-family:'Playfair Display',serif;
-    font-style:italic;font-size:.7rem;
-    color:#e0b060;letter-spacing:.55em;
-    text-transform:uppercase;margin-bottom:1.5rem;
-    position:relative;z-index:1;
-    text-shadow:0 0 12px rgba(224,176,96,.5);
+    font-style:italic;font-size:.6rem;
+    color:#e0b060;letter-spacing:.5em;
+    text-transform:uppercase;margin-bottom:1rem;
   }
   .draw-result-ornament::before,
   .draw-result-ornament::after{
-    content:'✦';margin:0 .8rem;color:#e0b060;
-    font-size:.6rem;vertical-align:middle;
-    text-shadow:0 0 8px rgba(224,176,96,.8);
+    content:'✦';margin:0 .5rem;color:#e0b060;
+    font-size:.5rem;vertical-align:middle;
   }
   .draw-result-num{
     font-family:'Playfair Display',serif;
     font-style:italic;font-weight:700;
-    font-size:clamp(2.6rem,6.5vw,3.6rem);
+    font-size:clamp(2rem,7vw,2.8rem);
     background:linear-gradient(180deg,#fff4d0 0%, #e0b060 40%, #a07838 80%, #6a4a18 100%);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     background-clip:text;
-    letter-spacing:.05em;margin-bottom:.4rem;
-    text-shadow:0 0 50px rgba(224,176,96,.4);
-    position:relative;z-index:1;line-height:1.1;
+    letter-spacing:.05em;margin-bottom:.3rem;
+    line-height:1.1;
     filter:drop-shadow(0 0 20px rgba(224,176,96,.3));
   }
   .draw-result-label{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.8rem;
+    font-style:italic;font-size:.7rem;
     color:#c8a878;letter-spacing:.5em;
-    text-transform:uppercase;margin-bottom:2rem;
-    position:relative;z-index:1;
+    text-transform:uppercase;margin-bottom:1.2rem;
   }
   .draw-result-name{
     font-family:'Playfair Display',serif;
     font-weight:700;
-    font-size:clamp(1.5rem,4vw,2.2rem);
+    font-size:clamp(1.2rem,4.5vw,1.8rem);
     background:linear-gradient(180deg,#fff4d0 0%, #e0b060 60%, #a07838 100%);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     background-clip:text;
     letter-spacing:.05em;
-    margin-bottom:2rem;
-    text-shadow:0 0 40px rgba(224,176,96,.5);
-    position:relative;z-index:1;line-height:1.3;
+    margin-bottom:1.2rem;
+    line-height:1.3;
     filter:drop-shadow(0 0 15px rgba(224,176,96,.3));
   }
-
   .draw-result-desc{
     font-family:'Cormorant Garamond',serif;
-    font-size:1.05rem;
-    line-height:2.1;
+    font-size:.92rem;
+    line-height:1.9;
     color:#c8b8a0;
     font-style:italic;
-    margin-bottom:2rem;
-    position:relative;z-index:1;
-    max-width:520px;
+    margin-bottom:1.2rem;
+    max-width:360px;
     margin-left:auto;margin-right:auto;
     text-align:center;
   }
   .desc-line{
     display:block;
-    margin-bottom:.5rem;
+    margin-bottom:.4rem;
     opacity:0;
     transform:translateY(10px);
     transition:opacity .8s ease, transform .8s ease;
@@ -1419,206 +1122,143 @@
     color:#e0b060;
     font-style:normal;
     font-family:'Noto Serif SC',serif;
-    font-size:.95rem;
-    letter-spacing:.05em;
-    text-shadow:
-      0 0 15px rgba(224,176,96,.6),
-      0 0 30px rgba(224,176,96,.3);
+    font-size:.88rem;
+    text-shadow:0 0 15px rgba(224,176,96,.6);
     font-weight:500;
   }
 
   .draw-result-tags{
-    display:flex;flex-wrap:wrap;gap:.6rem;
-    justify-content:center;position:relative;z-index:1;
-    margin-bottom:.5rem;
+    display:flex;flex-wrap:wrap;gap:.4rem;
+    justify-content:center;margin-bottom:.4rem;
   }
   .draw-result-tags span{
     font-family:'Cormorant Garamond',serif;
-    font-size:.7rem;color:#c8a878;
+    font-size:.62rem;color:#c8a878;
     border:1px solid rgba(224,176,96,.4);
-    padding:.3rem .9rem;
-    letter-spacing:.2em;text-transform:uppercase;
+    padding:.2rem .6rem;
+    letter-spacing:.15em;text-transform:uppercase;
     font-style:italic;
-    background:rgba(224,176,96,.04);
-    box-shadow:inset 0 0 12px rgba(224,176,96,.05);
   }
 
-  /* 创新按钮：黑金奢靡 */
   .draw-result-actions{
-    display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;
+    display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;
     position:relative;z-index:1;
   }
   .draw-result-btn{
-    position:relative;
-    padding:1rem 2.6rem;
+    padding:.8rem 1.6rem;
     background:linear-gradient(180deg, rgba(30,20,10,.9), rgba(15,10,5,.95));
     border:1px solid rgba(224,176,96,.6);
     color:#e0b060;
     font-family:'Cormorant Garamond',serif;
     font-style:italic;
-    font-size:.85rem;
-    letter-spacing:.4em;
+    font-size:.72rem;
+    letter-spacing:.3em;
     text-transform:uppercase;
     cursor:pointer;
     transition:all .5s cubic-bezier(.4,.2,.2,1);
-    overflow:hidden;
-    box-shadow:
-      0 10px 30px rgba(0,0,0,.6),
-      0 0 0 1px rgba(224,176,96,.2),
-      inset 0 1px 0 rgba(255,220,160,.15),
-      inset 0 -1px 0 rgba(0,0,0,.5);
   }
-  .draw-result-btn::before{
-    content:'';
-    position:absolute;
-    top:0;left:-100%;
-    width:100%;height:100%;
-    background:linear-gradient(90deg,
-      transparent 0%,
-      rgba(255,220,160,.15) 50%,
-      transparent 100%);
-    transition:left .8s ease;
-    pointer-events:none;
-  }
-  .draw-result-btn:hover::before{left:100%;}
-  .draw-result-btn:hover{
-    border-color:#e0b060;
-    color:#fff4d0;
-    box-shadow:
-      0 15px 40px rgba(0,0,0,.8),
-      0 0 0 1px rgba(224,176,96,.6),
-      0 0 40px rgba(224,176,96,.4),
-      inset 0 1px 0 rgba(255,220,160,.3),
-      inset 0 -1px 0 rgba(0,0,0,.5);
-    transform:translateY(-3px);
-    letter-spacing:.5em;
-  }
-  .draw-result-btn:active{transform:translateY(-1px);}
   .draw-result-btn.primary{
     background:linear-gradient(180deg, rgba(60,40,20,.95), rgba(30,20,10,.98));
     border-color:#e0b060;
     color:#fff4d0;
-    box-shadow:
-      0 10px 30px rgba(0,0,0,.6),
-      0 0 0 1px rgba(224,176,96,.5),
-      0 0 30px rgba(224,176,96,.25),
-      inset 0 1px 0 rgba(255,240,200,.25),
-      inset 0 -1px 0 rgba(0,0,0,.6);
-  }
-  .draw-result-btn.primary:hover{
-    box-shadow:
-      0 15px 40px rgba(0,0,0,.8),
-      0 0 0 1px rgba(224,176,96,.8),
-      0 0 60px rgba(224,176,96,.6),
-      inset 0 1px 0 rgba(255,240,200,.4),
-      inset 0 -1px 0 rgba(0,0,0,.6);
-  }
-  .draw-result-btn.secondary{
-    background:linear-gradient(180deg, rgba(20,15,10,.9), rgba(10,8,5,.95));
-    border-color:rgba(224,176,96,.35);
-    color:#a08050;
-  }
-  .draw-result-btn.secondary:hover{
-    border-color:rgba(224,176,96,.7);
-    color:#e0b060;
-    box-shadow:
-      0 15px 40px rgba(0,0,0,.8),
-      0 0 0 1px rgba(224,176,96,.4),
-      0 0 30px rgba(224,176,96,.25),
-      inset 0 1px 0 rgba(255,220,160,.15);
   }
 
-  /* ============================================================
-     剧情追逐页
-     ============================================================ */
-  .story-wrap{
-    position:relative;max-width:720px;width:100%;
-    text-align:center;z-index:6;
-  }
+  /* 故事页 */
   .story-stage{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-size:.7rem;
+    position:fixed;inset:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1s ease;
+  }
+  .story-stage.show{opacity:1;pointer-events:auto;}
+  .story-card{
+    position:relative;
+    width:100%;
+    max-width:420px;
+    max-height:95vh;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.1), transparent 60%),
+      linear-gradient(160deg, #1a1008 0%, #0e0806 50%, #050303 100%);
+    border:1px solid rgba(224,176,96,.5);
+    border-radius:8px;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,.95),
+      0 0 0 1px rgba(224,176,96,.3),
+      0 0 80px rgba(224,176,96,.15);
+    padding:2rem 1.5rem;
+    opacity:0;
+    transform:translateY(60px) scale(.9);
+    transition:opacity .9s cubic-bezier(.34,1.56,.64,1),
+               transform .9s cubic-bezier(.34,1.56,.64,1);
+  }
+  .story-stage.show .story-card{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+  .story-card::before{
+    content:'';position:absolute;inset:10px;
+    border:1px solid rgba(224,176,96,.35);
+    border-radius:6px;pointer-events:none;
+  }
+
+  .story-eyebrow{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.62rem;
     color:#e0b060;letter-spacing:.5em;
-    text-transform:uppercase;margin-bottom:1.5rem;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
+    text-transform:uppercase;margin-bottom:1rem;
+    text-align:center;
   }
-  .story-stage::before,
-  .story-stage::after{
-    content:'✦';margin:0 .8rem;color:#e0b060;
-    font-size:.6rem;vertical-align:middle;
+  .story-eyebrow::before,
+  .story-eyebrow::after{
+    content:'✦';margin:0 .5rem;color:#e0b060;
+    font-size:.5rem;vertical-align:middle;
   }
+
   .story-title{
     font-family:'Playfair Display',serif;
     font-style:italic;font-weight:600;
-    font-size:clamp(1.6rem,4.2vw,2.2rem);
-    color:#f4e4c8;margin-bottom:.6rem;
-    letter-spacing:.05em;
-    text-shadow:0 0 40px rgba(224,176,96,.5), 0 2px 10px rgba(0,0,0,.9);
+    font-size:clamp(1.2rem,4vw,1.6rem);
+    color:#f4e4c8;margin-bottom:.3rem;
+    text-align:center;
+    text-shadow:0 0 40px rgba(224,176,96,.5);
   }
-  .story-title .accent{
-    color:#e0b060;
-    text-shadow:0 0 50px rgba(224,176,96,.7), 0 2px 10px rgba(0,0,0,.8);
-  }
+  .story-title .accent{color:#e0b060;}
+
   .story-sub{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;
+    font-style:italic;font-size:.72rem;
     color:#c8a878;letter-spacing:.3em;
-    text-transform:uppercase;margin-bottom:2rem;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
-  }
-  .story-text{
-    position:relative;
-    max-width:640px;width:100%;
-    margin:0 auto 2rem;
-    padding:2.2rem 2rem;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.1), transparent 70%),
-      linear-gradient(160deg, rgba(30,18,12,.95) 0%, rgba(20,12,10,.97) 100%);
-    border:1px solid #8a6838;
-    border-radius:6px;
-    box-shadow:
-      0 20px 50px rgba(0,0,0,.9),
-      0 0 0 1px rgba(224,176,96,.25),
-      inset 0 0 60px rgba(120,80,40,.15);
-    text-align:left;
-  }
-  .story-text::before{
-    content:'';position:absolute;inset:8px;
-    border:1px solid rgba(224,176,96,.3);
-    border-radius:4px;pointer-events:none;
-  }
-  .story-paragraph{
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(1rem,2.4vw,1.15rem);
-    line-height:2.1;color:#d8c8b0;
-    font-style:italic;
-    margin-bottom:1.3rem;
-    opacity:0;transform:translateY(10px);
-    transition:opacity 1.4s ease, transform 1.4s ease;
-    position:relative;z-index:1;
-  }
-  .story-paragraph.show{opacity:1;transform:translateY(0);}
-  .story-paragraph:last-child{margin-bottom:0;}
-  .story-paragraph .hl{
-    color:#e0b060;font-style:normal;
-    font-family:'Noto Serif SC',serif;
-    font-size:.95rem;letter-spacing:.03em;
-    text-shadow:0 0 15px rgba(224,176,96,.5);
-  }
-  .story-paragraph .amber{
-    color:#f0d8a0;font-style:normal;
-    font-family:'Noto Serif SC',serif;
-    font-weight:500;
-    letter-spacing:.05em;
-    text-shadow:0 0 15px rgba(224,176,96,.4);
+    text-transform:uppercase;margin-bottom:1.2rem;
+    text-align:center;
   }
 
-  .rose-hidden{
+  .story-text{
+    font-family:'Cormorant Garamond',serif;
+    font-size:.98rem;
+    line-height:2;
+    color:#d8c8b0;
+    font-style:italic;
+    text-align:center;
+    margin-bottom:1.2rem;
+    padding:0 .5rem;
+  }
+  .story-text .hl{
+    color:#e0b060;
+    font-style:normal;
+    font-family:'Noto Serif SC',serif;
+    text-shadow:0 0 15px rgba(224,176,96,.5);
+  }
+
+  .story-item{
     color:#c01838;
     font-family:'Noto Serif SC',serif;
     font-weight:500;
     cursor:pointer;
-    position:relative;
     padding:0 .15em;
     letter-spacing:.05em;
     text-shadow:
@@ -1629,13 +1269,9 @@
     display:inline-block;
     border-bottom:1px dashed rgba(200,40,80,.6);
   }
-  .rose-hidden:hover{
+  .story-item:active{
     color:#e02050;
-    text-shadow:
-      0 0 20px rgba(220,50,90,1),
-      0 0 40px rgba(220,50,90,.6);
-    transform:scale(1.05);
-    border-bottom-color:#e02050;
+    transform:scale(1.08);
   }
   @keyframes roseHiddenPulse{
     from{text-shadow:
@@ -1645,63 +1281,78 @@
       0 0 16px rgba(200,40,80,.9),
       0 0 32px rgba(200,40,80,.5);}
   }
-  .rose-hidden.found{
+  .story-item.chosen{
     color:#fff4d0;
     text-shadow:0 0 30px rgba(224,176,96,1);
     animation:none;
     border-bottom-color:transparent;
-    cursor:default;
     pointer-events:none;
   }
 
-  .rose-question{
+  .story-hint{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.8rem;
+    color:#e0b060;
+    letter-spacing:.15em;
+    text-align:center;
+    padding:.7rem 0;
+    margin-bottom:1rem;
+    border-top:1px solid rgba(224,176,96,.2);
+    border-bottom:1px solid rgba(224,176,96,.2);
+    animation:hintPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes hintPulse{
+    0%,100%{opacity:.6;}
+    50%{opacity:1;}
+  }
+
+  /* 得到玫瑰页 */
+  .gain-stage{
+    position:fixed;inset:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1s ease;
+  }
+  .gain-stage.show{opacity:1;pointer-events:auto;}
+  .gain-card{
     position:relative;
-    max-width:640px;width:100%;
-    margin:0 auto 2rem;
-    padding:1.8rem 1.5rem;
+    width:100%;
+    max-width:400px;
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(200,60,100,.12), transparent 70%),
-      linear-gradient(160deg, rgba(40,16,28,.9) 0%, rgba(20,8,16,.95) 100%);
-    border:1px solid rgba(200,60,100,.4);
-    border-radius:6px;
+      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.12), transparent 60%),
+      linear-gradient(160deg, #1a1008 0%, #0e0806 50%, #050303 100%);
+    border:1px solid rgba(224,176,96,.5);
+    border-radius:8px;
     box-shadow:
-      0 20px 50px rgba(0,0,0,.9),
-      0 0 0 1px rgba(200,60,100,.2);
+      0 40px 100px rgba(0,0,0,.95),
+      0 0 0 1px rgba(224,176,96,.3),
+      0 0 80px rgba(224,176,96,.2);
+    padding:2.5rem 1.5rem 2rem;
     text-align:center;
+    opacity:0;
+    transform:translateY(60px) scale(.9);
+    transition:opacity .9s cubic-bezier(.34,1.56,.64,1),
+               transform .9s cubic-bezier(.34,1.56,.64,1);
   }
-  .rose-question::before{
-    content:'';position:absolute;inset:8px;
-    border:1px solid rgba(200,60,100,.3);
-    border-radius:4px;pointer-events:none;
+  .gain-stage.show .gain-card{
+    opacity:1;
+    transform:translateY(0) scale(1);
   }
-  .rose-question-text{
-    font-family:'Long Cang',cursive;
-    font-size:clamp(1.1rem,2.8vw,1.4rem);
-    line-height:1.8;color:#ffd8e8;
-    letter-spacing:.05em;
-    text-shadow:0 0 20px rgba(200,60,100,.5);
-    position:relative;z-index:1;
-  }
-  .rose-question-text .hl{
-    color:#c01838;
-    font-family:'Noto Serif SC',serif;
-    font-weight:500;
-    text-shadow:
-      0 0 12px rgba(200,40,80,.8),
-      0 0 24px rgba(200,40,80,.4);
+  .gain-card::before{
+    content:'';position:absolute;inset:10px;
+    border:1px solid rgba(224,176,96,.35);
+    border-radius:6px;pointer-events:none;
   }
 
-  .rose-gained{
-    text-align:center;
-    opacity:0;transform:scale(.9);
-    transition:opacity 1s ease, transform 1s ease;
-    pointer-events:none;
-    margin-top:1.5rem;
-  }
-  .rose-gained.show{opacity:1;transform:scale(1);pointer-events:auto;}
-  .rose-gained-icon{
+  .gain-rose-icon{
     width:80px;height:80px;
-    margin:0 auto 1rem;
+    margin:0 auto 1.2rem;
     filter:drop-shadow(0 0 30px rgba(224,176,96,.9));
     animation:roseGainGlow 2s ease-in-out infinite alternate;
   }
@@ -1709,109 +1360,177 @@
     from{filter:drop-shadow(0 0 20px rgba(224,176,96,.7));}
     to{filter:drop-shadow(0 0 40px rgba(224,176,96,1));}
   }
-  .rose-gained-text{
+
+  .gain-title{
     font-family:'Playfair Display',serif;
-    font-style:italic;font-size:1.2rem;
+    font-style:italic;font-weight:600;
+    font-size:clamp(1.3rem,4.5vw,1.8rem);
     color:#e0b060;
-    letter-spacing:.1em;
+    letter-spacing:.05em;
+    margin-bottom:.8rem;
     text-shadow:0 0 30px rgba(224,176,96,.6);
   }
-  .rose-gained-sub{
+  .gain-title .accent{color:#fff4d0;}
+
+  .gain-sub{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;
-    color:#c8a878;letter-spacing:.25em;
-    text-transform:uppercase;margin-top:.5rem;
+    font-style:italic;font-size:.75rem;
+    color:#c8a878;letter-spacing:.3em;
+    text-transform:uppercase;margin-bottom:1.5rem;
   }
 
-  .interlude-continue{
-    padding:1.1rem 3rem;
-    background:rgba(20,10,8,.5);
-    border:1px solid #6a5540;
-    color:#8a7560;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.9rem;
-    letter-spacing:.4em;text-transform:uppercase;
-    cursor:not-allowed;transition:all .4s ease;
-    backdrop-filter:blur(4px);
-    position:relative;
-    margin-top:2rem;
+  .gain-message{
+    font-family:'Long Cang',cursive;
+    font-size:clamp(1rem,3.2vw,1.2rem);
+    line-height:1.9;
+    color:#f4e4c8;
+    margin-bottom:1.8rem;
+    text-shadow:0 0 20px rgba(224,176,96,.4);
   }
-  .interlude-continue.enabled{
-    border-color:#e0b060;color:#fff4d0;
+  .gain-message .hl{color:#e0b060;}
+  .gain-message .pink{color:#ffb7d0;}
+
+  .question-title{
+    font-family:'Playfair Display',serif;
+    font-style:italic;font-weight:600;
+    font-size:clamp(1.1rem,3.8vw,1.5rem);
+    color:#e0b060;
+    margin-bottom:.6rem;
+    text-shadow:0 0 30px rgba(224,176,96,.5);
+  }
+  .question-title .accent{color:#fff4d0;}
+
+  .question-text{
+    font-family:'Long Cang',cursive;
+    font-size:clamp(.95rem,3vw,1.1rem);
+    line-height:1.8;
+    color:#d8c8b0;
+    margin-bottom:1.4rem;
+    text-align:center;
+    padding:0 .5rem;
+  }
+  .question-text .hl{color:#e0b060;}
+
+  .question-choices{
+    display:flex;flex-direction:column;
+    gap:.7rem;width:100%;
+  }
+  .question-choice{
+    padding:1rem 1.2rem;
+    background:rgba(20,10,8,.6);
+    border:1px solid rgba(224,176,96,.4);
+    border-radius:4px;
     cursor:pointer;
+    transition:all .4s ease;
+    text-align:center;
+    position:relative;
   }
-  .interlude-continue.enabled:hover{
-    border-color:#e0b060;color:#fff4d0;
-    box-shadow:0 0 50px rgba(224,176,96,.5);
-    letter-spacing:.45em;
-    transform:translateY(-2px);
+  .question-choice:active{
+    transform:scale(.98);
+    border-color:#e0b060;
+    box-shadow:0 0 30px rgba(224,176,96,.4);
   }
-
-  /* 移动端 */
-  @media(max-width:720px){
-    .screen{padding:2rem 1rem;}
-    .floating-card{width:50px;height:72px;}
-    .floating-card.c1{left:-2%;}
-    .floating-card.c2{right:-3%;}
-    .floating-card.c3{left:-3%;}
-    .floating-card.c4{right:-2%;}
-    .floating-card.c5{display:none;}
-    .dice-float.d1{width:50px;height:50px;top:8%;left:4%;}
-    .dice-float.d2{width:44px;height:44px;right:5%;}
-    .dice-float.d3{width:38px;height:38px;left:8%;}
-    .whisper-marquee{font-size:.85rem;}
-
-    .invitation-card{padding:2rem 1.2rem 1.6rem;}
-    .inv-profile{grid-template-columns:1fr;gap:.5rem;padding:1rem .8rem;}
-    .inv-profile-item{font-size:.78rem;}
-    .inv-profile-item .key{min-width:44px;font-size:.62rem;}
-    .inv-profile-item .val{font-size:.78rem;}
-    .inv-main{font-size:clamp(.95rem,3.6vw,1.2rem);line-height:1.7;}
-    .inv-confession{font-size:.85rem;padding:.6rem 0;}
-    .inv-signature{font-size:1.2rem;}
-
-    .sticks-fan{width:100%;height:440px;margin-bottom:1.5rem;}
-    .stick{width:44px;height:340px;}
-    .stick:nth-child(1){--angle:-30deg;--tx:-140px;--ty:8px; z-index:1;}
-    .stick:nth-child(2){--angle:-20deg;--tx:-93px;--ty:2px; z-index:2;}
-    .stick:nth-child(3){--angle:-10deg;--tx:-47px;--ty:-2px; z-index:3;}
-    .stick:nth-child(4){--angle:0deg;--tx:0px;--ty:-5px; z-index:7;}
-    .stick:nth-child(5){--angle:10deg;--tx:47px;--ty:-2px; z-index:3;}
-    .stick:nth-child(6){--angle:20deg;--tx:93px;--ty:2px; z-index:2;}
-    .stick:nth-child(7){--angle:30deg;--tx:140px;--ty:8px; z-index:1;}
-    .stick-num{font-size:1.4rem;}
-    .stick-label{font-size:.45rem;}
-    .stick-top-mark{width:18px;height:18px;}
-    .stick-top-mark::before{width:12px;height:12px;}
-    .stick.drawn .stick-inner{
-      transform: rotate(0deg) translateX(0) translateY(-60px) scale(1.2) rotateY(180deg);
-    }
-    .gift-badge{width:50px;height:50px;top:-14px;left:-14px;}
-    .gift-badge .gb-icon{width:26px;height:26px;}
-    .card-content{padding:2rem 1.4rem;}
-    .card-bg-stick::before{font-size:clamp(4rem,18vw,7rem);}
-    .draw-result-desc{font-size:.92rem;line-height:1.9;}
-    .draw-result-desc .amber-quote{font-size:.85rem;}
-    .draw-result-btn{padding:.9rem 1.8rem;font-size:.75rem;letter-spacing:.3em;}
-
-    .story-text{padding:1.5rem 1.2rem;}
-    .story-paragraph{font-size:.9rem;line-height:1.9;}
-    .rose-question{padding:1.3rem 1rem;}
-    .rose-question-text{font-size:1rem;}
-    .rose-gained-icon{width:60px;height:60px;}
-    .rose-gained-text{font-size:1rem;}
+  .question-choice .qc-name{
+    font-family:'Long Cang',cursive;
+    font-size:1rem;
+    color:#f0d8a0;
+    margin-bottom:.2rem;
+  }
+  .question-choice .qc-desc{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.72rem;
+    color:#c8a878;
+    line-height:1.5;
   }
 
-  @media(max-width:400px){
-    .stick{width:38px;height:300px;}
-    .stick:nth-child(1){--tx:-110px; z-index:1;}
-    .stick:nth-child(2){--tx:-73px; z-index:2;}
-    .stick:nth-child(3){--tx:-37px; z-index:3;}
-    .stick:nth-child(4){--tx:0px; z-index:7;}
-    .stick:nth-child(5){--tx:37px; z-index:3;}
-    .stick:nth-child(6){--tx:73px; z-index:2;}
-    .stick:nth-child(7){--tx:110px; z-index:1;}
-    .sticks-fan{height:380px;}
+  /* 结局页 */
+  .ending-stage{
+    position:fixed;inset:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1s ease;
+  }
+  .ending-stage.show{opacity:1;pointer-events:auto;}
+  .ending-card{
+    position:relative;
+    width:100%;
+    max-width:440px;
+    max-height:95vh;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(224,176,96,.1), transparent 60%),
+      linear-gradient(160deg, #1a1008 0%, #0e0806 50%, #050303 100%);
+    border:1px solid rgba(224,176,96,.5);
+    border-radius:8px;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,.95),
+      0 0 0 1px rgba(224,176,96,.3);
+    padding:2rem 1.5rem;
+    text-align:center;
+  }
+  .ending-card::before{
+    content:'';position:absolute;inset:10px;
+    border:1px solid rgba(224,176,96,.35);
+    border-radius:6px;pointer-events:none;
+  }
+  .ending-eyebrow{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.62rem;
+    color:#e0b060;letter-spacing:.5em;
+    text-transform:uppercase;margin-bottom:1rem;
+  }
+  .ending-eyebrow::before,
+  .ending-eyebrow::after{
+    content:'✦';margin:0 .5rem;color:#e0b060;
+    font-size:.5rem;vertical-align:middle;
+  }
+  .ending-title{
+    font-family:'Playfair Display',serif;
+    font-style:italic;font-weight:600;
+    font-size:clamp(1.3rem,4.5vw,1.8rem);
+    color:#e0b060;
+    margin-bottom:1.2rem;
+    text-shadow:0 0 30px rgba(224,176,96,.5);
+  }
+  .ending-title .accent{color:#fff4d0;}
+  .ending-text{
+    font-family:'Cormorant Garamond',serif;
+    font-size:.95rem;
+    line-height:1.9;
+    color:#d8c8b0;
+    font-style:italic;
+    margin-bottom:1.5rem;
+    text-align:center;
+    padding:0 .5rem;
+  }
+  .ending-text .hl{
+    color:#e0b060;
+    font-style:normal;
+    font-family:'Noto Serif SC',serif;
+  }
+  .ending-btn{
+    padding:.85rem 2.4rem;
+    background:linear-gradient(180deg, rgba(60,40,20,.95), rgba(30,20,10,.98));
+    border:1px solid #e0b060;
+    color:#fff4d0;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.8rem;
+    letter-spacing:.4em;text-transform:uppercase;
+    cursor:pointer;
+    transition:all .4s ease;
+  }
+
+  @media(max-height:640px){
+    .stick{height:min(48vh,300px);}
+    .sticks-fan{height:min(52vh,360px);}
+    .story-card{padding:1.5rem 1rem;}
+    .story-text{font-size:.9rem;line-height:1.8;}
+    .gain-card{padding:1.8rem 1.2rem 1.5rem;}
+    .gain-rose-icon{width:60px;height:60px;}
   }
 </style>
 </head>
@@ -1828,14 +1547,13 @@
 <div class="whisper-marquee w5">Meet me where the roses bloom.</div>
 <div class="whisper-marquee w6">If you run, I'll follow.</div>
 
-<!-- ========= 第一屏：报名 ========= -->
-<section class="screen" id="screen1">
+<!-- 第 1 屏：报名 -->
+<section class="screen active" id="screen1">
   <div class="signup-stage">
-    <div class="floating-card c1"><div class="card-corner tl">A</div><div class="card-symbol">♠</div><div class="card-corner br">A</div></div>
-    <div class="floating-card c2"><div class="card-corner tl">K</div><div class="card-symbol">♥</div><div class="card-corner br">K</div></div>
-    <div class="floating-card c3"><div class="card-corner tl">Q</div><div class="card-symbol">♦</div><div class="card-corner br">Q</div></div>
-    <div class="floating-card c4"><div class="card-corner tl">J</div><div class="card-symbol">♣</div><div class="card-corner br">J</div></div>
-    <div class="floating-card c5"><div class="card-corner tl">X</div><div class="card-symbol">✧</div><div class="card-corner br">X</div></div>
+    <div class="floating-card c1"><div class="card-symbol">♠</div></div>
+    <div class="floating-card c2"><div class="card-symbol">♥</div></div>
+    <div class="floating-card c3"><div class="card-symbol">♦</div></div>
+    <div class="floating-card c4"><div class="card-symbol">♣</div></div>
     <div class="card-glow g1"></div>
     <div class="card-glow g2"></div>
 
@@ -1849,21 +1567,14 @@
   </div>
 </section>
 
-<!-- ========= 邀请屏 ========= -->
-<section class="screen hidden" id="screenInvite">
-  <div class="eyebrow">— an invitation from amber —</div>
+<!-- 第 2 屏：邀请函 -->
+<section class="screen" id="screenInvite">
   <div class="invitation-stage">
     <div class="invitation-card" id="invitationCard">
-      <div class="inv-corner tl"></div>
-      <div class="inv-corner tr"></div>
-      <div class="inv-corner bl"></div>
-      <div class="inv-corner br"></div>
       <div class="crest">
         <svg viewBox="0 0 60 70">
           <path d="M30 5 L52 15 L52 40 Q52 58 30 68 Q8 58 8 40 L8 15 Z"
                 fill="none" stroke="#e0b060" stroke-width="1.5"/>
-          <path d="M30 12 L46 20 L46 38 Q46 52 30 60 Q14 52 14 38 L14 20 Z"
-                fill="none" stroke="#e0b060" stroke-width="0.8"/>
           <path d="M30 22 L38 30 L30 38 L22 30 Z" fill="#e0b060" opacity="0.7"/>
           <circle cx="30" cy="30" r="2" fill="#ffd8a0"/>
         </svg>
@@ -1882,58 +1593,19 @@
       <div class="inv-confession">
         <span class="hl">"来追我。追到了，我就让你咬一口。"</span>
       </div>
-      <div class="inv-divider"><span class="diamond">◆</span></div>
       <div class="inv-signature">
         琥珀
-        <span class="meta">— awaiting your arrival —</span>
-      </div>
-      <div class="inv-seal">
-        <div class="wax-mini">♡</div>
-        <div class="wax-text">Sealed with wax</div>
+        <span class="meta">— awaiting you —</span>
       </div>
     </div>
-    <div class="inv-continue" id="invContinue">
+    <div class="inv-continue">
       <button class="inv-continue-btn" id="invContinueBtn">查看邀请</button>
     </div>
   </div>
 </section>
 
-<!-- ========= 第二屏：信封 ========= -->
-<section class="screen hidden" id="screen2">
-  <div class="dice-float d1">
-    <svg viewBox="0 0 80 80">
-      <rect x="10" y="10" width="60" height="60" rx="8" fill="#1a0e08" stroke="#e0b060" stroke-width="2"/>
-      <rect x="16" y="16" width="48" height="48" rx="5" fill="none" stroke="#e0b060" stroke-width="0.8" opacity="0.5"/>
-      <circle class="dice-pip" cx="30" cy="30" r="4" fill="#c01838"/>
-      <circle class="dice-pip" cx="50" cy="30" r="4" fill="#c01838"/>
-      <circle class="dice-pip" cx="40" cy="40" r="4" fill="#c01838"/>
-      <circle class="dice-pip" cx="30" cy="50" r="4" fill="#c01838"/>
-      <circle class="dice-pip" cx="50" cy="50" r="4" fill="#c01838"/>
-    </svg>
-  </div>
-  <div class="dice-float d2">
-    <svg viewBox="0 0 80 80">
-      <rect x="10" y="10" width="60" height="60" rx="8" fill="#1a0e08" stroke="#e0b060" stroke-width="2"/>
-      <rect x="16" y="16" width="48" height="48" rx="5" fill="none" stroke="#e0b060" stroke-width="0.8" opacity="0.5"/>
-      <circle class="dice-pip" cx="30" cy="30" r="4" fill="#c01838"/>
-      <circle class="dice-pip" cx="50" cy="50" r="4" fill="#c01838"/>
-    </svg>
-  </div>
-  <div class="dice-float d3">
-    <svg viewBox="0 0 80 80">
-      <rect x="10" y="10" width="60" height="60" rx="8" fill="#1a0e08" stroke="#e0b060" stroke-width="2"/>
-      <rect x="16" y="16" width="48" height="48" rx="5" fill="none" stroke="#e0b060" stroke-width="0.8" opacity="0.5"/>
-      <circle class="dice-pip" cx="25" cy="25" r="3.5" fill="#c01838"/>
-      <circle class="dice-pip" cx="40" cy="25" r="3.5" fill="#c01838"/>
-      <circle class="dice-pip" cx="55" cy="25" r="3.5" fill="#c01838"/>
-      <circle class="dice-pip" cx="25" cy="55" r="3.5" fill="#c01838"/>
-      <circle class="dice-pip" cx="40" cy="55" r="3.5" fill="#c01838"/>
-      <circle class="dice-pip" cx="55" cy="55" r="3.5" fill="#c01838"/>
-    </svg>
-  </div>
-
-  <div class="eyebrow">— before the ball —</div>
-
+<!-- 第 3 屏：信封 -->
+<section class="screen" id="screen2">
   <div class="envelope-stage">
     <div class="envelope" id="envelope">
       <div class="glow-burst"></div>
@@ -1959,20 +1631,11 @@
       </div>
     </div>
   </div>
-
-  <div class="hint" id="hint">选一个火漆 · 做出你的选择</div>
 </section>
 
 <!-- 弹窗 -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-card">
-    <div class="modal-dice">
-      <svg viewBox="0 0 80 80">
-        <rect x="10" y="10" width="60" height="60" rx="8" fill="#1a0e08" stroke="#e0b060" stroke-width="1.5"/>
-        <circle cx="30" cy="30" r="4" fill="#c01838"/>
-        <circle cx="50" cy="50" r="4" fill="#c01838"/>
-      </svg>
-    </div>
     <div class="modal-text">真的不再<span class="accent">想一想</span>吗？</div>
     <button class="modal-btn" id="modalBtn">我再看看</button>
   </div>
@@ -1993,62 +1656,60 @@
   </div>
 </div>
 
-<!-- ========= 玩法介绍页 ========= -->
-<section class="screen hidden" id="screenIntroRose">
+<!-- 第 4 屏：玩法介绍 -->
+<section class="screen" id="screenIntroRose">
   <div class="intro-rose-wrap">
     <div class="eyebrow">— the rose quest · I —</div>
     <div class="intro-rose-title">收集 <span class="accent">第一朵玫瑰</span></div>
     <div class="intro-rose-sub">— your partner —</div>
     <div class="intro-rose-desc">
       第一朵玫瑰，藏在七支签里。<br>
-      点击签面顶端的红色标记，你的舞伴将会出现。
+      点击签面顶端的红色标记。
     </div>
-
     <div class="intro-steps">
       <div class="intro-step">
         <div class="is-num">I</div>
         <div class="is-content">
           <div class="is-title">七支签 · 七种命运</div>
-          <div class="is-desc">每支签上都刻着一个数字。签面顶端有一枚红色标记。</div>
+          <div class="is-desc">每支签上都刻着一个数字。</div>
         </div>
       </div>
       <div class="intro-step">
         <div class="is-num">II</div>
         <div class="is-content">
           <div class="is-title">点击红色标记 · 抽取</div>
-          <div class="is-desc">点击任意一支签顶端的红色标记，签会翻转，舞伴的身份随之呈现。</div>
+          <div class="is-desc">签会翻转，舞伴的身份随之呈现。</div>
         </div>
       </div>
       <div class="intro-step">
         <div class="is-num">III</div>
         <div class="is-content">
           <div class="is-title">重新选择 · 或进入舞会</div>
-          <div class="is-desc">如果你不满意，可以重新抽。满意了，就带着她走进舞会。</div>
+          <div class="is-desc">不满意可重新抽。满意了就走进舞会。</div>
         </div>
       </div>
     </div>
-
     <button class="interlude-continue enabled" id="introContinue">开始抽签 · 选择舞伴</button>
   </div>
 </section>
 
-<!-- ========= 抽签阶段 ========= -->
-<div class="draw-stage hidden" id="drawStage">
-  <div class="draw-title">
-    选择你的假面公主
-    <span class="ornament">— click the red mark —</span>
+<!-- 抽签屏 -->
+<section class="screen" id="drawScreen">
+  <div class="draw-stage">
+    <div class="draw-title">
+      选择你的假面公主
+      <span class="ornament">— click the red mark —</span>
+    </div>
+    <div class="draw-sub">Seven tokens · One fate</div>
+    <div class="hint-top">↓ 点击任意一支签顶端的红色标记 ↓</div>
+    <div class="sticks-fan" id="sticksFan"></div>
   </div>
-  <div class="draw-sub">Seven tokens · One fate</div>
-  <div class="hint-top">↓ 点击任意一支签顶端的红色标记 ↓</div>
+</section>
 
-  <div class="sticks-fan" id="sticksFan"></div>
-</div>
-
-<!-- ========= 结果卡阶段 ========= -->
+<!-- 结果卡屏 -->
 <div class="card-stage" id="cardStage">
   <div class="card-frame" id="cardFrame">
     <div class="card-bg-stick">
-      <div class="inner-line"></div>
       <div class="card-corner-deco tl"></div>
       <div class="card-corner-deco tr"></div>
       <div class="card-corner-deco bl"></div>
@@ -2085,44 +1746,57 @@
   </div>
 </div>
 
-<!-- ========= 剧情追逐页 ========= -->
-<section class="screen hidden" id="screenStory">
-  <div class="story-wrap">
-    <div class="story-stage" id="storyStage">The Chasing · I</div>
-    <div class="story-title" id="storyTitle">她开始 <span class="accent">追你</span></div>
-    <div class="story-sub" id="storySub">— the chase begins —</div>
-
+<!-- 故事屏 -->
+<div class="story-stage" id="storyStage">
+  <div class="story-card">
+    <div class="story-eyebrow" id="storyEyebrow">The Ball · I</div>
+    <div class="story-title" id="storyTitle">一场舞会</div>
+    <div class="story-sub" id="storySub">— from ball to ball's end —</div>
     <div class="story-text" id="storyText"></div>
-
-    <div class="rose-question" id="roseQuestion">
-      <div class="rose-question-text">
-        你觉得，玫瑰<span class="hl">藏在哪一句里</span>？
-      </div>
-    </div>
-
-    <div class="rose-gained" id="roseGained">
-      <div class="rose-gained-icon">
-        <svg viewBox="0 0 60 60">
-          <circle cx="30" cy="24" r="12" fill="none" stroke="#e0b060" stroke-width="2"/>
-          <circle cx="30" cy="24" r="7" fill="none" stroke="#e0b060" stroke-width="1.5"/>
-          <circle cx="30" cy="24" r="3" fill="#c01838"/>
-          <line x1="30" y1="36" x2="30" y2="54" stroke="#e0b060" stroke-width="2"/>
-          <path d="M30 44 Q24 42 20 46" stroke="#e0b060" stroke-width="1.5" fill="none"/>
-          <path d="M30 48 Q36 46 40 50" stroke="#e0b060" stroke-width="1.5" fill="none"/>
-        </svg>
-      </div>
-      <div class="rose-gained-text">你得到了第一朵玫瑰</div>
-      <div class="rose-gained-sub">— the first rose —</div>
-    </div>
-
-    <button class="interlude-continue" id="storyContinue" disabled>继续 · 寻找第二朵玫瑰</button>
+    <div class="story-hint" id="storyHint">✦ 点击故事中标红的物品，得到第一朵玫瑰 ✦</div>
   </div>
-</section>
+</div>
+
+<!-- 得到玫瑰屏 -->
+<div class="gain-stage" id="gainStage">
+  <div class="gain-card">
+    <div class="gain-rose-icon">
+      <svg viewBox="0 0 60 60">
+        <circle cx="30" cy="24" r="12" fill="none" stroke="#e0b060" stroke-width="2"/>
+        <circle cx="30" cy="24" r="7" fill="none" stroke="#e0b060" stroke-width="1.5"/>
+        <circle cx="30" cy="24" r="3" fill="#c01838"/>
+        <line x1="30" y1="36" x2="30" y2="54" stroke="#e0b060" stroke-width="2"/>
+        <path d="M30 44 Q24 42 20 46" stroke="#e0b060" stroke-width="1.5" fill="none"/>
+        <path d="M30 48 Q36 46 40 50" stroke="#e0b060" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+    <div class="gain-title">你得到了 <span class="accent">第一朵玫瑰</span></div>
+    <div class="gain-sub">— the first rose —</div>
+    <div class="gain-message">
+      你的舞伴，<br>
+      在一个 <span class="hl">你还没去过的地方</span> 等你。
+    </div>
+
+    <div class="question-title" id="questionTitle">先回答一个问题</div>
+    <div class="question-text" id="questionText"></div>
+    <div class="question-choices" id="questionChoices"></div>
+  </div>
+</div>
+
+<!-- 结局屏 -->
+<div class="ending-stage" id="endingStage">
+  <div class="ending-card">
+    <div class="ending-eyebrow">The End · I</div>
+    <div class="ending-title" id="endingTitle">故事 <span class="accent">继续</span></div>
+    <div class="ending-text" id="endingText"></div>
+    <button class="ending-btn" id="endingBtn">继续 · 寻找第二朵玫瑰</button>
+  </div>
+</div>
 
 <script>
   /* ===== 浮尘 ===== */
   const dust = document.getElementById('dust');
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 40; i++) {
     const s = document.createElement('span');
     const size = Math.random() * 3 + 1;
     s.style.width = size + 'px';
@@ -2140,8 +1814,6 @@
       <circle cx="20" cy="16" r="5" fill="none" stroke="#e0b060" stroke-width="1"/>
       <circle cx="20" cy="16" r="2" fill="#c01838"/>
       <line x1="20" y1="24" x2="20" y2="38" stroke="#e0b060" stroke-width="1.2"/>
-      <path d="M20 30 Q16 29 13 32" stroke="#e0b060" stroke-width="1" fill="none"/>
-      <path d="M20 34 Q24 33 27 36" stroke="#e0b060" stroke-width="1" fill="none"/>
     </svg>`;
   }
   for (let i = 0; i < 12; i++) {
@@ -2183,116 +1855,19 @@
     spawnPaw(t.clientX, t.clientY);
   }, { passive: true });
 
-  /* ===== 音效 ===== */
-  let audioCtx = null;
-  function getAudioCtx() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    return audioCtx;
-  }
-  function playSealPress() {
-    const ctx = getAudioCtx(); const now = ctx.currentTime;
-    const osc = ctx.createOscillator(); const gain = ctx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(220, now);
-    osc.frequency.exponentialRampToValueAtTime(60, now + 0.25);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.25, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(now); osc.stop(now + 0.35);
-  }
-  function playEnvelopeOpen() {
-    const ctx = getAudioCtx(); const now = ctx.currentTime;
-    const osc = ctx.createOscillator(); const oscGain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(80, now);
-    osc.frequency.exponentialRampToValueAtTime(40, now + 0.8);
-    oscGain.gain.setValueAtTime(0.0001, now);
-    oscGain.gain.exponentialRampToValueAtTime(0.15, now + 0.05);
-    oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.0);
-    osc.connect(oscGain).connect(ctx.destination);
-    osc.start(now); osc.stop(now + 1.1);
-    const bufferSize = ctx.sampleRate * 0.8;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      const t = i / bufferSize;
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2.5) * 0.6;
-    }
-    const noise = ctx.createBufferSource();
-    noise.buffer = buffer;
-    const noiseFilter = ctx.createBiquadFilter();
-    noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 1800;
-    const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0.0001, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.2, now + 0.03);
-    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
-    noise.connect(noiseFilter).connect(noiseGain).connect(ctx.destination);
-    noise.start(now); noise.stop(now + 0.9);
-  }
-  function playPaperRustle() {
-    const ctx = getAudioCtx(); const now = ctx.currentTime;
-    const bufferSize = ctx.sampleRate * 1.2;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      const t = i / bufferSize;
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 1.5) * 0.3;
-    }
-    const noise = ctx.createBufferSource();
-    noise.buffer = buffer;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 3000; filter.Q.value = 0.8;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.08, now + 0.3);
-    gain.gain.linearRampToValueAtTime(0.0001, now + 1.2);
-    noise.connect(filter).connect(gain).connect(ctx.destination);
-    noise.start(now); noise.stop(now + 1.2);
-  }
-  function playCardFlip() {
-    const ctx = getAudioCtx(); const now = ctx.currentTime;
-    const osc = ctx.createOscillator(); const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(600, now);
-    osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.15, now + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(now); osc.stop(now + 0.25);
-  }
-  function playRoseFind() {
-    const ctx = getAudioCtx(); const now = ctx.currentTime;
-    const notes = [523, 659, 784, 1047];
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator(); const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now + i * 0.1);
-      gain.gain.setValueAtTime(0.0001, now + i * 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.12, now + i * 0.1 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.1 + 0.3);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(now + i * 0.1); osc.stop(now + i * 0.1 + 0.35);
-    });
+  /* ===== 屏幕切换 ===== */
+  const allScreens = document.querySelectorAll('.screen');
+  function showScreen(id) {
+    allScreens.forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
   }
 
-  /* ===== 屏幕引用 ===== */
-  const screen1 = document.getElementById('screen1');
-  const screenInvite = document.getElementById('screenInvite');
-  const screen2 = document.getElementById('screen2');
-  const screenIntroRose = document.getElementById('screenIntroRose');
-  const drawStage = document.getElementById('drawStage');
-  const cardStage = document.getElementById('cardStage');
-  const screenStory = document.getElementById('screenStory');
-
+  /* ===== 第 1 屏：报名 ===== */
   const nameInput = document.getElementById('nameInput');
   const signupBtn = document.getElementById('signupBtn');
-  const envelopeName = document.getElementById('envelopeName');
   const invMain = document.getElementById('invMain');
-  const invitationCard = document.getElementById('invitationCard');
-  const invContinue = document.getElementById('invContinue');
-  const invContinueBtn = document.getElementById('invContinueBtn');
+  const envelopeName = document.getElementById('envelopeName');
   let userName = '';
 
   nameInput.addEventListener('input', () => {
@@ -2305,51 +1880,38 @@
 
   signupBtn.addEventListener('click', () => {
     if (!userName) return;
-    screen1.classList.add('leaving');
-    setTimeout(() => {
-      screen1.classList.add('hidden');
-      screenInvite.classList.remove('hidden');
-      invMain.innerHTML =
-        '一位来自 <span class="highlight-from">勃艮第红酒庄园</span> 的琥珀小姐，<br>' +
-        '邀请善良又美丽的 <span class="highlight-name">' + userName + '</span> 佳人<br>' +
-        '前往 <span class="highlight-place">幽暗城堡</span> 参加神秘舞会。';
-      setTimeout(() => invitationCard.classList.add('show'), 200);
-      setTimeout(() => invContinue.classList.add('show'), 1800);
-    }, 800);
+    invMain.innerHTML =
+      '一位来自 <span class="highlight-from">勃艮第红酒庄园</span> 的琥珀小姐，<br>' +
+      '邀请善良又美丽的 <span class="highlight-name">「' + userName + '」</span><br>' +
+      '前往 <span class="highlight-place">幽暗城堡</span> 参加神秘舞会。';
+    showScreen('screenInvite');
   });
 
-  invContinueBtn.addEventListener('click', () => {
-    screenInvite.classList.add('leaving');
-    setTimeout(() => {
-      screenInvite.classList.add('hidden');
-      screen2.classList.remove('hidden');
-      envelopeName.textContent = '致 ' + userName;
-      setTimeout(() => envelopeName.classList.add('show'), 600);
-    }, 800);
+  /* ===== 第 2 屏：邀请函 ===== */
+  document.getElementById('invContinueBtn').addEventListener('click', () => {
+    envelopeName.textContent = '致 ' + userName;
+    showScreen('screen2');
+    setTimeout(() => envelopeName.classList.add('show'), 500);
   });
 
-  /* ===== 「跑」按钮 ===== */
+  /* ===== 第 3 屏：信封 ===== */
+  const envelope = document.getElementById('envelope');
   const sealRun = document.getElementById('sealRun');
   const modalOverlay = document.getElementById('modalOverlay');
   const modalBtn = document.getElementById('modalBtn');
+  const letterOverlay = document.getElementById('letterOverlay');
+  const letterActions = document.getElementById('letterActions');
+  const letterBtn = document.getElementById('letterBtn');
+  const waxShards = document.getElementById('waxShards');
+  let picked = false;
 
-  sealRun.addEventListener('click', e => {
+  sealRun.addEventListener('click', (e) => {
     e.stopPropagation();
     modalOverlay.classList.add('show');
   });
   modalBtn.addEventListener('click', () => {
     modalOverlay.classList.remove('show');
   });
-
-  /* ===== 火漆 ===== */
-  const envelope = document.getElementById('envelope');
-  const hint = document.getElementById('hint');
-  const sealWraps = document.querySelectorAll('.seal-wrap');
-  const letterOverlay = document.getElementById('letterOverlay');
-  const letterActions = document.getElementById('letterActions');
-  const letterBtn = document.getElementById('letterBtn');
-  const waxShards = document.getElementById('waxShards');
-  let picked = false;
 
   function createShards() {
     waxShards.innerHTML = '';
@@ -2369,91 +1931,58 @@
     }
   }
 
-  sealWraps.forEach(seal => {
-    seal.addEventListener('click', e => {
+  document.querySelectorAll('.seal-wrap').forEach(seal => {
+    seal.addEventListener('click', (e) => {
       e.stopPropagation();
       if (picked) return;
       if (seal.dataset.choice === 'run') return;
       picked = true;
-      playSealPress();
       seal.classList.add('picked');
-      sealWraps.forEach(s => { if (s !== seal) s.classList.add('faded'); });
-      hint.textContent = '信封在打开...';
-      hint.classList.add('changed');
+      document.querySelectorAll('.seal-wrap').forEach(s => {
+        if (s !== seal) s.classList.add('faded');
+      });
       createShards();
       setTimeout(() => {
         envelope.classList.add('opening');
-        playEnvelopeOpen();
-      }, 500);
+      }, 400);
       setTimeout(() => {
-        screen2.classList.add('leaving');
-        setTimeout(() => {
-          screen2.classList.add('hidden');
-          letterOverlay.classList.add('show');
-          setTimeout(() => playPaperRustle(), 200);
-          revealLetterLines();
-        }, 900);
-      }, 3200);
+        letterOverlay.classList.add('show');
+        revealLetterLines();
+      }, 1800);
     });
   });
-  envelope.addEventListener('click', e => e.stopPropagation());
 
   function revealLetterLines() {
     const lines = document.querySelectorAll('.letter-line');
     lines.forEach(line => {
       const delay = parseInt(line.dataset.delay) || 0;
-      setTimeout(() => { line.classList.add('show'); }, delay + 600);
+      setTimeout(() => { line.classList.add('show'); }, delay + 400);
     });
-    setTimeout(() => { letterActions.classList.add('show'); }, 5800);
+    setTimeout(() => { letterActions.classList.add('show'); }, 5500);
   }
 
   letterBtn.addEventListener('click', () => {
     letterOverlay.classList.remove('show');
     setTimeout(() => {
       letterOverlay.style.display = 'none';
-      screenIntroRose.classList.remove('hidden');
-    }, 1000);
+      showScreen('screenIntroRose');
+    }, 800);
   });
 
-  /* ===== 玩法介绍页 → 抽签 ===== */
+  /* ===== 第 4 屏：玩法介绍 ===== */
   document.getElementById('introContinue').addEventListener('click', () => {
-    screenIntroRose.classList.add('leaving');
-    setTimeout(() => {
-      screenIntroRose.classList.add('hidden');
-      drawStage.classList.remove('hidden');
-    }, 900);
+    showScreen('drawScreen');
   });
 
   /* ===== 抽签数据 ===== */
   const partners = [
-    { name: '扑朔迷离的坏女人', num: 'I', label: 'BAD WOMAN',
-      quotes: ['读懂喜欢的人的心思不是应该的吗。'],
-      desc: '她会在舞池里突然靠近你，问你信不信她。你说信，她说不信；你说不信，她说那就进来看看。',
-      tags: ['坏女人特辑', '钓系暧昧', '恶趣调戏', '醋意爆发'] },
-    { name: '温柔的年上姐姐', num: 'II', label: 'SISTER',
-      quotes: ['小心这杯酒，很烈。'],
-      desc: '她会在舞会中途把你拉进角落，问你今晚要不要私会。你说太直接了，她说那窝在沙发上看书我看你。',
-      tags: ['温柔姐姐', '善解人意', '爱如潮水', '一见钟情'] },
-    { name: '琥珀本色', num: 'III', label: 'AMBER',
-      quotes: ['色字头上一把刀。'],
-      desc: '她会在最后一支舞时告诉你，她还想见到你。你说总会再见的，她说那就一言为定。',
-      tags: ['上瘾患者', '独一无二', '暧昧迭代', '一言为定'] },
-    { name: '色欲狂犬', num: 'IV', label: 'MAD DOG',
-      quotes: ['如果我想得寸进尺怎么办。'],
-      desc: '她会在舞池里把你圈在怀里，不让别人靠近。你说太粘了，她说那正好，我不同意你走就是不成立。',
-      tags: ['得寸进尺', '占有欲爆发', '粘人重力系', '狂犬炸毛'] },
-    { name: '恶趣横生的妈咪', num: 'V', label: 'MOMMY',
-      quotes: ['我看见你的妙脆角泛红了哦。'],
-      desc: '她会在舞会中途给你递一杯香槟，指尖擦过你的手。你说她太会了，她说对你总是欲壑难填。',
-      tags: ['中高擦类', '亲昵隐晦', '暧昧热烈', '欲壑难填'] },
-    { name: '久别重逢的自卑妻子', num: 'VI', label: 'WIFE',
-      quotes: ['我不再年轻了，也留不住我的妻子了吗。'],
-      desc: '她会在舞会散场时独自坐在角落，看着你。你说你还在，她说那说好，我们永不分离。',
-      tags: ['自卑年上', '泛红眼角', '脆弱自白', '矢志不渝'] },
-    { name: '命中注定的crush', num: 'VII', label: 'A PROMISE',
-      quotes: ['其实我真的缺你很久了。'],
-      desc: '她会在舞会最后一支曲子响起时，向你伸出手。你说好，她说那说好，我们一言为定。',
-      tags: ['魂牵梦绕', '醉生梦死', '契合灵魂', '缘分使然'] }
+    { name: '扑朔迷离的坏女人', num: 'I', label: 'BAD WOMAN' },
+    { name: '温柔的年上姐姐', num: 'II', label: 'SISTER' },
+    { name: '琥珀本色', num: 'III', label: 'AMBER' },
+    { name: '色欲狂犬', num: 'IV', label: 'MAD DOG' },
+    { name: '恶趣横生的妈咪', num: 'V', label: 'MOMMY' },
+    { name: '久别重逢的自卑妻子', num: 'VI', label: 'WIFE' },
+    { name: '命中注定的crush', num: 'VII', label: 'A PROMISE' }
   ];
 
   /* ===== 生成签架 ===== */
@@ -2479,51 +2008,22 @@
 
   const sticks = document.querySelectorAll('.stick');
 
-  /* ===== 结果卡元素 ===== */
+  /* ===== 抽签交互 ===== */
+  const cardStage = document.getElementById('cardStage');
+  const drawResultName = document.getElementById('drawResultName');
   const drawResultNum = document.getElementById('drawResultNum');
   const drawResultLabel = document.getElementById('drawResultLabel');
-  const drawResultName = document.getElementById('drawResultName');
-  const drawResultDesc = document.getElementById('drawResultDesc');
-  const drawResultTags = document.getElementById('drawResultTags');
-  const redrawBtn = document.getElementById('redrawBtn');
-  const confirmBtn = document.getElementById('confirmBtn');
   const giftBadge = document.getElementById('giftBadge');
-
   let drawn = false;
   let selectedIndex = -1;
   const pickedSticks = new Set();
 
-  /* 构建描述（她说金色高亮 + 其余逐句成行） */
-  function buildDesc(partner) {
-    let html = '';
-    partner.quotes.forEach(q => {
-      html += `<span class="desc-line"><span class="amber-quote">她说：${q}</span></span>`;
-    });
-    const parts = partner.desc.split(/(?<=[。？！；])/).filter(s => s.trim().length > 0);
-    parts.forEach(p => {
-      html += `<span class="desc-line">${p.trim()}</span>`;
-    });
-    return html;
-  }
-
-  /* 逐行浮现 */
-  function revealDescLines() {
-    const lines = drawResultDesc.querySelectorAll('.desc-line');
-    lines.forEach((line, idx) => {
-      setTimeout(() => {
-        line.classList.add('show');
-      }, idx * 400 + 300);
-    });
-  }
-
-  /* ===== 抽签交互 ===== */
   sticks.forEach((stick, idx) => {
     const topMark = stick.querySelector('.stick-top-mark');
     topMark.addEventListener('click', (e) => {
       e.stopPropagation();
       if (drawn) return;
       if (pickedSticks.has(idx)) return;
-
       drawn = true;
       selectedIndex = idx;
       pickedSticks.add(idx);
@@ -2531,40 +2031,29 @@
 
       stick.classList.add('drawn');
       sticks.forEach(s => { if (s !== stick) s.classList.add('faded'); });
-      playCardFlip();
 
       drawResultNum.textContent = partner.num;
       drawResultLabel.textContent = partner.label;
       drawResultName.textContent = partner.name;
-      drawResultDesc.innerHTML = buildDesc(partner);
-      drawResultTags.innerHTML = partner.tags.map(t => `<span>${t}</span>`).join('');
 
       setTimeout(() => {
         stick.classList.add('gone');
-      }, 800);
+      }, 700);
 
       setTimeout(() => {
-        drawStage.classList.add('leaving');
+        cardStage.classList.add('show');
         setTimeout(() => {
-          cardStage.classList.add('show');
-          setTimeout(() => {
-            giftBadge.classList.add('show');
-          }, 500);
-          setTimeout(() => {
-            revealDescLines();
-          }, 300);
+          giftBadge.classList.add('show');
         }, 400);
-      }, 1400);
+      }, 1200);
     });
   });
 
   /* 重新选择 */
-  redrawBtn.addEventListener('click', () => {
-    cardStage.classList.add('leaving');
+  document.getElementById('redrawBtn').addEventListener('click', () => {
+    cardStage.classList.remove('show');
     giftBadge.classList.remove('show');
     setTimeout(() => {
-      cardStage.classList.remove('show', 'leaving');
-      drawStage.classList.remove('leaving');
       sticks.forEach((s, idx) => {
         s.classList.remove('drawn', 'gone', 'faded');
         if (pickedSticks.has(idx)) {
@@ -2573,172 +2062,216 @@
       });
       drawn = false;
       selectedIndex = -1;
-    }, 900);
+    }, 700);
   });
 
-  /* ===== 进入舞会 → 剧情追逐 ===== */
-  confirmBtn.addEventListener('click', () => {
-    cardStage.classList.add('leaving');
+  /* ===== 进入舞会 → 故事页 ===== */
+  document.getElementById('confirmBtn').addEventListener('click', () => {
+    cardStage.classList.remove('show');
     giftBadge.classList.remove('show');
     setTimeout(() => {
-      cardStage.classList.remove('show', 'leaving');
       cardStage.style.display = 'none';
       initStory(selectedIndex);
-      screenStory.classList.remove('hidden');
-    }, 900);
+    }, 700);
   });
 
-  /* ===== 剧情数据（每位舞伴独立剧情，>200字） ===== */
+  /* ===== 故事数据（每位舞伴独立，≤100字，描绘舞会到舞会结束） ===== */
   const storyData = {
     0: {
-      stage: 'The Chasing · I · Bad Woman',
-      title: '她在 <span class="accent">追你</span>',
-      sub: '— she is chasing you —',
-      paragraphs: [
-        '音乐停了。你站在舞池的边缘，看着她从人群里走过来。她没有急着靠近，而是<span class="amber">在你三步之外停下</span>。',
-        '她说："你刚才一直在看我。"你没有否认。她笑了，笑意藏在面具后面："我猜你会说，是因为我好看。"你摇头。她的笑意更深了："那是因为什么？"',
-        '你沉默了一秒。这一秒里，她往前走了两步。三步变一步。她抬头看着你，声音低下来："<span class="hl">有传言说我是坏女人。</span>你信吗？"',
-        '你没有回答。她说："你不信。因为如果你信，你早就跑了。"她伸出手，指尖轻轻点了点你的胸口："<span class="hl">但你没跑。所以你也有点坏。</span>"',
-        '音乐重新响起。她后退一步，回到那个三步之外的位置。她说："我追你，不是因为我想要你。是因为——<span class="hl">我想看看你会不会回头。</span>"',
-        '你回头了。她已经不在原地。<span class="rose-hidden" data-rose="true">只有一朵玫瑰，躺在你刚才站过的地方。</span>'
-      ]
+      eyebrow: 'The Ball · Bad Woman',
+      title: '一场 <span class="accent">错过的舞</span>',
+      sub: '— a dance to the end —',
+      text: '舞会开始，她站在人群中央，却没有走向你。<br>音乐响起，你发现自己的<span class="story-item" data-rose="true">酒杯</span>被人碰了一下。<br>你回头，她已经走远。<br>舞会结束时，你才明白——<br>她一直在等你先开口。'
     },
     1: {
-      stage: 'The Chasing · II · Sister',
-      title: '她在 <span class="accent">等你</span>',
-      sub: '— she is waiting —',
-      paragraphs: [
-        '音乐停了。你站在舞池中央，手里还握着刚才那杯没喝完的香槟。她走过来的时候，脚步很轻，像怕惊动什么。',
-        '她说："小心这杯酒，很烈。"你低头看了看，杯子里只剩一层薄薄的液体。她笑了："<span class="amber">我说的不是酒。</span>"',
-        '你抬头看她。她比你想象中年长一点，但没有一点老态。她伸手，把你手里的杯子拿走，放在旁边的桌上。',
-        '她说："我想和你私会。"你愣了一下。她说："别紧张。私会的意思是——<span class="hl">找个没有人的地方，听你说说你今天到底在想什么。</span>"',
-        '你说太直接了。她笑出声："直接一点不好吗？我已经没有时间绕弯子了。"她指了指舞池边上那张空沙发："<span class="hl">你看书，我看你。</span>可以吗？"',
-        '你点头。她坐下的那一刻，裙摆扬起一阵风。风里有一朵玫瑰，<span class="rose-hidden" data-rose="true">落在沙发缝里，谁也没注意。</span>'
-      ]
+      eyebrow: 'The Ball · Sister',
+      title: '一场 <span class="accent">温柔的舞</span>',
+      sub: '— a dance to the end —',
+      text: '舞会开始，她递给你一杯香槟。<br>你喝了一口，发现她一直看着你。<br>你低头，看见<span class="story-item" data-rose="true">餐巾</span>上写着一行字。<br>舞会结束时，你才明白——<br>她不是不敢说，是怕你不敢听。'
     },
     2: {
-      stage: 'The Chasing · III · Amber',
-      title: '她在 <span class="accent">问你</span>',
-      sub: '— she is asking —',
-      paragraphs: [
-        '音乐停了。你站在舞池的角落，看着她走过来。她是琥珀，是这场舞会的主人，也是唯一一个没有戴面具的人。',
-        '她说："你刚才一直在看我。"你点头。她说："为什么？"你说不上来。她笑了："<span class="amber">色字头上一把刀。</span>你听说过这句话吗？"',
-        '你说听说过。她说："那你为什么还看我？"你没回答。她往前一步，几乎贴着你的耳朵说："<span class="hl">因为我好看，还是因为你想知道，那把刀什么时候会落下来？</span>"',
-        '你后退一步。她不再往前。她说："没关系。我不急。"她抬手，指了指舞池另一侧："最后一支舞，我在那边。你来找我，或者不来找我。<span class="hl">我都不介意。</span>"',
-        '她转身走了。你站在原地，看着她的背影。她走到一半，回头看了你一眼。那一眼很短，但你记住了。',
-        '你低头，发现手心里多了一样东西。<span class="rose-hidden" data-rose="true">一朵玫瑰。她什么时候放的，你不知道。</span>'
-      ]
+      eyebrow: 'The Ball · Amber',
+      title: '一场 <span class="accent">未完成的舞</span>',
+      sub: '— a dance to the end —',
+      text: '舞会开始，她站在最暗的角落。<br>你走过去，她问：你信不信我。<br>你没有回答。<br>舞会结束时，你发现<span class="story-item" data-rose="true">座位</span>上多了一样东西。<br>是她的面具，背面刻着你的名字。'
     },
     3: {
-      stage: 'The Chasing · IV · Mad Dog',
-      title: '她在 <span class="accent">圈住你</span>',
-      sub: '— she is holding you —',
-      paragraphs: [
-        '音乐停了。你刚要往后退，一只手从背后圈住了你的腰。她没有说话，只是把你往后拉了一步。',
-        '你回头。她的脸离你很近。她说："你想走？"你说不是。她说："那你为什么退？"你说不上来。她笑了，笑得有点危险："<span class="amber">如果我想得寸进尺怎么办？</span>"',
-        '你说太粘了。她说："那正好。"她收紧手臂，把你圈得更紧："<span class="hl">我不同意你走，就是不成立。</span>"',
-        '舞池里的其他人都在看你们。你有点不自在。她像是察觉到了，低声说："别管他们。<span class="hl">他们只是在羡慕你。</span>"',
-        '你想推开她。但你发现，你不想。她发现了这一点，笑得更深："我就知道。"她松开手，后退一步："行吧，这次先放过你。"',
-        '你松了口气。然后你看见，她转身的时候，裙摆里掉出了一朵玫瑰。<span class="rose-hidden" data-rose="true">你弯腰捡起来。她没有回头。</span>'
-      ]
+      eyebrow: 'The Ball · Mad Dog',
+      title: '一场 <span class="accent">追逐的舞</span>',
+      sub: '— a dance to the end —',
+      text: '舞会开始，她一直跟在你身后。<br>你不回头，她不靠近。<br>你停在<span class="story-item" data-rose="true">楼梯</span>口，她终于追上来。<br>舞会结束时，你才明白——<br>她不是粘人，是怕你走丢。'
     },
     4: {
-      stage: 'The Chasing · V · Mommy',
-      title: '她在 <span class="accent">逗你</span>',
-      sub: '— she is teasing —',
-      paragraphs: [
-        '音乐停了。你站在吧台旁边，她端着两杯香槟走过来。她把其中一杯递给你，指尖擦过你的手背。',
-        '她说："我看见你的妙脆角泛红了哦。"你低头看了一眼手里的杯子，又看了看自己的耳朵。她笑了："<span class="amber">不是你耳朵。是你在想的那件事。</span>"',
-        '你说她太会了。她说："对你，我总是欲壑难填。"她喝了一口酒，眼睛一直没有离开你："<span class="hl">你说，我是不是太坏了？</span>"',
-        '你没有回答。她说："没关系。我知道你在想什么。"她往前一步，把杯子放在吧台上，凑近你耳边："<span class="hl">你在想，今天晚上，我会不会放过你。</span>"',
-        '她后退一步，笑了笑："答案是——不会。"她转身走了，留下你一个人站在原地，手里还握着那杯没喝的香槟。',
-        '你低头。香槟杯的杯底，贴着一朵玫瑰。<span class="rose-hidden" data-rose="true">花瓣上还有她的口红印。</span>'
-      ]
+      eyebrow: 'The Ball · Mommy',
+      title: '一场 <span class="accent">试探的舞</span>',
+      sub: '— a dance to the end —',
+      text: '舞会开始，她端着两杯酒走过来。<br>她说：我看见你在想什么。<br>你没听懂。<br>舞会结束时，你发现<span class="story-item" data-rose="true">杯底</span>刻着一个名字。<br>是她的，也是你的。'
     },
     5: {
-      stage: 'The Chasing · VI · Wife',
-      title: '她在 <span class="accent">看你</span>',
-      sub: '— she is watching —',
-      paragraphs: [
-        '音乐停了。舞池里的人都散了。你看见角落里的沙发上，坐着一个人。她没有动，只是看着你。',
-        '你走过去。她抬起头。她比你想象中要老一些，眼角有细纹，但眼睛很亮。她说："你来了。"你说你怎么知道我会来。她说："<span class="amber">因为你在看我。</span>"',
-        '你坐下。她说："我不再年轻了。<span class="hl">也留不住我的妻子了。</span>"你说你还在。她笑了，笑得很轻："你还在。但你也会走的。"',
-        '你说不会。她说："别急着承诺。<span class="hl">我只是想让你知道，我已经接受了这件事。</span>"她把手放在膝盖上，安静地看着你。',
-        '你突然不知道说什么。她替你解了围："没关系。陪我坐一会儿就行。"你们就这样坐着，看舞池的灯一点点暗下去。',
-        '走的时候，她叫住你。你回头。她手里有一朵玫瑰，<span class="rose-hidden" data-rose="true">已经有点蔫了。她说："别嫌弃。这是我今天唯一一朵，没舍得送出去的。"</span>'
-      ]
+      eyebrow: 'The Ball · Wife',
+      title: '一场 <span class="accent">安静的舞</span>',
+      sub: '— a dance to the end —',
+      text: '舞会开始，她坐在最角落的位置。<br>你走过去，她说：你来了。<br>你们什么都没说。<br>舞会结束时，你发现<span class="story-item" data-rose="true">手帕</span>上绣着一朵玫瑰。<br>她说：这是我今天唯一一朵，没舍得送出去的。'
     },
     6: {
-      stage: 'The Chasing · VII · A Promise',
-      title: '她在 <span class="accent">等你来追</span>',
-      sub: '— she is waiting to be chased —',
-      paragraphs: [
-        '音乐停了。你站在舞池的尽头，看见她站在另一头。她没有走过来，也没有招手。她只是站在那里，看着你。',
-        '你往前走了一步。她没有动。你又走了一步。她还是没动。你走到一半的时候，她转身了，往舞池的另一侧走。',
-        '你追上去。你追得很快。她走得也很快。你们绕着舞池转了一圈。你说你追不上。她说："<span class="amber">那你就别追了。</span>"',
-        '你停下。她也停下。她回头看你，笑了："<span class="hl">其实我真的缺你很久了。</span>"你说什么意思。她说："意思是——<span class="hl">我一直在等一个人来追我。而你刚好来了。</span>"',
-        '你往前走了一步。她没有再走。她站在那里，等你走到她面前。你到了。她伸出手："那说好，我们一言为定。"',
-        '你握住她的手。她的另一只手，从袖子里取出了一朵玫瑰。<span class="rose-hidden" data-rose="true">她把玫瑰放在你们握在一起的手心里。</span>'
-      ]
+      eyebrow: 'The Ball · A Promise',
+      title: '一场 <span class="accent">注定的舞</span>',
+      sub: '— a dance to the end —',
+      text: '舞会开始，她站在舞池的另一头。<br>你追，她躲。<br>你停下，她也停下。<br>舞会结束时，她伸出手，说：<span class="story-item" data-rose="true">手心</span>是空的。<br>你握住，才发现——玫瑰一直就在那里。'
     }
   };
 
-  /* ===== 剧情页初始化 ===== */
+  /* ===== 故事页初始化 ===== */
+  const storyStage = document.getElementById('storyStage');
+
   function initStory(idx) {
     const data = storyData[idx];
     if (!data) return;
 
-    document.getElementById('storyStage').textContent = data.stage;
+    document.getElementById('storyEyebrow').textContent = data.eyebrow;
     document.getElementById('storyTitle').innerHTML = data.title;
     document.getElementById('storySub').textContent = data.sub;
+    document.getElementById('storyText').innerHTML = data.text;
 
-    const storyText = document.getElementById('storyText');
-    storyText.innerHTML = '';
-    data.paragraphs.forEach((p) => {
-      const pEl = document.createElement('div');
-      pEl.className = 'story-paragraph';
-      pEl.innerHTML = p;
-      storyText.appendChild(pEl);
-    });
-
-    const roseGained = document.getElementById('roseGained');
-    roseGained.classList.remove('show');
-    const storyContinue = document.getElementById('storyContinue');
-    storyContinue.disabled = true;
-    storyContinue.classList.remove('enabled');
-
-    const paras = storyText.querySelectorAll('.story-paragraph');
-    paras.forEach((p, i) => {
-      setTimeout(() => {
-        p.classList.add('show');
-      }, i * 1200 + 400);
-    });
+    storyStage.style.display = 'flex';
+    storyStage.classList.add('show');
 
     setTimeout(() => {
-      const roseHidden = storyText.querySelector('.rose-hidden');
-      if (roseHidden) {
-        roseHidden.addEventListener('click', () => {
-          if (roseHidden.classList.contains('found')) return;
-          roseHidden.classList.add('found');
-          playRoseFind();
+      const storyItem = document.querySelector('.story-item');
+      if (storyItem) {
+        storyItem.addEventListener('click', () => {
+          if (storyItem.classList.contains('chosen')) return;
+          storyItem.classList.add('chosen');
           setTimeout(() => {
-            roseGained.classList.add('show');
+            storyStage.classList.remove('show');
             setTimeout(() => {
-              storyContinue.disabled = false;
-              storyContinue.classList.add('enabled');
-            }, 1500);
-          }, 400);
+              storyStage.style.display = 'none';
+              initGain(idx);
+            }, 700);
+          }, 800);
         });
       }
-    }, paras.length * 1200 + 500);
+    }, 600);
   }
 
-  /* ===== 剧情页 → 第二朵玫瑰 ===== */
-  document.getElementById('storyContinue').addEventListener('click', () => {
-    const btn = document.getElementById('storyContinue');
-    if (btn.disabled) return;
-    alert('第一朵玫瑰已收集 · 第二朵玫瑰（一场舞结束之后）将在后续实现');
+  /* ===== 得到玫瑰 + 无厘头问题 ===== */
+  const gainStage = document.getElementById('gainStage');
+
+  const questions = {
+    0: {
+      title: '一个 <span class="accent">无厘头的问题</span>',
+      text: '如果你是一张牌，<br>你希望自己是<span class="hl">哪一张</span>？',
+      choices: [
+        { name: '黑桃A', desc: '唯一的那一张', next: '你选了黑桃A。她说：那我们就不玩牌了。' },
+        { name: '红心7', desc: '藏着的那一张', next: '你选了红心7。她说：好，我在第7支曲子等你。' },
+        { name: '大王', desc: '最大的那一张', next: '你选了大王。她说：那你就得负责赢。' }
+      ]
+    },
+    1: {
+      title: '一个 <span class="accent">无厘头的问题</span>',
+      text: '如果明天就是世界末日，<br>你希望<span class="hl">最后一杯酒</span>是什么？',
+      choices: [
+        { name: '香槟', desc: '庆祝的那一杯', next: '你选了香槟。她说：那我们就庆祝吧。' },
+        { name: '红酒', desc: '沉默的那一杯', next: '你选了红酒。她说：那我们就不说话。' },
+        { name: '白水', desc: '清醒的那一杯', next: '你选了白水。她说：那正好，我也没醉。' }
+      ]
+    },
+    2: {
+      title: '一个 <span class="accent">无厘头的问题</span>',
+      text: '如果只能留下一样东西，<br>你会留下<span class="hl">什么</span>？',
+      choices: [
+        { name: '面具', desc: '藏住的那一张脸', next: '你选了面具。她说：那我就不摘了。' },
+        { name: '玫瑰', desc: '会凋谢的那一朵', next: '你选了玫瑰。她说：那我就再送你一朵。' },
+        { name: '影子', desc: '看不见的那一个', next: '你选了影子。她说：那我们就永远在一起。' }
+      ]
+    },
+    3: {
+      title: '一个 <span class="accent">无厘头的问题</span>',
+      text: '如果你可以变成一种动物，<br>你希望是<span class="hl">什么</span>？',
+      choices: [
+        { name: '猫', desc: '粘人的那种', next: '你选了猫。她说：那我就不放你走了。' },
+        { name: '狼', desc: '独行的那种', next: '你选了狼。她说：那我陪你独行。' },
+        { name: '鸟', desc: '会飞的那种', next: '你选了鸟。她说：那我就不关窗。' }
+      ]
+    },
+    4: {
+      title: '一个 <span class="accent">无厘头的问题</span>',
+      text: '如果非要选一个季节，<br>你喜欢<span class="hl">哪一个</span>？',
+      choices: [
+        { name: '春', desc: '刚开花的那一季', next: '你选了春。她说：那我再等一季。' },
+        { name: '夏', desc: '最热的那一季', next: '你选了夏。她说：那我们就热着。' },
+        { name: '冬', desc: '最冷的那一季', next: '你选了冬。她说：那我们就抱在一起。' }
+      ]
+    },
+    5: {
+      title: '一个 <span class="accent">无厘头的问题</span>',
+      text: '如果你能记住一件事，<br>你希望记住<span class="hl">什么</span>？',
+      choices: [
+        { name: '她的名字', desc: '最重要的那一个', next: '你选了她的名字。她说：那我就不改名了。' },
+        { name: '今天的舞会', desc: '最热闹的那一晚', next: '你选了今天。她说：那我们今晚不散。' },
+        { name: '一朵玫瑰', desc: '会凋谢的那一朵', next: '你选了玫瑰。她说：那我再送你一朵。' }
+      ]
+    },
+    6: {
+      title: '一个 <span class="accent">无厘头的问题</span>',
+      text: '如果只能往前走一步，<br>你会走向<span class="hl">哪里</span>？',
+      choices: [
+        { name: '她', desc: '站在那里的人', next: '你选了她。她说：那正好，我也没动。' },
+        { name: '门外', desc: '还没去过的地方', next: '你选了门外。她说：那我陪你出去。' },
+        { name: '原地', desc: '不动的地方', next: '你选了原地。她说：那我们就留在这里。' }
+      ]
+    }
+  };
+
+  function initGain(idx) {
+    const q = questions[idx];
+    if (!q) return;
+
+    document.getElementById('questionTitle').innerHTML = q.title;
+    document.getElementById('questionText').innerHTML = q.text;
+
+    const choicesContainer = document.getElementById('questionChoices');
+    choicesContainer.innerHTML = '';
+    q.choices.forEach((c) => {
+      const btn = document.createElement('div');
+      btn.className = 'question-choice';
+      btn.innerHTML = `
+        <div class="qc-name">${c.name}</div>
+        <div class="qc-desc">${c.desc}</div>
+      `;
+      btn.addEventListener('click', () => {
+        showEnding(idx, c.next);
+      });
+      choicesContainer.appendChild(btn);
+    });
+
+    gainStage.style.display = 'flex';
+    gainStage.classList.add('show');
+  }
+
+  /* ===== 结局页 ===== */
+  const endingStage = document.getElementById('endingStage');
+
+  function showEnding(idx, text) {
+    gainStage.classList.remove('show');
+    setTimeout(() => {
+      gainStage.style.display = 'none';
+      document.getElementById('endingTitle').innerHTML = '故事 <span class="accent">继续</span>';
+      document.getElementById('endingText').innerHTML = text + '<br><br>第一朵玫瑰，已经在你手里。';
+      endingStage.style.display = 'flex';
+      endingStage.classList.add('show');
+    }, 700);
+  }
+
+  document.getElementById('endingBtn').addEventListener('click', () => {
+    endingStage.classList.remove('show');
+    setTimeout(() => {
+      alert('第一朵玫瑰已收集 ·\n第二朵玫瑰（一场舞结束之后）将在后续实现');
+    }, 500);
   });
+
+  /* ===== 初始化显示第 1 屏 ===== */
+  showScreen('screen1');
 </script>
 </body>
 </html>
