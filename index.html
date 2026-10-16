@@ -441,7 +441,7 @@
   .whisper-out.show{opacity:1;transform:translate(-50%,-50%) scale(1.05);}
 
   /* ============================================
-     第三屏：抽签（欧美风升级版）
+     第三屏：抽签（欧美风）
      ============================================ */
   .draw-title{
     font-family:'Playfair Display',serif;
@@ -469,6 +469,7 @@
     letter-spacing:.25em;
     margin-bottom:2.5rem;
     text-transform:uppercase;
+    transition:color .4s ease;
   }
 
   /* ===== 扇形签架 ===== */
@@ -481,9 +482,13 @@
     justify-content:center;
     align-items:flex-end;
     perspective:1400px;
+    transition:filter .8s ease;
   }
+  /* 重抽次数越多，烛光越亮 */
+  .sticks-fan.rewarm{filter:brightness(1.06);}
+  .sticks-fan.rewarm2{filter:brightness(1.12);}
+  .sticks-fan.rewarm3{filter:brightness(1.2);}
 
-  /* 每支签 */
   .stick{
     position:absolute;
     bottom:0;
@@ -497,7 +502,6 @@
     transform-style:preserve-3d;
   }
 
-  /* 7 支签的扇形角度 */
   .stick:nth-child(1){--angle:-42deg;--tx:-240px;--ty:20px;}
   .stick:nth-child(2){--angle:-28deg;--tx:-160px;--ty:4px;}
   .stick:nth-child(3){--angle:-14deg;--tx:-80px;--ty:-6px;}
@@ -525,8 +529,6 @@
     transition:inherit;
     overflow:hidden;
   }
-
-  /* 烫金边 */
   .stick .stick-inner::before{
     content:'';
     position:absolute;
@@ -536,7 +538,6 @@
     border-radius:18px 18px 4px 4px;
     pointer-events:none;
   }
-  /* 烫金双线 */
   .stick .stick-inner::after{
     content:'';
     position:absolute;
@@ -547,7 +548,6 @@
     pointer-events:none;
   }
 
-  /* 顶部装饰：花体编号 */
   .stick-num{
     position:absolute;
     top:38px;left:50%;
@@ -563,8 +563,6 @@
     z-index:2;
     text-shadow:0 1px 0 rgba(255,255,255,.6);
   }
-
-  /* 签上竖排小字 */
   .stick-label{
     position:absolute;
     top:80px;left:50%;
@@ -582,8 +580,6 @@
     white-space:nowrap;
     opacity:.75;
   }
-
-  /* 底部火漆小点 */
   .stick-seal{
     position:absolute;
     bottom:24px;left:50%;
@@ -597,7 +593,6 @@
     z-index:2;
   }
 
-  /* hover：整支签抽出一点 */
   .stick:hover .stick-inner,
   .stick:hover .stick-num,
   .stick:hover .stick-label,
@@ -612,11 +607,8 @@
       inset -6px 0 14px rgba(120,90,60,.25),
       inset 6px 0 14px rgba(120,90,60,.25);
   }
-  .stick:hover .stick-num{
-    color:#c03050;
-  }
+  .stick:hover .stick-num{color:#c03050;}
 
-  /* 抽中的签：完全抽出 */
   .stick.drawn .stick-inner,
   .stick.drawn .stick-num,
   .stick.drawn .stick-label,
@@ -631,10 +623,9 @@
       inset 0 0 0 1px rgba(220,180,120,.7);
   }
 
-  /* 未抽中的签：淡出 */
   .stick.faded{opacity:.12;filter:blur(1px);pointer-events:none;}
 
-  /* ===== 舞伴签页（欧美风） ===== */
+  /* ===== 舞伴签页 ===== */
   .partner-scroll{
     position:relative;
     max-width:600px;
@@ -649,7 +640,6 @@
     opacity:1;transform:translateY(0);pointer-events:auto;
   }
 
-  /* 签页外框：多层边框 + 烫金 */
   .scroll-frame{
     position:relative;
     background:
@@ -664,8 +654,6 @@
       inset 0 0 80px rgba(120,80,40,.15);
     overflow:hidden;
   }
-
-  /* 内层金线框 */
   .scroll-frame::before{
     content:'';
     position:absolute;
@@ -683,7 +671,6 @@
     pointer-events:none;
   }
 
-  /* 四角装饰 */
   .corner{
     position:absolute;
     width:24px;height:24px;
@@ -697,7 +684,6 @@
   .corner.bl{bottom:8px;left:8px;border-bottom-width:1px;border-left-width:1px;}
   .corner.br{bottom:8px;right:8px;border-bottom-width:1px;border-right-width:1px;}
 
-  /* 顶部小装饰 */
   .scroll-ornament{
     text-align:center;
     font-family:'Playfair Display',serif;
@@ -717,7 +703,6 @@
     vertical-align:middle;
   }
 
-  /* 舞伴编号 */
   .scroll-roman{
     text-align:center;
     font-family:'Playfair Display',serif;
@@ -729,7 +714,6 @@
     margin-bottom:1rem;
   }
 
-  /* 舞伴名（花体大字） */
   .scroll-name{
     text-align:center;
     font-family:'Playfair Display',serif;
@@ -745,7 +729,6 @@
     line-height:1.2;
   }
 
-  /* 分隔线 */
   .scroll-divider{
     display:flex;
     align-items:center;
@@ -766,7 +749,6 @@
     font-size:.6rem;
   }
 
-  /* 描述 */
   .scroll-desc{
     font-family:'Cormorant Garamond',serif;
     font-size:1.05rem;
@@ -784,7 +766,6 @@
     letter-spacing:.03em;
   }
 
-  /* 标签 */
   .scroll-tags{
     display:flex;flex-wrap:wrap;gap:.6rem;
     justify-content:center;
@@ -803,7 +784,6 @@
     background:rgba(180,140,70,.05);
   }
 
-  /* 底部火漆 */
   .scroll-seal{
     display:flex;
     align-items:center;
@@ -825,9 +805,17 @@
     font-style:italic;
   }
 
-  /* 继续按钮 */
-  .continue-btn{
+  /* ===== 按钮组：重新选签 + 继续 ===== */
+  .scroll-actions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:1.2rem;
     margin-top:2rem;
+    flex-wrap:wrap;
+  }
+
+  .continue-btn{
     padding:.8rem 2rem;
     background:transparent;
     border:1px solid #6a5540;
@@ -847,6 +835,57 @@
     letter-spacing:.4em;
   }
 
+  /* 重新选签按钮：更轻、更暧昧 */
+  .redraw-btn{
+    padding:.8rem 2rem;
+    background:transparent;
+    border:1px solid #4a3a30;
+    color:#8a7560;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.85rem;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all .4s ease;
+    position:relative;
+  }
+  .redraw-btn:hover{
+    border-color:#c0a070;
+    color:#e0c8a0;
+    box-shadow:0 0 30px rgba(200,160,100,.2);
+    letter-spacing:.4em;
+  }
+  .redraw-btn::after{
+    content:'↻';
+    position:absolute;
+    right:-1.2rem;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:.9rem;
+    opacity:0;
+    transition:opacity .3s ease, right .3s ease;
+    color:#c0a070;
+  }
+  .redraw-btn:hover::after{
+    opacity:1;
+    right:-1.5rem;
+  }
+
+  /* 重抽提示 */
+  .redraw-note{
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:.75rem;
+    color:#6a5540;
+    letter-spacing:.2em;
+    margin-top:1rem;
+    opacity:0;
+    transition:opacity .6s ease;
+  }
+  .redraw-note.show{opacity:1;}
+
   @media(max-width:720px){
     .sticks-fan{height:340px;}
     .stick{width:44px;height:280px;}
@@ -859,6 +898,8 @@
     .stick-num{font-size:.9rem;top:30px;}
     .stick-label{font-size:.6rem;top:64px;}
     .scroll-frame{padding:2rem 1.5rem;}
+    .scroll-actions{flex-direction:column;gap:.8rem;}
+    .redraw-btn::after{right:-1rem;}
   }
 
   @media(max-width:520px){
@@ -953,7 +994,7 @@
   <div class="hint" id="hint">选一个火漆 · 盖上你的回答</div>
 </section>
 
-<!-- ===== 第三屏：抽签（欧美风） ===== -->
+<!-- ===== 第三屏：抽签 ===== -->
 <section class="screen hidden" id="screen3">
   <div class="eyebrow">— the ball begins —</div>
   <div class="draw-title">
@@ -962,7 +1003,6 @@
   </div>
   <div class="draw-sub" id="drawSub">Seven sticks · One fate</div>
 
-  <!-- 扇形签架 -->
   <div class="sticks-fan" id="sticksFan">
     <div class="stick" data-partner="0">
       <div class="stick-inner"></div>
@@ -1008,7 +1048,6 @@
     </div>
   </div>
 
-  <!-- 舞伴签页 -->
   <div class="partner-scroll" id="partnerScroll">
     <div class="scroll-frame">
       <div class="corner tl"></div>
@@ -1033,9 +1072,12 @@
       </div>
     </div>
 
-    <div style="text-align:center;">
+    <div class="scroll-actions">
+      <button class="redraw-btn" id="redrawBtn">重新选签</button>
       <button class="continue-btn" id="continueBtn">继续 · 进入舞池</button>
     </div>
+
+    <div class="redraw-note" id="redrawNote"></div>
   </div>
 </section>
 
@@ -1124,15 +1166,21 @@
   });
   envelope.addEventListener('click', e => e.stopPropagation());
 
-  /* ===== 第三屏：抽签 ===== */
+  /* ===== 第三屏：抽签 + 重抽 ===== */
   const sticks = document.querySelectorAll('.stick');
+  const sticksFan = document.getElementById('sticksFan');
   const drawSub = document.getElementById('drawSub');
   const partnerScroll = document.getElementById('partnerScroll');
   const scrollRoman = document.getElementById('scrollRoman');
   const scrollName = document.getElementById('scrollName');
   const scrollDesc = document.getElementById('scrollDesc');
   const scrollTags = document.getElementById('scrollTags');
+  const redrawBtn = document.getElementById('redrawBtn');
+  const redrawNote = document.getElementById('redrawNote');
+  const continueBtn = document.getElementById('continueBtn');
+
   let drawn = false;
+  let redrawCount = 0;
 
   const partners = [
     {
@@ -1179,6 +1227,7 @@
     }
   ];
 
+  /* 抽签 */
   sticks.forEach(stick => {
     stick.addEventListener('click', () => {
       if (drawn) return;
@@ -1202,10 +1251,44 @@
     });
   });
 
-  /* 继续按钮：后续可接舞池长页面 */
-  document.getElementById('continueBtn').addEventListener('click', () => {
+  /* 重新选签 */
+  redrawBtn.addEventListener('click', () => {
+    if (!drawn) return;
+
+    // 签页收起
+    partnerScroll.classList.remove('show');
+
+    // 签放回扇形
+    setTimeout(() => {
+      sticks.forEach(s => {
+        s.classList.remove('drawn');
+        s.classList.remove('faded');
+      });
+      drawn = false;
+
+      // 更新提示
+      drawSub.textContent = 'Seven sticks · One fate';
+
+      // 烛光随重抽次数变亮
+      redrawCount++;
+      sticksFan.classList.remove('rewarm', 'rewarm2', 'rewarm3');
+      if (redrawCount === 1) sticksFan.classList.add('rewarm');
+      else if (redrawCount === 2) sticksFan.classList.add('rewarm2');
+      else if (redrawCount >= 3) sticksFan.classList.add('rewarm3');
+
+      // 重抽提示
+      redrawNote.textContent = redrawCount === 1
+        ? '— 换一支？她不会介意的 —'
+        : redrawCount === 2
+        ? '— 还在挑？她有的是时间 —'
+        : '— 挑吧。挑到满意为止。 —';
+      redrawNote.classList.add('show');
+    }, 600);
+  });
+
+  /* 继续进入舞池 */
+  continueBtn.addEventListener('click', () => {
     console.log('进入舞池 · 可接后续长页面');
-    // 预留：此处可跳转到完整舞池页面
     alert('舞池已开启 · 后续页面可在此接入');
   });
 </script>
