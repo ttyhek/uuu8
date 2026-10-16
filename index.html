@@ -454,26 +454,34 @@
   .inv-continue-btn:hover::after{opacity:1;right:.8rem;}
 
   /* ============================================================
-     仿真面具（悬浮装饰）
+     悬浮骰子
      ============================================================ */
-  .mask-float{
+  .dice-float{
     position:fixed;
     pointer-events:none;
     z-index:3;
-    animation:maskFloat 8s ease-in-out infinite;
-    filter:drop-shadow(0 8px 20px rgba(0,0,0,.8)) drop-shadow(0 0 30px rgba(180,80,120,.4));
+    animation:diceFloat 8s ease-in-out infinite;
+    filter:drop-shadow(0 8px 20px rgba(0,0,0,.85)) drop-shadow(0 0 24px rgba(255,200,120,.35));
   }
-  .mask-float svg{width:100%;height:100%;display:block;}
-  @keyframes maskFloat{
+  .dice-float svg{width:100%;height:100%;display:block;}
+  @keyframes diceFloat{
     0%,100%{transform:translateY(0) rotate(var(--rot,0deg));}
-    50%{transform:translateY(-18px) rotate(calc(var(--rot,0deg) + 5deg));}
+    50%{transform:translateY(-18px) rotate(calc(var(--rot,0deg) + 8deg));}
   }
-  .mask-float.m1{top:12%;left:6%;width:90px;height:70px;--rot:-8deg;animation-delay:0s;}
-  .mask-float.m2{top:60%;right:8%;width:80px;height:60px;--rot:12deg;animation-delay:2s;}
-  .mask-float.m3{bottom:10%;left:12%;width:70px;height:55px;--rot:-15deg;animation-delay:4s;}
+  .dice-float.d1{top:12%;left:6%;width:80px;height:80px;--rot:-8deg;animation-delay:0s;}
+  .dice-float.d2{top:60%;right:8%;width:70px;height:70px;--rot:12deg;animation-delay:2s;}
+  .dice-float.d3{bottom:10%;left:12%;width:60px;height:60px;--rot:-15deg;animation-delay:4s;}
+
+  .dice-pip{
+    animation:pipPulse 2s ease-in-out infinite alternate;
+  }
+  @keyframes pipPulse{
+    from{opacity:.5;}
+    to{opacity:1;}
+  }
 
   /* ============================================================
-     第二屏：羊皮纸信封
+     第二屏：信封
      ============================================================ */
   .envelope-stage{
     position:relative;
@@ -481,7 +489,6 @@
     margin-bottom:4rem;
     perspective:1200px;
   }
-
   .envelope{
     position:relative;
     width:100%;
@@ -491,85 +498,29 @@
   }
   .envelope-body{
     position:absolute;inset:0;
-    border-radius:4px;
+    background:linear-gradient(160deg,#e8d8c0,#d4c0a0);
+    border-radius:6px;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,.9),
+      0 0 0 1px rgba(200,170,120,.4),
+      inset 0 0 60px rgba(180,140,90,.2);
     overflow:hidden;
     transform-origin:center center;
     transition:transform .8s ease, opacity .8s ease;
-    /* 仿真陈旧羊皮纸 */
-    background:
-      radial-gradient(ellipse at 30% 25%, rgba(180,140,90,.4), transparent 45%),
-      radial-gradient(ellipse at 75% 60%, rgba(140,100,60,.35), transparent 50%),
-      radial-gradient(ellipse at 50% 90%, rgba(120,80,40,.3), transparent 55%),
-      radial-gradient(ellipse at 15% 80%, rgba(160,110,60,.25), transparent 40%),
-      linear-gradient(135deg, #e8d8b8 0%, #d8c098 30%, #c8a878 60%, #b09060 100%);
-    box-shadow:
-      0 30px 60px rgba(0,0,0,.9),
-      0 0 0 1px rgba(120,90,50,.6),
-      inset 0 0 80px rgba(80,50,20,.3),
-      inset 0 0 20px rgba(60,40,15,.4);
   }
-  /* 羊皮纸粗糙纹理 */
   .envelope-body::before{
-    content:'';position:absolute;inset:0;
-    background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23parchment)' opacity='0.4'/%3E%3C/svg%3E"),
-      repeating-linear-gradient(28deg, rgba(100,70,30,.05) 0 2px, transparent 2px 6px),
-      repeating-linear-gradient(-42deg, rgba(80,50,20,.04) 0 3px, transparent 3px 8px);
-    mix-blend-mode:multiply;
-    opacity:.5;
-    pointer-events:none;
-    z-index:2;
-  }
-  /* 羊皮纸折痕 */
-  .envelope-body::after{
-    content:'';position:absolute;inset:0;
-    background-image:
-      linear-gradient(90deg, transparent 49.5%, rgba(80,50,20,.25) 50%, transparent 50.5%),
-      linear-gradient(0deg, transparent 49.5%, rgba(80,50,20,.2) 50%, transparent 50.5%);
-    pointer-events:none;
-    z-index:3;
-  }
-  /* 信封三角折 */
-  .envelope-body .flap{
-    position:absolute;top:0;left:0;right:0;height:60%;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(220,180,130,.5), transparent 60%),
-      linear-gradient(160deg, #e0c8a0, #b89868);
+    content:'';position:absolute;top:0;left:0;right:0;height:60%;
+    background:linear-gradient(160deg,#f0e0c8,#dcc8a8);
     clip-path:polygon(0 0, 100% 0, 50% 100%);
-    box-shadow:inset 0 -4px 12px rgba(80,50,20,.4);
-    z-index:4;
+    box-shadow:inset 0 -2px 4px rgba(0,0,0,.1);
+    z-index:2;
     transition:transform 1.2s cubic-bezier(.4,.1,.2,1), opacity 1.2s ease;
     transform-origin:top center;
   }
-  .envelope-body .flap::before{
-    content:'';position:absolute;inset:0;
-    background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p2)' opacity='0.5'/%3E%3C/svg%3E");
-    mix-blend-mode:multiply;
-    opacity:.4;
+  .envelope.opening .envelope-body::before{
+    transform:rotateX(180deg);opacity:0;
   }
-  /* 信封边缘磨损 */
-  .envelope-worn{
-    position:absolute;inset:0;
-    pointer-events:none;
-    z-index:5;
-    background:
-      radial-gradient(ellipse at 0% 0%, rgba(60,30,10,.6), transparent 15%),
-      radial-gradient(ellipse at 100% 0%, rgba(60,30,10,.5), transparent 12%),
-      radial-gradient(ellipse at 0% 100%, rgba(60,30,10,.7), transparent 18%),
-      radial-gradient(ellipse at 100% 100%, rgba(60,30,10,.6), transparent 15%),
-      radial-gradient(ellipse at 50% 0%, rgba(80,40,15,.3), transparent 8%),
-      radial-gradient(ellipse at 50% 100%, rgba(80,40,15,.35), transparent 10%);
-    mix-blend-mode:multiply;
-  }
-
-  .envelope.opening .envelope-body .flap{
-    transform:rotateX(180deg);
-    opacity:0;
-  }
-  .envelope.opening .envelope-body{
-    transform:translateY(-10px);
-  }
+  .envelope.opening .envelope-body{transform:translateY(-10px);}
 
   .wax-shards{
     position:absolute;top:50%;left:50%;
@@ -615,15 +566,13 @@
     30%{opacity:1;transform:translate(-50%,-50%) scale(1) rotateX(0deg);}
     100%{opacity:0;transform:translate(-50%,-140%) scale(1.05) rotateX(0deg);}
   }
-
-  /* 羊皮纸水印（保持琥珀） */
   .watermark{
-    position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.2;
+    position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.18;
     background-image:
-      radial-gradient(circle at 25% 35%, transparent 0 18px, rgba(100,60,20,.5) 18px 19px, transparent 19px),
-      radial-gradient(circle at 75% 65%, transparent 0 22px, rgba(100,60,20,.4) 22px 23px, transparent 23px),
-      radial-gradient(circle at 50% 50%, transparent 0 40px, rgba(100,60,20,.25) 40px 41px, transparent 41px),
-      repeating-linear-gradient(45deg, transparent 0 12px, rgba(120,80,30,.12) 12px 13px);
+      radial-gradient(circle at 25% 35%, transparent 0 18px, rgba(120,80,40,.35) 18px 19px, transparent 19px),
+      radial-gradient(circle at 75% 65%, transparent 0 22px, rgba(120,80,40,.3) 22px 23px, transparent 23px),
+      radial-gradient(circle at 50% 50%, transparent 0 40px, rgba(120,80,40,.15) 40px 41px, transparent 41px),
+      repeating-linear-gradient(45deg, transparent 0 12px, rgba(140,100,60,.08) 12px 13px);
     mask-image:radial-gradient(ellipse at center, black 30%, transparent 80%);
     -webkit-mask-image:radial-gradient(ellipse at center, black 30%, transparent 80%);
   }
@@ -633,32 +582,30 @@
     font-family:'Cormorant Garamond',serif;
     font-style:italic;
     font-size:clamp(3rem,8vw,5rem);
-    color:rgba(120,70,30,.18);
-    letter-spacing:.3em;z-index:3;pointer-events:none;
+    color:rgba(140,90,50,.12);
+    letter-spacing:.3em;z-index:1;pointer-events:none;
     white-space:nowrap;font-weight:300;
-    text-shadow:0 1px 0 rgba(255,240,200,.4);
   }
   .envelope-q{
     position:absolute;bottom:14%;left:50%;
     transform:translateX(-50%);
     font-family:'Long Cang',cursive;
     font-size:clamp(.85rem,2.4vw,1.2rem);
-    color:#5a3a18;white-space:nowrap;
-    letter-spacing:.08em;z-index:6;
-    text-shadow:0 1px 2px rgba(255,240,200,.5);
+    color:#5a3a28;white-space:nowrap;
+    letter-spacing:.08em;z-index:4;
+    text-shadow:0 1px 2px rgba(255,255,255,.4);
   }
   .envelope-name{
     position:absolute;top:18%;left:50%;
     transform:translateX(-50%);
     font-family:'Long Cang',cursive;
     font-size:clamp(1rem,2.8vw,1.3rem);
-    color:#7a2018;letter-spacing:.05em;z-index:6;
+    color:#8a2040;letter-spacing:.05em;z-index:4;
     opacity:0;transition:opacity 1s ease;
-    text-shadow:0 1px 2px rgba(255,240,200,.4);
+    text-shadow:0 1px 2px rgba(255,255,255,.3);
   }
   .envelope-name.show{opacity:1;}
 
-  /* 火漆 */
   .seals{
     position:absolute;bottom:-50px;left:50%;
     transform:translateX(-50%);
@@ -785,16 +732,11 @@
   }
   .hint.changed{color:#e0c080;}
 
-  /* 「跑」按钮禁用提示 */
-  .seal-wrap.disabled-run{
-    cursor:not-allowed;
-  }
-  .seal-wrap.disabled-run:hover{
-    transform:translateY(-3px) scale(1.02);
-  }
+  .seal-wrap.disabled-run{cursor:not-allowed;}
+  .seal-wrap.disabled-run:hover{transform:translateY(-3px) scale(1.02);}
 
   /* ============================================================
-     弹窗：真的不再想一想吗
+     弹窗
      ============================================================ */
   .modal-overlay{
     position:fixed;inset:0;z-index:200;
@@ -806,7 +748,6 @@
     transition:opacity .6s ease;
   }
   .modal-overlay.show{opacity:1;pointer-events:auto;}
-
   .modal-card{
     position:relative;
     max-width:400px;width:100%;
@@ -825,27 +766,23 @@
     transform:translateY(20px) scale(.94);
     transition:transform .6s cubic-bezier(.34,1.56,.64,1);
   }
-  .modal-overlay.show .modal-card{
-    transform:translateY(0) scale(1);
-  }
+  .modal-overlay.show .modal-card{transform:translateY(0) scale(1);}
   .modal-card::before{
     content:'';position:absolute;inset:10px;
-    border:1px solid rgba(200,160,90,.4);
-    pointer-events:none;
+    border:1px solid rgba(200,160,90,.4);pointer-events:none;
   }
   .modal-card::after{
     content:'';position:absolute;inset:15px;
-    border:1px solid rgba(200,160,90,.18);
-    pointer-events:none;
+    border:1px solid rgba(200,160,90,.18);pointer-events:none;
   }
-  .modal-mask{
-    width:60px;height:50px;
+  .modal-dice{
+    width:70px;height:70px;
     margin:0 auto 1.5rem;
     opacity:.85;
     filter:drop-shadow(0 0 12px rgba(255,180,120,.5));
     position:relative;z-index:1;
   }
-  .modal-mask svg{width:100%;height:100%;display:block;}
+  .modal-dice svg{width:100%;height:100%;display:block;}
   .modal-text{
     font-family:'Long Cang',cursive;
     font-size:clamp(1.4rem,4vw,1.8rem);
@@ -879,7 +816,7 @@
   }
 
   /* ============================================================
-     信纸 / 玫瑰收集
+     信纸
      ============================================================ */
   .letter-overlay{
     position:fixed;inset:0;z-index:80;
@@ -962,10 +899,10 @@
   }
 
   /* ============================================================
-     玫瑰收集任务屏（保留）
+     玫瑰收集页
      ============================================================ */
   .rose-quest-wrap{
-    position:relative;max-width:640px;width:100%;
+    position:relative;max-width:700px;width:100%;
     text-align:center;z-index:6;
   }
   .rose-quest-title{
@@ -987,58 +924,192 @@
     text-transform:uppercase;margin-bottom:2rem;
     text-shadow:0 2px 6px rgba(0,0,0,.8);
   }
-  .rose-stage-title{
-    font-family:'Playfair Display',serif;
-    font-style:italic;font-weight:600;
-    font-size:clamp(1.3rem,3.5vw,1.8rem);
-    color:#ffb7d0;
-    margin-bottom:.6rem;
-    letter-spacing:.05em;
-    text-shadow:0 0 40px rgba(255,155,192,.5), 0 2px 10px rgba(0,0,0,.9);
-  }
-  .rose-stage-sub{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.85rem;
-    color:#c8a878;letter-spacing:.3em;
-    text-transform:uppercase;margin-bottom:2rem;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
-  }
   .rose-quest-desc{
     font-family:'Cormorant Garamond',serif;
     font-size:clamp(1rem,2.4vw,1.15rem);
     line-height:2;color:#d8c8b0;
     font-style:italic;
-    margin-bottom:2.5rem;
+    margin-bottom:2rem;
     text-shadow:0 2px 6px rgba(0,0,0,.8);
   }
-  .rose-quest-desc .hl{
-    color:#ffb7d0;font-style:normal;
-    font-family:'Noto Serif SC',serif;
-    font-size:.95rem;
+
+  .dice-roll-display{
+    display:flex;align-items:center;justify-content:center;
+    gap:1rem;margin:0 auto 2rem;
+    padding:1rem 1.8rem;
+    background:rgba(20,10,8,.5);
+    border:1px solid #6a5540;
+    border-radius:4px;
+    width:fit-content;
+    backdrop-filter:blur(4px);
+    transition:all .4s ease;
+  }
+  .dice-roll-display.rolling{
+    border-color:#ffb7d0;
+    box-shadow:0 0 40px rgba(255,155,192,.4);
+  }
+  .dice-roll-label{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.85rem;
+    color:#c8a878;letter-spacing:.25em;
+    text-transform:uppercase;
+  }
+  .dice-roll-num{
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:2rem;
+    color:#e0c080;
+    text-shadow:0 0 30px rgba(255,200,140,.7), 0 2px 6px rgba(0,0,0,.9);
+    min-width:2rem;
+    display:inline-block;
+  }
+
+  /* 翻牌卡牌区 */
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1rem;
+    max-width:520px;
+    margin:0 auto 2rem;
+    width:100%;
+  }
+  @media(max-width:520px){
+    .card-grid{grid-template-columns:repeat(2, 1fr);max-width:360px;}
+  }
+  .flip-card{
+    position:relative;
+    aspect-ratio:2/3;
+    perspective:1000px;
+    cursor:pointer;
+    transition:transform .4s ease;
+  }
+  .flip-card:hover:not(.flipped){transform:translateY(-6px);}
+  .flip-card.flipped{cursor:default;}
+  .flip-inner{
+    position:relative;width:100%;height:100%;
+    transition:transform .9s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{
+    position:absolute;inset:0;
+    backface-visibility:hidden;
+    border-radius:6px;
+    border:1px solid #8a6838;
+    box-shadow:
+      0 10px 24px rgba(0,0,0,.8),
+      0 0 0 1px rgba(200,160,90,.25),
+      inset 0 0 40px rgba(120,80,40,.2);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  .flip-face::before{
+    content:'';position:absolute;inset:6px;
+    border:1px solid rgba(200,160,90,.4);
+    border-radius:4px;pointer-events:none;
+  }
+  .flip-face::after{
+    content:'';position:absolute;inset:10px;
+    border:1px solid rgba(200,160,90,.18);
+    border-radius:3px;pointer-events:none;
+  }
+  .flip-back{
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(140,60,90,.25), transparent 60%),
+      linear-gradient(160deg, rgba(40,26,20,.96) 0%, rgba(28,18,14,.98) 100%);
+  }
+  .flip-back-symbol{
+    font-family:'Playfair Display',serif;
+    font-style:italic;font-size:2.6rem;
+    color:#c8a058;opacity:.85;
+    text-shadow:0 0 20px rgba(255,200,140,.5);
+    z-index:2;
+  }
+  .flip-front{
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(255,120,180,.2), transparent 60%),
+      linear-gradient(160deg, rgba(50,20,35,.96) 0%, rgba(30,12,22,.98) 100%);
+    transform:rotateY(180deg);
+    flex-direction:column;padding:1rem .6rem;gap:.6rem;
+  }
+  .flip-front .ff-rose{
+    width:56px;height:56px;
+    filter:drop-shadow(0 0 16px rgba(255,120,180,.6));
+    animation:rosePulse 2.5s ease-in-out infinite alternate;
+  }
+  @keyframes rosePulse{
+    from{transform:scale(1);}
+    to{transform:scale(1.08);}
+  }
+  .flip-front .ff-text{
+    font-family:'Long Cang',cursive;
+    font-size:.85rem;
+    color:#ffd8e8;text-align:center;
+    line-height:1.4;padding:0 .3rem;
+    text-shadow:0 0 16px rgba(255,155,192,.5);
+    z-index:2;
+  }
+  .flip-front .ff-tag{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.55rem;
+    color:#c8a058;letter-spacing:.25em;
+    text-transform:uppercase;z-index:2;
+  }
+  .flip-card.claimed .flip-front{
+    opacity:.35;filter:grayscale(.5);
+  }
+  .flip-card.claimed{pointer-events:none;}
+
+  .dice-roller{
+    display:flex;align-items:center;justify-content:center;
+    gap:1.5rem;margin-bottom:2rem;flex-wrap:wrap;
+  }
+  .dice-btn{
+    padding:1rem 2.4rem;
+    background:rgba(20,10,8,.5);
+    border:1px solid #e0c080;
+    color:#f0d8a0;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.9rem;
+    letter-spacing:.4em;text-transform:uppercase;
+    cursor:pointer;transition:all .4s ease;
+    backdrop-filter:blur(4px);
+    position:relative;
+  }
+  .dice-btn:hover:not(:disabled){
+    border-color:#ffb7d0;color:#ffd8e8;
+    box-shadow:0 0 50px rgba(255,155,192,.5);
+    letter-spacing:.45em;
+    transform:translateY(-2px);
+  }
+  .dice-btn:disabled{
+    opacity:.35;cursor:not-allowed;
+    border-color:#6a5540;color:#8a7560;
+  }
+  .dice-btn.rolling{animation:diceBtnShake .15s ease-in-out infinite;}
+  @keyframes diceBtnShake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-2px);}
+    75%{transform:translateX(2px);}
   }
 
   .rose-slots{
-    display:flex;
-    gap:1.5rem;justify-content:center;
-    align-items:center;
-    margin-bottom:2.5rem;flex-wrap:wrap;
+    display:flex;gap:1.2rem;justify-content:center;
+    align-items:center;margin-bottom:2rem;flex-wrap:wrap;
   }
   .rose-slot{
-    width:100px;height:100px;
-    border-radius:50%;
-    background:
-      radial-gradient(circle at 50% 50%, rgba(60,20,30,.8), rgba(30,10,15,.9));
+    width:70px;height:70px;border-radius:50%;
+    background:radial-gradient(circle at 50% 50%, rgba(60,20,30,.8), rgba(30,10,15,.9));
     border:1px solid #8a6838;
     box-shadow:
       0 10px 30px rgba(0,0,0,.8),
       0 0 0 1px rgba(200,160,90,.3),
       inset 0 0 30px rgba(120,80,40,.2);
     display:flex;align-items:center;justify-content:center;
-    position:relative;
-    transition:all .6s ease;
+    position:relative;transition:all .6s ease;
   }
   .rose-slot .slot-inner{
-    width:60px;height:60px;
+    width:42px;height:42px;
     opacity:0;transform:scale(0);
     transition:all .8s cubic-bezier(.34,1.56,.64,1);
   }
@@ -1053,44 +1124,20 @@
   }
   .rose-slot.filled .slot-inner{opacity:1;transform:scale(1);}
   .rose-slot .slot-num{
-    position:absolute;
-    bottom:-25px;left:50%;
+    position:absolute;bottom:-22px;left:50%;
     transform:translateX(-50%);
     font-family:'Playfair Display',serif;
-    font-style:italic;font-size:.7rem;
+    font-style:italic;font-size:.6rem;
     color:#c8a058;letter-spacing:.2em;
     text-shadow:0 2px 6px rgba(0,0,0,.8);
-  }
-
-  .rose-pick-area{
-    display:flex;gap:1.2rem;
-    justify-content:center;align-items:center;
-    flex-wrap:wrap;margin-bottom:2rem;min-height:120px;
-  }
-  .rose-pick{
-    width:80px;height:80px;
-    cursor:pointer;transition:all .4s ease;
-    position:relative;
-    animation:roseFloat 3s ease-in-out infinite;
-  }
-  .rose-pick:hover{
-    transform:scale(1.15);
-    filter:drop-shadow(0 0 20px rgba(255,100,150,.8));
-  }
-  .rose-pick.picked{
-    opacity:0;transform:scale(0);pointer-events:none;
-  }
-  .rose-pick svg{width:100%;height:100%;display:block;}
-  @keyframes roseFloat{
-    0%,100%{transform:translateY(0) rotate(-3deg);}
-    50%{transform:translateY(-8px) rotate(3deg);}
+    white-space:nowrap;
   }
 
   .rose-quest-status{
     font-family:'Cormorant Garamond',serif;
     font-style:italic;font-size:.95rem;
     color:#c8a878;letter-spacing:.15em;
-    margin-bottom:2rem;
+    margin-bottom:1.5rem;
     text-shadow:0 2px 6px rgba(0,0,0,.8);
   }
   .rose-quest-status .count{
@@ -1100,7 +1147,29 @@
     text-shadow:0 0 20px rgba(255,155,192,.6);
   }
 
-  /* 故事线猜测 */
+  .rose-continue-btn{
+    padding:1.1rem 3rem;
+    background:rgba(20,10,8,.5);
+    border:1px solid #6a5540;
+    color:#8a7560;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.9rem;
+    letter-spacing:.4em;text-transform:uppercase;
+    cursor:not-allowed;transition:all .4s ease;
+    backdrop-filter:blur(4px);
+    position:relative;
+  }
+  .rose-continue-btn.enabled{
+    border-color:#e0c080;color:#f0d8a0;
+    cursor:pointer;
+  }
+  .rose-continue-btn.enabled:hover{
+    border-color:#ffb7d0;color:#ffd8e8;
+    box-shadow:0 0 50px rgba(255,155,192,.5);
+    letter-spacing:.45em;
+    transform:translateY(-2px);
+  }
+
   .story-choices{
     display:flex;flex-direction:column;
     gap:1rem;max-width:460px;
@@ -1145,31 +1214,8 @@
     letter-spacing:.05em;
   }
 
-  .rose-continue-btn{
-    padding:1.1rem 3rem;
-    background:rgba(20,10,8,.5);
-    border:1px solid #6a5540;
-    color:#8a7560;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.9rem;
-    letter-spacing:.4em;text-transform:uppercase;
-    cursor:not-allowed;transition:all .4s ease;
-    backdrop-filter:blur(4px);
-    position:relative;
-  }
-  .rose-continue-btn.enabled{
-    border-color:#e0c080;color:#f0d8a0;
-    cursor:pointer;
-  }
-  .rose-continue-btn.enabled:hover{
-    border-color:#ffb7d0;color:#ffd8e8;
-    box-shadow:0 0 50px rgba(255,155,192,.5);
-    letter-spacing:.45em;
-    transform:translateY(-2px);
-  }
-
   /* ============================================================
-     抽签页
+     抽签页（重新设计：签翻转 + 简洁排版）
      ============================================================ */
   .draw-title{
     font-family:'Playfair Display',serif;
@@ -1194,19 +1240,22 @@
     position:relative;z-index:6;
     text-shadow:0 2px 6px rgba(0,0,0,.8);
   }
+
   .sticks-fan{
     position:relative;
     width:min(600px,95vw);
     height:420px;
-    margin-bottom:1rem;
+    margin-bottom:2rem;
     display:flex;justify-content:center;align-items:center;
     perspective:1400px;
     transition:filter .8s ease, opacity .8s ease;
     z-index:6;
   }
+
+  /* 签：细长数字卡片 */
   .stick{
     position:absolute;
-    width:36px;height:240px;
+    width:56px;height:280px;
     cursor:pointer;
     transform-origin:center center;
     transition:transform .55s cubic-bezier(.34,1.56,.64,1),
@@ -1223,81 +1272,117 @@
 
   .stick-inner{
     position:absolute;inset:0;
-    border-radius:4px;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.15), transparent 60%),
-      linear-gradient(160deg, rgba(40,26,20,.96) 0%, rgba(28,18,14,.98) 50%, rgba(18,10,8,.99) 100%);
-    border:1px solid #8a6838;
+    transition:transform .8s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+    transform: rotate(var(--angle)) translateX(var(--tx)) translateY(var(--ty));
+  }
+
+  /* 正面（数字面） */
+  .stick-front, .stick-back{
+    position:absolute;inset:0;
+    border-radius:6px;
+    backface-visibility:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:.8rem .4rem;
     box-shadow:
       0 14px 30px rgba(0,0,0,.8),
       0 0 0 1px rgba(200,160,90,.3),
       inset 0 0 40px rgba(120,80,40,.15);
     overflow:hidden;
-    transform: rotate(var(--angle)) translateX(var(--tx)) translateY(var(--ty));
-    transition:transform .55s cubic-bezier(.34,1.56,.64,1), filter .4s ease;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    padding:.5rem .3rem;
   }
-  .stick-inner::before{
-    content:'';position:absolute;inset:4px;
+  .stick-front::before, .stick-back::before{
+    content:'';position:absolute;inset:5px;
     border:1px solid rgba(200,160,90,.4);
+    border-radius:4px;pointer-events:none;
+  }
+  .stick-front::after, .stick-back::after{
+    content:'';position:absolute;inset:9px;
+    border:1px solid rgba(200,160,90,.18);
     border-radius:3px;pointer-events:none;
   }
-  .stick-inner::after{
-    content:'';position:absolute;inset:7px;
-    border:1px solid rgba(200,160,90,.18);
-    border-radius:2px;pointer-events:none;
+  .stick-front{
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.15), transparent 60%),
+      linear-gradient(160deg, rgba(40,26,20,.96) 0%, rgba(28,18,14,.98) 50%, rgba(18,10,8,.99) 100%);
+  }
+  .stick-back{
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,180,220,.2), transparent 60%),
+      linear-gradient(160deg, rgba(50,20,35,.96) 0%, rgba(30,12,22,.98) 100%);
+    transform:rotateY(180deg);
   }
   .stick-num{
     font-family:'Playfair Display',serif;
     font-style:italic;font-weight:700;
-    font-size:1.5rem;color:#e0c080;
-    text-shadow:0 0 15px rgba(255,200,140,.6), 0 2px 4px rgba(0,0,0,.9);
+    font-size:2rem;color:#e0c080;
+    text-shadow:0 0 20px rgba(255,200,140,.7), 0 2px 6px rgba(0,0,0,.9);
     position:relative;z-index:2;
-    margin-bottom:.8rem;letter-spacing:.05em;
+    margin-bottom:.6rem;letter-spacing:.05em;
   }
   .stick-label{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.5rem;
-    letter-spacing:.25em;color:#c8a058;
+    font-style:italic;font-size:.6rem;
+    letter-spacing:.3em;color:#c8a058;
     text-transform:uppercase;text-align:center;
     position:relative;z-index:2;
     writing-mode:vertical-rl;
-    text-orientation:mixed;opacity:.8;
+    text-orientation:mixed;opacity:.85;
   }
-  .stick-seal{
-    position:absolute;bottom:6px;left:50%;
-    transform:translateX(-50%);
-    width:6px;height:6px;border-radius:50%;
-    background:radial-gradient(circle at 35% 35%, #c03050, #7a1830);
-    box-shadow:0 2px 4px rgba(0,0,0,.5), inset 0 0 3px rgba(255,200,220,.3);
-    z-index:2;
+  /* 背面内容 */
+  .stick-back .sb-ornament{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.55rem;
+    color:#c8a058;letter-spacing:.3em;
+    text-transform:uppercase;margin-bottom:1rem;
+    position:relative;z-index:2;
   }
+  .stick-back .sb-rose{
+    width:36px;height:36px;
+    margin-bottom:1rem;
+    filter:drop-shadow(0 0 12px rgba(255,120,180,.6));
+    position:relative;z-index:2;
+  }
+  .stick-back .sb-text{
+    font-family:'Long Cang',cursive;
+    font-size:.75rem;
+    color:#ffd8e8;
+    text-align:center;
+    line-height:1.4;
+    position:relative;z-index:2;
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    letter-spacing:.15em;
+  }
+
+  /* hover */
   .stick:hover .stick-inner{
     transform: rotate(var(--angle)) translateX(var(--tx)) translateY(calc(var(--ty) - 20px));
     filter:brightness(1.15);
+  }
+  .stick:hover .stick-front,
+  .stick:hover .stick-back{
     box-shadow:
       0 22px 44px rgba(0,0,0,.9),
       0 0 0 1px rgba(220,180,110,.5),
       0 0 40px rgba(255,200,140,.4),
       inset 0 0 40px rgba(120,80,40,.2);
   }
+
+  /* 选中：签跳出并翻转 */
   .stick.drawn{
     z-index:30;
-    transition: transform 1s cubic-bezier(.34,1.56,.64,1);
   }
   .stick.drawn .stick-inner{
-    transform: rotate(0deg) translateX(0) translateY(-80px) scale(1.8);
-    box-shadow:
-      0 30px 60px rgba(0,0,0,.95),
-      0 0 0 1px rgba(220,180,110,.6),
-      0 0 60px rgba(255,200,140,.6),
-      inset 0 0 60px rgba(120,80,40,.25);
+    transform: translateX(0) translateY(-60px) scale(1.5) rotateY(180deg);
   }
   .stick.faded{opacity:.08;filter:blur(2px);pointer-events:none;}
 
-  /* 抽签结果卡 */
+  /* ============================================================
+     抽签结果卡（与按钮分离）
+     ============================================================ */
   .draw-result{
     position:relative;
     max-width:640px;width:100%;
@@ -1307,120 +1392,134 @@
     transition:opacity 1.2s ease, transform 1.2s ease;
     pointer-events:none;
     z-index:6;
+    text-align:center;
   }
   .draw-result.show{opacity:1;transform:translateY(0);pointer-events:auto;}
 
-  .draw-result-inner{
-    display:flex;gap:2rem;align-items:center;
-    padding:1.5rem;
+  /* 卡片本体（简洁：无装饰角标，只保留细边框） */
+  .draw-result-card{
+    position:relative;
+    padding:2.4rem 2rem;
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.10), transparent 60%),
-      linear-gradient(160deg, rgba(40,26,20,.95) 0%, rgba(30,18,14,.96) 50%, rgba(20,12,10,.97) 100%);
+      radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.08), transparent 60%),
+      linear-gradient(160deg, rgba(40,26,20,.95) 0%, rgba(28,18,14,.97) 100%);
     border:1px solid #8a6838;
-    border-radius:2px;
+    border-radius:4px;
     box-shadow:
-      0 30px 80px rgba(0,0,0,.9),
-      0 0 0 1px rgba(200,160,90,.3),
-      inset 0 0 80px rgba(120,80,40,.2);
-    position:relative;overflow:hidden;
+      0 30px 70px rgba(0,0,0,.9),
+      0 0 0 1px rgba(200,160,90,.25),
+      inset 0 0 60px rgba(120,80,40,.15);
+    text-align:center;
+    margin-bottom:1.6rem;
   }
-  .draw-result-inner::before{
-    content:'';position:absolute;inset:8px;
-    border:1px solid rgba(200,160,90,.4);
-    pointer-events:none;
+  .draw-result-card::before{
+    content:'';position:absolute;inset:10px;
+    border:1px solid rgba(200,160,90,.35);
+    border-radius:3px;pointer-events:none;
   }
-  .draw-result-icon{
-    flex-shrink:0;
-    width:100px;height:200px;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,220,160,.15), transparent 60%),
-      linear-gradient(160deg, rgba(40,26,20,.96) 0%, rgba(28,18,14,.98) 100%);
-    border:1px solid #8a6838;
-    border-radius:6px;
-    box-shadow:
-      0 10px 30px rgba(0,0,0,.9),
-      0 0 0 1px rgba(200,160,90,.3),
-      inset 0 0 40px rgba(120,80,40,.2);
-    padding:.8rem;position:relative;
+
+  /* 顶部标签 */
+  .draw-result-ornament{
+    font-family:'Playfair Display',serif;
+    font-style:italic;font-size:.65rem;
+    color:#c8a058;letter-spacing:.5em;
+    text-transform:uppercase;margin-bottom:1.2rem;
+    position:relative;z-index:1;
   }
-  .draw-result-icon::before{
-    content:'';position:absolute;inset:6px;
-    border:1px solid rgba(200,160,90,.4);
-    border-radius:4px;pointer-events:none;
+  .draw-result-ornament::before,
+  .draw-result-ornament::after{
+    content:'✦';margin:0 .6rem;color:#e0c080;
+    font-size:.55rem;vertical-align:middle;
   }
-  .draw-result-icon .big-num{
+
+  /* 大字数字 */
+  .draw-result-num{
     font-family:'Playfair Display',serif;
     font-style:italic;font-weight:700;
-    font-size:2.6rem;color:#e0c080;
-    text-shadow:0 0 30px rgba(255,200,140,.8), 0 2px 8px rgba(0,0,0,.9);
-    margin-bottom:.6rem;
-  }
-  .draw-result-icon .big-label{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.6rem;
-    letter-spacing:.3em;color:#c8a058;
-    text-transform:uppercase;
-    writing-mode:vertical-rl;
-    text-orientation:mixed;opacity:.85;
-  }
-  .draw-result-content{
-    flex:1;position:relative;z-index:1;min-width:0;
-  }
-  .draw-result-name{
-    font-family:'Playfair Display',serif;
-    font-weight:700;
-    font-size:clamp(1.3rem,3.2vw,1.8rem);
+    font-size:clamp(2.4rem,6vw,3.2rem);
     background:linear-gradient(180deg,#f8e8c0 0%, #d8b070 50%, #a07838 100%);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     background-clip:text;
     letter-spacing:.05em;
-    margin-bottom:.8rem;
+    margin-bottom:.4rem;
     text-shadow:0 0 40px rgba(220,180,100,.4);
+    position:relative;z-index:1;
+    line-height:1.1;
+  }
+  .draw-result-label{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:.75rem;
+    color:#c8a058;letter-spacing:.4em;
+    text-transform:uppercase;margin-bottom:1.8rem;
+    position:relative;z-index:1;
+  }
+
+  /* 名字 */
+  .draw-result-name{
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:clamp(1.4rem,3.6vw,2rem);
+    color:#ffb7d0;
+    letter-spacing:.05em;
+    margin-bottom:1.5rem;
+    text-shadow:0 0 30px rgba(255,155,192,.5);
+    position:relative;z-index:1;
     line-height:1.3;
   }
+
+  /* 描述 */
   .draw-result-desc{
     font-family:'Cormorant Garamond',serif;
-    font-size:.95rem;line-height:1.9;
+    font-size:1rem;line-height:2;
     color:#d8c8b0;font-style:italic;
-    margin-bottom:1rem;
+    margin-bottom:1.8rem;
+    position:relative;z-index:1;
+    max-width:480px;
+    margin-left:auto;margin-right:auto;
   }
   .draw-result-desc .quote{
     color:#ffb7d0;font-style:normal;
     font-family:'Noto Serif SC',serif;
-    font-size:.88rem;letter-spacing:.03em;
+    font-size:.92rem;letter-spacing:.03em;
   }
+
+  /* 标签 */
   .draw-result-tags{
     display:flex;flex-wrap:wrap;gap:.5rem;
-    margin-bottom:1.2rem;
+    justify-content:center;
+    position:relative;z-index:1;
   }
   .draw-result-tags span{
     font-family:'Cormorant Garamond',serif;
-    font-size:.68rem;color:#e0c080;
-    border:1px solid rgba(200,160,90,.5);
-    padding:.25rem .7rem;
+    font-size:.7rem;color:#c8a058;
+    border:1px solid rgba(200,160,90,.4);
+    padding:.3rem .8rem;
     letter-spacing:.15em;text-transform:uppercase;
-    font-style:italic;background:rgba(200,160,90,.06);
+    font-style:italic;
   }
+
+  /* 按钮区（在卡片外面） */
   .draw-result-actions{
-    display:flex;gap:.8rem;flex-wrap:wrap;
+    display:flex;gap:1rem;flex-wrap:wrap;
+    justify-content:center;
   }
   .draw-result-btn{
-    padding:.7rem 1.5rem;
+    padding:.9rem 2.2rem;
     background:rgba(20,10,8,.5);
     border:1px solid #a08050;
     color:#e0c080;
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.75rem;
-    letter-spacing:.3em;text-transform:uppercase;
+    font-style:italic;font-size:.8rem;
+    letter-spacing:.35em;text-transform:uppercase;
     cursor:pointer;transition:all .4s ease;
+    backdrop-filter:blur(4px);
   }
   .draw-result-btn:hover{
     border-color:#ffb7d0;color:#ffd8e8;
     box-shadow:0 0 30px rgba(255,155,192,.4);
-    letter-spacing:.35em;
+    letter-spacing:.4em;
+    transform:translateY(-2px);
   }
   .draw-result-btn.secondary{
     border-color:#6a5540;color:#c8a878;
@@ -1428,15 +1527,6 @@
   .draw-result-btn.secondary:hover{
     border-color:#e0c080;color:#f0d8a0;
     box-shadow:0 0 30px rgba(200,160,100,.3);
-  }
-
-  .story-prompt{
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:.9rem;
-    color:#c8a878;letter-spacing:.1em;
-    margin-bottom:1.5rem;
-    text-shadow:0 2px 6px rgba(0,0,0,.8);
-    line-height:1.8;
   }
 
   /* ============================================================
@@ -1450,9 +1540,9 @@
     .floating-card.c4{right:-3%;}
     .floating-card.c5{display:none;}
 
-    .mask-float.m1{width:60px;height:48px;}
-    .mask-float.m2{width:55px;height:42px;}
-    .mask-float.m3{width:50px;height:38px;}
+    .dice-float.d1{width:56px;height:56px;}
+    .dice-float.d2{width:48px;height:48px;}
+    .dice-float.d3{width:42px;height:42px;}
 
     .whisper-marquee{font-size:.9rem;}
 
@@ -1464,39 +1554,37 @@
     .inv-main{font-size:clamp(1rem,4vw,1.3rem);}
     .inv-confession{font-size:.9rem;}
 
-    .sticks-fan{height:340px;}
-    .stick{width:28px;height:190px;}
-    .stick:nth-child(1){--tx:-120px;}
-    .stick:nth-child(2){--tx:-80px;}
-    .stick:nth-child(3){--tx:-40px;}
-    .stick:nth-child(5){--tx:40px;}
-    .stick:nth-child(6){--tx:80px;}
-    .stick:nth-child(7){--tx:120px;}
-    .stick-num{font-size:1.1rem;}
-    .stick-label{font-size:.42rem;}
+    .sticks-fan{height:380px;}
+    .stick{width:44px;height:230px;}
+    .stick:nth-child(1){--tx:-130px;}
+    .stick:nth-child(2){--tx:-86px;}
+    .stick:nth-child(3){--tx:-43px;}
+    .stick:nth-child(5){--tx:43px;}
+    .stick:nth-child(6){--tx:86px;}
+    .stick:nth-child(7){--tx:130px;}
+    .stick-num{font-size:1.5rem;}
+    .stick-label{font-size:.5rem;}
 
-    .draw-result-inner{flex-direction:column;gap:1.2rem;padding:1.2rem;}
-    .draw-result-icon{width:90px;height:160px;}
-    .draw-result-icon .big-num{font-size:2rem;}
+    .draw-result-card{padding:2rem 1.4rem;}
     .draw-result-actions{justify-content:center;}
 
-    .rose-slot{width:80px;height:80px;}
-    .rose-slot .slot-inner{width:46px;height:46px;}
-    .rose-pick{width:60px;height:60px;}
+    .rose-slot{width:58px;height:58px;}
+    .rose-slot .slot-inner{width:34px;height:34px;}
   }
 
   @media(max-width:520px){
     .screen{padding:2rem 1rem;}
-    .sticks-fan{height:300px;}
-    .stick{width:24px;height:160px;}
-    .stick:nth-child(1){--tx:-90px;}
-    .stick:nth-child(2){--tx:-60px;}
-    .stick:nth-child(3){--tx:-30px;}
-    .stick:nth-child(5){--tx:30px;}
-    .stick:nth-child(6){--tx:60px;}
-    .stick:nth-child(7){--tx:90px;}
-    .stick-num{font-size:.9rem;}
+    .sticks-fan{height:340px;}
+    .stick{width:38px;height:200px;}
+    .stick:nth-child(1){--tx:-100px;}
+    .stick:nth-child(2){--tx:-67px;}
+    .stick:nth-child(3){--tx:-33px;}
+    .stick:nth-child(5){--tx:33px;}
+    .stick:nth-child(6){--tx:67px;}
+    .stick:nth-child(7){--tx:100px;}
+    .stick-num{font-size:1.2rem;}
     .stick-label{display:none;}
+    .stick-back .sb-text{font-size:.6rem;}
 
     .inv-top-ornament{margin-top:2rem;font-size:.6rem;}
     .inv-main{line-height:1.7;}
@@ -1504,11 +1592,9 @@
     .inv-confession .hl{font-size:.82rem;}
 
     .rose-slots{gap:.8rem;}
-    .rose-slot{width:64px;height:64px;}
-    .rose-slot .slot-inner{width:36px;height:36px;}
-    .rose-pick{width:50px;height:50px;}
-    .draw-result-icon{width:80px;height:140px;}
-    .draw-result-icon .big-num{font-size:1.6rem;}
+    .rose-slot{width:52px;height:52px;}
+    .rose-slot .slot-inner{width:30px;height:30px;}
+    .draw-result-card{padding:1.6rem 1.2rem;}
   }
 </style>
 </head>
@@ -1531,31 +1617,11 @@
      ============================================================ -->
 <section class="screen" id="screen1">
   <div class="signup-stage">
-    <div class="floating-card c1">
-      <div class="card-corner tl">A</div>
-      <div class="card-symbol">♠</div>
-      <div class="card-corner br">A</div>
-    </div>
-    <div class="floating-card c2">
-      <div class="card-corner tl">K</div>
-      <div class="card-symbol">♥</div>
-      <div class="card-corner br">K</div>
-    </div>
-    <div class="floating-card c3">
-      <div class="card-corner tl">Q</div>
-      <div class="card-symbol">♦</div>
-      <div class="card-corner br">Q</div>
-    </div>
-    <div class="floating-card c4">
-      <div class="card-corner tl">J</div>
-      <div class="card-symbol">♣</div>
-      <div class="card-corner br">J</div>
-    </div>
-    <div class="floating-card c5">
-      <div class="card-corner tl">X</div>
-      <div class="card-symbol">✧</div>
-      <div class="card-corner br">X</div>
-    </div>
+    <div class="floating-card c1"><div class="card-corner tl">A</div><div class="card-symbol">♠</div><div class="card-corner br">A</div></div>
+    <div class="floating-card c2"><div class="card-corner tl">K</div><div class="card-symbol">♥</div><div class="card-corner br">K</div></div>
+    <div class="floating-card c3"><div class="card-corner tl">Q</div><div class="card-symbol">♦</div><div class="card-corner br">Q</div></div>
+    <div class="floating-card c4"><div class="card-corner tl">J</div><div class="card-symbol">♣</div><div class="card-corner br">J</div></div>
+    <div class="floating-card c5"><div class="card-corner tl">X</div><div class="card-symbol">✧</div><div class="card-corner br">X</div></div>
     <div class="card-glow g1"></div>
     <div class="card-glow g2"></div>
 
@@ -1621,42 +1687,38 @@
 </section>
 
 <!-- ============================================================
-     第二屏：羊皮纸信封 + 仿真面具
+     第二屏：信封 + 悬浮骰子
      ============================================================ -->
 <section class="screen hidden" id="screen2">
-  <!-- 悬浮仿真面具 -->
-  <div class="mask-float m1">
-    <svg viewBox="0 0 90 70">
-      <ellipse cx="45" cy="35" rx="42" ry="32" fill="#1a0e08" stroke="#c8a058" stroke-width="1.8"/>
-      <ellipse cx="45" cy="35" rx="38" ry="28" fill="none" stroke="#e0c080" stroke-width="0.8" opacity="0.5"/>
-      <ellipse cx="28" cy="30" rx="12" ry="14" fill="#0a0608" stroke="#c8a058" stroke-width="1.5"/>
-      <ellipse cx="62" cy="30" rx="12" ry="14" fill="#0a0608" stroke="#c8a058" stroke-width="1.5"/>
-      <circle cx="28" cy="30" r="3" fill="#ffb7d0" opacity="0.6"/>
-      <circle cx="62" cy="30" r="3" fill="#ffb7d0" opacity="0.6"/>
-      <path d="M38 50 Q45 56 52 50" stroke="#c8a058" stroke-width="1" fill="none"/>
-      <line x1="45" y1="55" x2="45" y2="62" stroke="#c8a058" stroke-width="0.8"/>
-      <path d="M45 62 Q50 66 55 64" stroke="#c8a058" stroke-width="0.6" fill="none"/>
+  <div class="dice-float d1">
+    <svg viewBox="0 0 80 80">
+      <rect x="10" y="10" width="60" height="60" rx="8" fill="#1a0e08" stroke="#c8a058" stroke-width="2"/>
+      <rect x="16" y="16" width="48" height="48" rx="5" fill="none" stroke="#e0c080" stroke-width="0.8" opacity="0.5"/>
+      <circle class="dice-pip" cx="30" cy="30" r="4" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="50" cy="30" r="4" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="40" cy="40" r="4" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="30" cy="50" r="4" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="50" cy="50" r="4" fill="#ffb7d0"/>
     </svg>
   </div>
-  <div class="mask-float m2">
-    <svg viewBox="0 0 90 70">
-      <ellipse cx="45" cy="35" rx="42" ry="32" fill="#1a0e08" stroke="#c8a058" stroke-width="1.8"/>
-      <ellipse cx="45" cy="35" rx="38" ry="28" fill="none" stroke="#e0c080" stroke-width="0.8" opacity="0.5"/>
-      <ellipse cx="28" cy="30" rx="12" ry="14" fill="#0a0608" stroke="#c8a058" stroke-width="1.5"/>
-      <ellipse cx="62" cy="30" rx="12" ry="14" fill="#0a0608" stroke="#c8a058" stroke-width="1.5"/>
-      <circle cx="28" cy="30" r="3" fill="#ffb7d0" opacity="0.6"/>
-      <circle cx="62" cy="30" r="3" fill="#ffb7d0" opacity="0.6"/>
-      <path d="M38 50 Q45 56 52 50" stroke="#c8a058" stroke-width="1" fill="none"/>
+  <div class="dice-float d2">
+    <svg viewBox="0 0 80 80">
+      <rect x="10" y="10" width="60" height="60" rx="8" fill="#1a0e08" stroke="#c8a058" stroke-width="2"/>
+      <rect x="16" y="16" width="48" height="48" rx="5" fill="none" stroke="#e0c080" stroke-width="0.8" opacity="0.5"/>
+      <circle class="dice-pip" cx="30" cy="30" r="4" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="50" cy="50" r="4" fill="#ffb7d0"/>
     </svg>
   </div>
-  <div class="mask-float m3">
-    <svg viewBox="0 0 90 70">
-      <ellipse cx="45" cy="35" rx="42" ry="32" fill="#1a0e08" stroke="#c8a058" stroke-width="1.8"/>
-      <ellipse cx="28" cy="30" rx="12" ry="14" fill="#0a0608" stroke="#c8a058" stroke-width="1.5"/>
-      <ellipse cx="62" cy="30" rx="12" ry="14" fill="#0a0608" stroke="#c8a058" stroke-width="1.5"/>
-      <circle cx="28" cy="30" r="3" fill="#ffb7d0" opacity="0.6"/>
-      <circle cx="62" cy="30" r="3" fill="#ffb7d0" opacity="0.6"/>
-      <path d="M38 50 Q45 56 52 50" stroke="#c8a058" stroke-width="1" fill="none"/>
+  <div class="dice-float d3">
+    <svg viewBox="0 0 80 80">
+      <rect x="10" y="10" width="60" height="60" rx="8" fill="#1a0e08" stroke="#c8a058" stroke-width="2"/>
+      <rect x="16" y="16" width="48" height="48" rx="5" fill="none" stroke="#e0c080" stroke-width="0.8" opacity="0.5"/>
+      <circle class="dice-pip" cx="25" cy="25" r="3.5" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="40" cy="25" r="3.5" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="55" cy="25" r="3.5" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="25" cy="55" r="3.5" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="40" cy="55" r="3.5" fill="#ffb7d0"/>
+      <circle class="dice-pip" cx="55" cy="55" r="3.5" fill="#ffb7d0"/>
     </svg>
   </div>
 
@@ -1668,12 +1730,10 @@
       <div class="wax-shards" id="waxShards"></div>
       <div class="envelope-letter"></div>
       <div class="envelope-body">
-        <div class="flap"></div>
         <div class="watermark"></div>
         <div class="watermark-text">琥珀</div>
         <div class="envelope-name" id="envelopeName"></div>
         <div class="envelope-q">如果一去不复返的话，你还要继续吗</div>
-        <div class="envelope-worn"></div>
       </div>
       <div class="seals">
         <div class="seal-wrap pinklight disabled-run" id="sealRun" data-choice="run">
@@ -1694,18 +1754,15 @@
 </section>
 
 <!-- ============================================================
-     弹窗：真的不再想一想吗
+     弹窗
      ============================================================ -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-card">
-    <div class="modal-mask">
-      <svg viewBox="0 0 90 70">
-        <ellipse cx="45" cy="35" rx="42" ry="32" fill="#1a0e08" stroke="#e0c080" stroke-width="1.5"/>
-        <ellipse cx="28" cy="30" rx="12" ry="14" fill="#0a0608" stroke="#e0c080" stroke-width="1.2"/>
-        <ellipse cx="62" cy="30" rx="12" ry="14" fill="#0a0608" stroke="#e0c080" stroke-width="1.2"/>
-        <circle cx="28" cy="30" r="3" fill="#ffb7d0" opacity="0.7"/>
-        <circle cx="62" cy="30" r="3" fill="#ffb7d0" opacity="0.7"/>
-        <path d="M38 50 Q45 56 52 50" stroke="#e0c080" stroke-width="0.8" fill="none"/>
+    <div class="modal-dice">
+      <svg viewBox="0 0 80 80">
+        <rect x="10" y="10" width="60" height="60" rx="8" fill="#1a0e08" stroke="#e0c080" stroke-width="1.5"/>
+        <circle cx="30" cy="30" r="4" fill="#ffb7d0"/>
+        <circle cx="50" cy="50" r="4" fill="#ffb7d0"/>
       </svg>
     </div>
     <div class="modal-text">真的不再<span class="accent">想一想</span>吗？</div>
@@ -1714,7 +1771,7 @@
 </div>
 
 <!-- ============================================================
-     信纸（极简留白）
+     信纸
      ============================================================ -->
 <div class="letter-overlay" id="letterOverlay">
   <div class="letter-paper" id="letterPaper">
@@ -1731,18 +1788,83 @@
 </div>
 
 <!-- ============================================================
-     玫瑰收集 · 阶段 1：你的舞伴
+     玫瑰收集 · 阶段 1
      ============================================================ -->
 <section class="screen hidden" id="screenRose1">
   <div class="rose-quest-wrap">
     <div class="eyebrow">— the rose quest · I —</div>
     <div class="rose-quest-title">收集 <span class="accent">第一朵玫瑰</span></div>
     <div class="rose-quest-sub">— your partner —</div>
-    <div class="rose-stage-title">第一朵玫瑰 · 你的舞伴</div>
-    <div class="rose-stage-sub">— choose your partner —</div>
     <div class="rose-quest-desc">
-      玫瑰散落在幽暗城堡的阴影里。<br>
-      找到第一朵，你的舞伴将会出现。
+      掷骰子，翻开卡牌。<br>
+      找到藏着玫瑰的那一张。
+    </div>
+
+    <div class="dice-roll-display" id="diceDisplay1">
+      <div class="dice-roll-label">DICE</div>
+      <div class="dice-roll-num" id="diceNum1">—</div>
+    </div>
+
+    <div class="card-grid" id="cardGrid1">
+      <div class="flip-card" data-card="1">
+        <div class="flip-inner">
+          <div class="flip-face flip-back"><div class="flip-back-symbol">✦</div></div>
+          <div class="flip-face flip-front">
+            <div class="ff-tag">ROSE</div>
+            <div class="ff-rose">
+              <svg viewBox="0 0 60 60">
+                <circle cx="30" cy="24" r="12" fill="none" stroke="#ffb7d0" stroke-width="2"/>
+                <circle cx="30" cy="24" r="7" fill="none" stroke="#e0c080" stroke-width="1.5"/>
+                <circle cx="30" cy="24" r="3" fill="#8a1840"/>
+                <line x1="30" y1="36" x2="30" y2="54" stroke="#e0c080" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="ff-text">第一朵玫瑰</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-card="2">
+        <div class="flip-inner">
+          <div class="flip-face flip-back"><div class="flip-back-symbol">✦</div></div>
+          <div class="flip-face flip-front">
+            <div class="ff-tag">ROSE</div>
+            <div class="ff-rose">
+              <svg viewBox="0 0 60 60">
+                <circle cx="30" cy="24" r="12" fill="none" stroke="#ffb7d0" stroke-width="2"/>
+                <circle cx="30" cy="24" r="7" fill="none" stroke="#e0c080" stroke-width="1.5"/>
+                <circle cx="30" cy="24" r="3" fill="#8a1840"/>
+                <line x1="30" y1="36" x2="30" y2="54" stroke="#e0c080" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="ff-text">第一朵玫瑰</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-card="3">
+        <div class="flip-inner">
+          <div class="flip-face flip-back"><div class="flip-back-symbol">✦</div></div>
+          <div class="flip-face flip-front">
+            <div class="ff-tag">ROSE</div>
+            <div class="ff-rose">
+              <svg viewBox="0 0 60 60">
+                <circle cx="30" cy="24" r="12" fill="none" stroke="#ffb7d0" stroke-width="2"/>
+                <circle cx="30" cy="24" r="7" fill="none" stroke="#e0c080" stroke-width="1.5"/>
+                <circle cx="30" cy="24" r="3" fill="#8a1840"/>
+                <line x1="30" y1="36" x2="30" y2="54" stroke="#e0c080" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="ff-text">第一朵玫瑰</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dice-roller">
+      <button class="dice-btn" id="rollDiceBtn1">掷骰子 · 翻一张牌</button>
+    </div>
+
+    <div class="rose-quest-status">
+      已收集 <span class="count" id="roseCount1">0</span> / 1 朵玫瑰
     </div>
 
     <div class="rose-slots">
@@ -1780,28 +1902,11 @@
         <div class="slot-num">ROSE · III</div>
       </div>
     </div>
-
-    <div class="rose-pick-area" id="rosePickArea1">
-      <div class="rose-pick" data-rose="1">
-        <svg viewBox="0 0 80 80">
-          <circle cx="40" cy="32" r="16" fill="none" stroke="#ffb7d0" stroke-width="2.5"/>
-          <circle cx="40" cy="32" r="10" fill="none" stroke="#e0c080" stroke-width="2"/>
-          <circle cx="40" cy="32" r="4" fill="#8a1840"/>
-          <line x1="40" y1="48" x2="40" y2="72" stroke="#e0c080" stroke-width="2.5"/>
-          <path d="M40 58 Q32 55 27 60" stroke="#e0c080" stroke-width="2" fill="none"/>
-          <path d="M40 64 Q48 61 53 66" stroke="#e0c080" stroke-width="2" fill="none"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="rose-quest-status">
-      已收集 <span class="count" id="roseCount1">0</span> / 1 朵玫瑰
-    </div>
   </div>
 </section>
 
 <!-- ============================================================
-     抽签页
+     抽签页（签翻转 + 简洁排版）
      ============================================================ -->
 <section class="screen hidden" id="screen3">
   <div class="eyebrow" id="drawEyebrow">— the ball begins —</div>
@@ -1812,33 +1917,32 @@
   <div class="draw-sub" id="drawSub">Seven tokens · One fate</div>
   <div class="sticks-fan" id="sticksFan"></div>
 
+  <!-- 结果卡（与按钮分离） -->
   <div class="draw-result" id="drawResult">
-    <div class="draw-result-inner">
-      <div class="draw-result-icon" id="drawResultIcon"></div>
-      <div class="draw-result-content">
-        <div class="draw-result-name" id="drawResultName"></div>
-        <div class="draw-result-desc" id="drawResultDesc"></div>
-        <div class="draw-result-tags" id="drawResultTags"></div>
-        <div class="draw-result-actions">
-          <button class="draw-result-btn secondary" id="redrawBtn">重新选择</button>
-          <button class="draw-result-btn" id="confirmBtn">进入舞会</button>
-        </div>
-      </div>
+    <div class="draw-result-card">
+      <div class="draw-result-ornament">Your Masked Princess</div>
+      <div class="draw-result-num" id="drawResultNum"></div>
+      <div class="draw-result-label" id="drawResultLabel"></div>
+      <div class="draw-result-name" id="drawResultName"></div>
+      <div class="draw-result-desc" id="drawResultDesc"></div>
+      <div class="draw-result-tags" id="drawResultTags"></div>
+    </div>
+    <div class="draw-result-actions">
+      <button class="draw-result-btn secondary" id="redrawBtn">重新选择</button>
+      <button class="draw-result-btn" id="confirmBtn">进入舞会</button>
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     玫瑰收集 · 阶段 2：你的故事
+     玫瑰收集 · 阶段 2
      ============================================================ -->
 <section class="screen hidden" id="screenRose2">
   <div class="rose-quest-wrap">
     <div class="eyebrow">— the rose quest · II —</div>
     <div class="rose-quest-title">收集 <span class="accent">第二朵玫瑰</span></div>
     <div class="rose-quest-sub">— your story —</div>
-    <div class="rose-stage-title">第二朵玫瑰 · 你的故事</div>
-    <div class="rose-stage-sub">— choose your story —</div>
-    <div class="story-prompt" id="storyPrompt">
+    <div class="rose-quest-desc">
       玫瑰的香气在空气里散开，你看见了三个画面。<br>
       选一个，它将成为你们的故事。
     </div>
@@ -1902,18 +2006,83 @@
 </section>
 
 <!-- ============================================================
-     玫瑰收集 · 阶段 3：你的结局
+     玫瑰收集 · 阶段 3
      ============================================================ -->
 <section class="screen hidden" id="screenRose3">
   <div class="rose-quest-wrap">
     <div class="eyebrow">— the rose quest · III —</div>
     <div class="rose-quest-title">收集 <span class="accent">第三朵玫瑰</span></div>
     <div class="rose-quest-sub">— your ending —</div>
-    <div class="rose-stage-title">第三朵玫瑰 · 你的结局</div>
-    <div class="rose-stage-sub">— your ending —</div>
     <div class="rose-quest-desc" id="rose3Desc">
       最后一朵玫瑰，藏在故事的结尾。<br>
-      找到它，舞会才会结束。
+      掷骰子，翻开最后一张牌。
+    </div>
+
+    <div class="dice-roll-display" id="diceDisplay3">
+      <div class="dice-roll-label">DICE</div>
+      <div class="dice-roll-num" id="diceNum3">—</div>
+    </div>
+
+    <div class="card-grid" id="cardGrid3">
+      <div class="flip-card" data-card="1">
+        <div class="flip-inner">
+          <div class="flip-face flip-back"><div class="flip-back-symbol">✦</div></div>
+          <div class="flip-face flip-front">
+            <div class="ff-tag">ROSE</div>
+            <div class="ff-rose">
+              <svg viewBox="0 0 60 60">
+                <circle cx="30" cy="24" r="12" fill="none" stroke="#ffb7d0" stroke-width="2"/>
+                <circle cx="30" cy="24" r="7" fill="none" stroke="#e0c080" stroke-width="1.5"/>
+                <circle cx="30" cy="24" r="3" fill="#8a1840"/>
+                <line x1="30" y1="36" x2="30" y2="54" stroke="#e0c080" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="ff-text">第三朵玫瑰</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-card="2">
+        <div class="flip-inner">
+          <div class="flip-face flip-back"><div class="flip-back-symbol">✦</div></div>
+          <div class="flip-face flip-front">
+            <div class="ff-tag">ROSE</div>
+            <div class="ff-rose">
+              <svg viewBox="0 0 60 60">
+                <circle cx="30" cy="24" r="12" fill="none" stroke="#ffb7d0" stroke-width="2"/>
+                <circle cx="30" cy="24" r="7" fill="none" stroke="#e0c080" stroke-width="1.5"/>
+                <circle cx="30" cy="24" r="3" fill="#8a1840"/>
+                <line x1="30" y1="36" x2="30" y2="54" stroke="#e0c080" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="ff-text">第三朵玫瑰</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" data-card="3">
+        <div class="flip-inner">
+          <div class="flip-face flip-back"><div class="flip-back-symbol">✦</div></div>
+          <div class="flip-face flip-front">
+            <div class="ff-tag">ROSE</div>
+            <div class="ff-rose">
+              <svg viewBox="0 0 60 60">
+                <circle cx="30" cy="24" r="12" fill="none" stroke="#ffb7d0" stroke-width="2"/>
+                <circle cx="30" cy="24" r="7" fill="none" stroke="#e0c080" stroke-width="1.5"/>
+                <circle cx="30" cy="24" r="3" fill="#8a1840"/>
+                <line x1="30" y1="36" x2="30" y2="54" stroke="#e0c080" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="ff-text">第三朵玫瑰</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dice-roller">
+      <button class="dice-btn" id="rollDiceBtn3">掷骰子 · 翻最后一张</button>
+    </div>
+
+    <div class="rose-quest-status">
+      已收集 <span class="count" id="roseCount3">2</span> / 3 朵玫瑰
     </div>
 
     <div class="rose-slots">
@@ -1950,23 +2119,6 @@
         </div>
         <div class="slot-num">ROSE · III</div>
       </div>
-    </div>
-
-    <div class="rose-pick-area" id="rosePickArea3">
-      <div class="rose-pick" data-rose="3">
-        <svg viewBox="0 0 80 80">
-          <circle cx="40" cy="32" r="16" fill="none" stroke="#ffb7d0" stroke-width="2.5"/>
-          <circle cx="40" cy="32" r="10" fill="none" stroke="#e0c080" stroke-width="2"/>
-          <circle cx="40" cy="32" r="4" fill="#8a1840"/>
-          <line x1="40" y1="48" x2="40" y2="72" stroke="#e0c080" stroke-width="2.5"/>
-          <path d="M40 58 Q32 55 27 60" stroke="#e0c080" stroke-width="2" fill="none"/>
-          <path d="M40 64 Q48 61 53 66" stroke="#e0c080" stroke-width="2" fill="none"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="rose-quest-status">
-      已收集 <span class="count" id="roseCount3">2</span> / 3 朵玫瑰
     </div>
 
     <button class="rose-continue-btn" id="roseFinishBtn" disabled>离开舞会 · 进入结局</button>
@@ -2104,6 +2256,31 @@
     noise.connect(filter).connect(gain).connect(ctx.destination);
     noise.start(now); noise.stop(now + 1.2);
   }
+  function playDiceRoll() {
+    const ctx = getAudioCtx(); const now = ctx.currentTime;
+    for (let i = 0; i < 6; i++) {
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(200 + Math.random() * 200, now + i * 0.08);
+      gain.gain.setValueAtTime(0.0001, now + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.06, now + i * 0.08 + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.08 + 0.06);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.08);
+    }
+  }
+  function playCardFlip() {
+    const ctx = getAudioCtx(); const now = ctx.currentTime;
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.15, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now); osc.stop(now + 0.25);
+  }
 
   /* ===== 第一屏 ===== */
   const screen1 = document.getElementById('screen1');
@@ -2155,7 +2332,7 @@
     }, 800);
   });
 
-  /* ===== 「跑」按钮：不可选，点击弹窗 ===== */
+  /* ===== 「跑」按钮 ===== */
   const sealRun = document.getElementById('sealRun');
   const modalOverlay = document.getElementById('modalOverlay');
   const modalBtn = document.getElementById('modalBtn');
@@ -2168,7 +2345,7 @@
     modalOverlay.classList.remove('show');
   });
 
-  /* ===== 第二屏：火漆（仅「不跑」可正常使用） ===== */
+  /* ===== 第二屏：火漆 ===== */
   const envelope = document.getElementById('envelope');
   const hint = document.getElementById('hint');
   const sealWraps = document.querySelectorAll('.seal-wrap');
@@ -2200,7 +2377,7 @@
     seal.addEventListener('click', e => {
       e.stopPropagation();
       if (picked) return;
-      if (seal.dataset.choice === 'run') return; // 跑不触发
+      if (seal.dataset.choice === 'run') return;
       picked = true;
       playSealPress();
       seal.classList.add('picked');
@@ -2243,24 +2420,61 @@
   });
 
   /* ===== 玫瑰收集阶段 1 ===== */
-  const rosePick1 = document.querySelector('#rosePickArea1 .rose-pick');
-  const roseCount1El = document.getElementById('roseCount1');
   let rose1Collected = false;
+  let card1Flipped = false;
+  const rollDiceBtn1 = document.getElementById('rollDiceBtn1');
+  const diceNum1 = document.getElementById('diceNum1');
+  const diceDisplay1 = document.getElementById('diceDisplay1');
+  const roseCount1El = document.getElementById('roseCount1');
+  const cardGrid1 = document.getElementById('cardGrid1');
+  const card1Els = cardGrid1.querySelectorAll('.flip-card');
 
-  rosePick1.addEventListener('click', () => {
-    if (rose1Collected) return;
-    rose1Collected = true;
-    rosePick1.classList.add('picked');
-    roseCount1El.textContent = '1';
-    const slot = document.querySelector('#screenRose1 .rose-slot[data-slot="1"]');
-    if (slot) slot.classList.add('filled');
-    setTimeout(() => {
-      screenRose1.classList.add('leaving');
-      setTimeout(() => {
-        screenRose1.classList.add('hidden');
-        screen3.classList.remove('hidden');
-      }, 900);
-    }, 800);
+  rollDiceBtn1.addEventListener('click', () => {
+    if (card1Flipped) return;
+    rollDiceBtn1.disabled = true;
+    rollDiceBtn1.classList.add('rolling');
+    diceDisplay1.classList.add('rolling');
+    playDiceRoll();
+
+    let count = 0;
+    const interval = setInterval(() => {
+      diceNum1.textContent = Math.floor(Math.random() * 6) + 1;
+      count++;
+      if (count > 15) {
+        clearInterval(interval);
+        const finalNum = Math.floor(Math.random() * 6) + 1;
+        diceNum1.textContent = finalNum;
+        diceDisplay1.classList.remove('rolling');
+        rollDiceBtn1.classList.remove('rolling');
+
+        let cardIdx = 0;
+        if (finalNum <= 2) cardIdx = 0;
+        else if (finalNum <= 4) cardIdx = 1;
+        else cardIdx = 2;
+
+        setTimeout(() => {
+          const card = card1Els[cardIdx];
+          card.classList.add('flipped');
+          playCardFlip();
+
+          setTimeout(() => {
+            card.classList.add('claimed');
+            rose1Collected = true;
+            roseCount1El.textContent = '1';
+            const slot = document.querySelector('#screenRose1 .rose-slot[data-slot="1"]');
+            if (slot) slot.classList.add('filled');
+
+            setTimeout(() => {
+              screenRose1.classList.add('leaving');
+              setTimeout(() => {
+                screenRose1.classList.add('hidden');
+                screen3.classList.remove('hidden');
+              }, 900);
+            }, 1000);
+          }, 1200);
+        }, 400);
+      }
+    }, 80);
   });
 
   /* ===== 抽签数据 ===== */
@@ -2288,7 +2502,7 @@
       tags: ['魂牵梦绕', '醉生梦死', '契合灵魂', '缘分使然'] }
   ];
 
-  /* ===== 生成签架 ===== */
+  /* ===== 生成签架（带正反两面） ===== */
   const sticksFan = document.getElementById('sticksFan');
   partners.forEach((p, i) => {
     const stick = document.createElement('div');
@@ -2296,9 +2510,22 @@
     stick.dataset.partner = i;
     stick.innerHTML = `
       <div class="stick-inner">
-        <div class="stick-num">${p.num}</div>
-        <div class="stick-label">${p.label}</div>
-        <div class="stick-seal"></div>
+        <div class="stick-front">
+          <div class="stick-num">${p.num}</div>
+          <div class="stick-label">${p.label}</div>
+        </div>
+        <div class="stick-back">
+          <div class="sb-ornament">ROSE</div>
+          <div class="sb-rose">
+            <svg viewBox="0 0 60 60">
+              <circle cx="30" cy="24" r="12" fill="none" stroke="#ffb7d0" stroke-width="2"/>
+              <circle cx="30" cy="24" r="7" fill="none" stroke="#e0c080" stroke-width="1.5"/>
+              <circle cx="30" cy="24" r="3" fill="#8a1840"/>
+              <line x1="30" y1="36" x2="30" y2="54" stroke="#e0c080" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="sb-text">第一朵玫瑰</div>
+        </div>
       </div>
     `;
     sticksFan.appendChild(stick);
@@ -2307,7 +2534,8 @@
 
   /* ===== 抽签 + 结果卡 ===== */
   const drawResult = document.getElementById('drawResult');
-  const drawResultIcon = document.getElementById('drawResultIcon');
+  const drawResultNum = document.getElementById('drawResultNum');
+  const drawResultLabel = document.getElementById('drawResultLabel');
   const drawResultName = document.getElementById('drawResultName');
   const drawResultDesc = document.getElementById('drawResultDesc');
   const drawResultTags = document.getElementById('drawResultTags');
@@ -2323,15 +2551,22 @@
       drawn = true;
       selectedIndex = parseInt(stick.dataset.partner);
       const partner = partners[selectedIndex];
+
+      // 签跳出并翻转
       stick.classList.add('drawn');
       sticks.forEach(s => { if (s !== stick) s.classList.add('faded'); });
-      drawResultIcon.innerHTML =
-        '<div class="big-num">' + partner.num + '</div>' +
-        '<div class="big-label">' + partner.label + '</div>';
+      playCardFlip();
+
+      // 填充结果卡
+      drawResultNum.textContent = partner.num;
+      drawResultLabel.textContent = partner.label;
       drawResultName.textContent = partner.name;
       drawResultDesc.innerHTML = partner.desc;
       drawResultTags.innerHTML = partner.tags.map(t => `<span>${t}</span>`).join('');
-      setTimeout(() => { drawResult.classList.add('show'); }, 800);
+
+      setTimeout(() => {
+        drawResult.classList.add('show');
+      }, 900);
     });
   });
 
@@ -2356,7 +2591,7 @@
     }, 600);
   });
 
-  /* ===== 玫瑰收集阶段 2：故事线 ===== */
+  /* ===== 玫瑰收集阶段 2 ===== */
   const storyChoices = document.querySelectorAll('.story-choice');
   const roseContinue2 = document.getElementById('roseContinue2');
   let selectedStory = '';
@@ -2383,29 +2618,65 @@
       screenRose3.classList.remove('hidden');
       const rose3Desc = document.getElementById('rose3Desc');
       const storyTexts = {
-        midnight: '午夜钟声的回音里，藏着最后一朵玫瑰。',
-        mirror: '镜中那个没有回头的她，手里握着最后一朵玫瑰。',
-        letter: '那封信的落款处，压着最后一朵玫瑰。'
+        midnight: '午夜钟声的回音里，藏着最后一朵玫瑰。<br>掷骰子，翻开最后一张牌。',
+        mirror: '镜中那个没有回头的她，手里握着最后一朵玫瑰。<br>掷骰子，翻开最后一张牌。',
+        letter: '那封信的落款处，压着最后一朵玫瑰。<br>掷骰子，翻开最后一张牌。'
       };
-      rose3Desc.innerHTML = storyTexts[selectedStory] || '找到最后一朵玫瑰，舞会才会结束。';
+      rose3Desc.innerHTML = storyTexts[selectedStory] || '掷骰子，翻开最后一张牌。';
     }, 900);
   });
 
-  /* ===== 玫瑰收集阶段 3：结局 ===== */
-  const rosePick3 = document.querySelector('#rosePickArea3 .rose-pick');
-  const roseCount3El = document.getElementById('roseCount3');
-  const roseFinishBtn = document.getElementById('roseFinishBtn');
+  /* ===== 玫瑰收集阶段 3 ===== */
   let rose3Collected = false;
+  let card3Flipped = false;
+  const rollDiceBtn3 = document.getElementById('rollDiceBtn3');
+  const diceNum3 = document.getElementById('diceNum3');
+  const diceDisplay3 = document.getElementById('diceDisplay3');
+  const roseCount3El = document.getElementById('roseCount3');
+  const cardGrid3 = document.getElementById('cardGrid3');
+  const card3Els = cardGrid3.querySelectorAll('.flip-card');
+  const roseFinishBtn = document.getElementById('roseFinishBtn');
 
-  rosePick3.addEventListener('click', () => {
-    if (rose3Collected) return;
-    rose3Collected = true;
-    rosePick3.classList.add('picked');
-    roseCount3El.textContent = '3';
-    const slot = document.querySelector('#screenRose3 .rose-slot[data-slot="3"]');
-    if (slot) slot.classList.add('filled');
-    roseFinishBtn.disabled = false;
-    roseFinishBtn.classList.add('enabled');
+  rollDiceBtn3.addEventListener('click', () => {
+    if (card3Flipped) return;
+    rollDiceBtn3.disabled = true;
+    rollDiceBtn3.classList.add('rolling');
+    diceDisplay3.classList.add('rolling');
+    playDiceRoll();
+
+    let count = 0;
+    const interval = setInterval(() => {
+      diceNum3.textContent = Math.floor(Math.random() * 6) + 1;
+      count++;
+      if (count > 15) {
+        clearInterval(interval);
+        const finalNum = Math.floor(Math.random() * 6) + 1;
+        diceNum3.textContent = finalNum;
+        diceDisplay3.classList.remove('rolling');
+        rollDiceBtn3.classList.remove('rolling');
+
+        let cardIdx = 0;
+        if (finalNum <= 2) cardIdx = 0;
+        else if (finalNum <= 4) cardIdx = 1;
+        else cardIdx = 2;
+
+        setTimeout(() => {
+          const card = card3Els[cardIdx];
+          card.classList.add('flipped');
+          playCardFlip();
+
+          setTimeout(() => {
+            card.classList.add('claimed');
+            rose3Collected = true;
+            roseCount3El.textContent = '3';
+            const slot = document.querySelector('#screenRose3 .rose-slot[data-slot="3"]');
+            if (slot) slot.classList.add('filled');
+            roseFinishBtn.disabled = false;
+            roseFinishBtn.classList.add('enabled');
+          }, 1200);
+        }, 400);
+      }
+    }, 80);
   });
 
   roseFinishBtn.addEventListener('click', () => {
