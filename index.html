@@ -273,7 +273,7 @@
 
 <script>
   /* ============================================================
-     一、物理引擎：最终完整掉落 ≈ 屏幕面积一半
+     一、物理引擎：100 个普通字符（不含 LOVE）+ 3 组 LOVE
      ============================================================ */
   (function initPhysics(){
     const canvas = document.getElementById('physics-bg');
@@ -300,6 +300,7 @@
     ];
     World.add(world, walls);
 
+    /* 普通字符池：不含 L O V E */
     const LETTERS = ['Y','U','M','I','S','H','R','T','W','N','C','F','D','G','B','K','P','A','X','Z'];
 
     /* 普通字符：暗酒红 */
@@ -352,34 +353,15 @@
       return body;
     }
 
-    /* ============================================================
-       精确计算：全部落定后字符总覆盖面积 ≈ 屏幕面积 × 0.5
-       - 每个字符在平面上近似占一个 边长 = 字号 × 0.9 的方块
-       - 该方块面积 = (字号 × 0.9)²
-       - 目标总字符数 = 屏幕面积 × 0.5 / 单字面积
-       ============================================================ */
-    function computeTotalCount(){
-      const screenArea = W * H;
-      const avgFontSize = 33;                        // 普通字符平均字号
-      const charBox = avgFontSize * 0.9;             // 单字占位边长
-      const charArea = charBox * charBox;            // 单字占位面积
-      const targetArea = screenArea * 0.5;           // 目标 = 屏幕一半
-      let count = Math.round(targetArea / charArea);
-      /* 硬性最小/最大，避免极端屏幕下失控 */
-      count = Math.max(60, Math.min(count, 900));
-      return count;
-    }
-
-    let TOTAL_COUNT = computeTotalCount();
-
-    /* 初始先撒下 TOTAL_COUNT 个字符，覆盖屏幕及上方 */
-    for (let i = 0; i < TOTAL_COUNT; i++) {
-      const x = 30 + Math.random() * (W - 60);
-      const y = -50 - Math.random() * (TOTAL_COUNT * 8);
+    /* ===== 100 个普通字符（不含 LOVE）===== */
+    const INITIAL_COUNT = 100;
+    for (let i = 0; i < INITIAL_COUNT; i++) {
+      const x = 40 + Math.random() * (W - 80);
+      const y = -100 - Math.random() * 1800;
       World.add(world, makeNormalLetter(x, y));
     }
 
-    /* 仅 3 组 LOVE */
+    /* ===== 仅 3 组 LOVE ===== */
     const LOVE_GROUPS = 3;
     for (let g = 0; g < LOVE_GROUPS; g++) {
       const baseX = 60 + Math.random() * (W - 120);
@@ -392,16 +374,17 @@
       }
     }
 
-    /* 不再持续补充：总数固定为 TOTAL_COUNT，落定后正好覆盖一半 */
-    /* （如果你想让它慢慢补充，可以取消下面注释） */
-    /*
+    /* ===== 每 1.2 秒补充 3~4 个普通字符，上限 180（不含 LOVE）===== */
     setInterval(() => {
-      if (bodies.length > TOTAL_COUNT + 12) return;
-      const x = 40 + Math.random() * (W - 80);
-      const y = -60 - Math.random() * 120;
-      World.add(world, makeNormalLetter(x, y));
+      const normalCount = bodies.filter(b => !b.customIsLove).length;
+      if (normalCount >= 180) return;
+      const batch = 3 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < batch; i++) {
+        const x = 40 + Math.random() * (W - 80);
+        const y = -60 - Math.random() * 120;
+        World.add(world, makeNormalLetter(x, y));
+      }
     }, 1200);
-    */
 
     function renderLetters(){
       ctx.clearRect(0, 0, W, H);
@@ -447,8 +430,6 @@
       H = window.innerHeight;
       canvas.width = W;
       canvas.height = H;
-
-      TOTAL_COUNT = computeTotalCount();
 
       World.remove(world, walls);
       walls = [
