@@ -21,7 +21,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .dust span{position:absolute;border-radius:50%;background:#e0b060;opacity:.4;animation:fd linear infinite;box-shadow:0 0 6px rgba(224,176,96,.6)}
 @keyframes fd{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.5}90%{opacity:.5}100%{transform:translateY(-10vh) scale(1);opacity:0}}
 
-/* 英文字符掉落层（第一页背景） */
+/* 英文字符掉落层 */
 .letterfall{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
 .letterfall span{position:absolute;top:-12%;font-family:'Cormorant Garamond',serif;font-style:italic;color:#e0b060;opacity:0;font-weight:300;animation:lf linear infinite;will-change:transform,opacity;text-shadow:0 0 24px rgba(224,176,96,.4);transform-origin:center}
 @keyframes lf{
@@ -201,33 +201,33 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .fr-btn{padding:clamp(.65rem,2vw,.9rem) clamp(1.6rem,4.5vw,2.4rem);background:rgba(20,10,8,.5);border:2px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.6vw,.9rem);letter-spacing:.5em;text-transform:uppercase;cursor:pointer;transition:all .4s}
 .fr-btn:hover{background:rgba(224,176,96,.12);border-color:#e0b060;color:#f4e4c8}
 
-/* ===== 抽签区（文字居上 + 下方行间距 + 签与文字边缘对齐） ===== */
+/* ===== 抽签区（文字居上 + 签紧随文字下方） ===== */
 .draw-screen{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(1.2rem,4vw,2.4rem) clamp(1rem,3vw,2rem) clamp(.8rem,2.5vw,1.5rem);opacity:0;pointer-events:none;transition:opacity .8s}
 .draw-screen.active{opacity:1;pointer-events:auto}
-.draw-header{width:100%;max-width:min(600px,92vw);text-align:center;margin-bottom:clamp(1.2rem,3.5vw,2rem)}
+.draw-header{width:100%;max-width:min(600px,92vw);text-align:center;margin-bottom:clamp(.6rem,1.5vw,1rem)}
 .draw-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(1.2rem,3.6vw,2.1rem);color:#f4e4c8;margin-bottom:clamp(.7rem,1.8vw,1.1rem);text-align:center;line-height:1.35}
 .draw-title .orn{display:block;font-size:.55em;color:#e0b060;margin-top:.45rem;letter-spacing:.35em;font-weight:400;font-style:italic}
 .draw-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.7vw,.95rem);color:#c8a878;letter-spacing:.3em;margin-bottom:clamp(.8rem,2vw,1.2rem);text-transform:uppercase;text-align:center;line-height:1.8}
-.hint-top{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.7vw,.95rem);color:#e0b060;letter-spacing:.25em;margin-bottom:clamp(.6rem,1.5vw,1rem);text-align:center;animation:hp 2.5s ease-in-out infinite;line-height:1.9}
+.hint-top{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.7vw,.95rem);color:#e0b060;letter-spacing:.25em;margin-bottom:clamp(.4rem,1vw,.7rem);text-align:center;animation:hp 2.5s ease-in-out infinite;line-height:1.9}
 @keyframes hp{0%,100%{opacity:.5}50%{opacity:1}}
 
-/* 扇面：签架与文字边缘对齐（max-width 与 header 一致） */
+/* 扇面：签架紧随文字下方 */
 .fan{
   position:relative;
   width:100%;
   max-width:min(600px,92vw);
-  height:clamp(260px,50vh,420px);
+  height:clamp(240px,46vh,390px);
   display:flex;
   justify-content:center;
   align-items:flex-end;
   perspective:1400px;
-  margin-top:auto;
+  margin-top:0;
 }
 .stick{
   position:absolute;
   bottom:0;
   width:clamp(34px,6vw,50px);
-  height:clamp(210px,46vh,350px);
+  height:clamp(200px,44vh,340px);
   cursor:pointer;
   transform-origin:bottom center;
   transition:transform .55s cubic-bezier(.34,1.56,.64,1),filter .4s,opacity .4s;
@@ -295,7 +295,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .cr-btn.p{background:linear-gradient(180deg,rgba(60,40,20,.95),rgba(30,20,10,.98));border-color:#e0b060;color:#fff4d0}
 .cr-btn.p:hover{background:linear-gradient(180deg,rgba(90,60,30,.98),rgba(45,30,15,1))}
 
-/* 故事 */
+/* ===== 舞会开始：互动故事 ===== */
 .story-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:clamp(.8rem,2.5vw,1.5rem);opacity:0;pointer-events:none;transition:opacity 1s}
 .story-stage.show{opacity:1;pointer-events:auto}
 .story-card{position:relative;width:100%;max-width:min(480px,90vw);max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#1a1008,#0e0806 50%,#050303);border:1px solid rgba(224,176,96,.5);border-radius:10px;box-shadow:0 40px 100px rgba(0,0,0,.95),0 0 80px rgba(224,176,96,.15);padding:clamp(1.4rem,3.5vw,2.2rem) clamp(1rem,2.5vw,1.8rem);text-align:center;opacity:0;transform:translateY(60px) scale(.9);transition:opacity .9s cubic-bezier(.34,1.56,.64,1),transform .9s cubic-bezier(.34,1.56,.64,1);scrollbar-width:thin;scrollbar-color:#8a6838 transparent}
@@ -309,9 +309,15 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .st-title .a{color:#e0b060}
 .st-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.6rem,1.4vw,.8rem);color:#c8a878;letter-spacing:.35em;text-transform:uppercase;margin-bottom:clamp(.8rem,2vw,1.2rem)}
 .st-text{font-family:'Cormorant Garamond',serif;font-size:clamp(.8rem,1.8vw,1rem);line-height:1.9;color:#d8c8b0;font-style:italic;margin-bottom:clamp(.8rem,2vw,1.2rem);text-align:left}
-.st-item{color:#c01838;font-family:'Noto Serif SC',serif;font-weight:500;cursor:pointer;padding:0 .2em;text-shadow:0 0 14px rgba(200,40,80,.8),0 0 28px rgba(200,40,80,.4);animation:rp 1.8s ease-in-out infinite alternate;display:inline-block;border-bottom:1px dashed rgba(200,40,80,.6)}
-@keyframes rp{from{text-shadow:0 0 10px rgba(200,40,80,.6),0 0 18px rgba(200,40,80,.3)}to{text-shadow:0 0 18px rgba(200,40,80,.9),0 0 36px rgba(200,40,80,.5)}}
-.st-item.chosen{color:#fff4d0;text-shadow:0 0 34px rgba(224,176,96,1);animation:none;border-bottom-color:transparent;pointer-events:none}
+.st-text .hl{color:#e0b060;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500}
+.st-text .rose{color:#c01838;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500;text-shadow:0 0 12px rgba(200,40,80,.6)}
+/* 互动选项 */
+.st-choices{display:flex;flex-direction:column;gap:.6rem;width:100%;margin-top:clamp(.4rem,1.5vw,.8rem)}
+.st-choice{padding:clamp(.7rem,1.8vw,.95rem) clamp(.8rem,2.2vw,1.2rem);background:rgba(20,10,8,.6);border:1px solid rgba(224,176,96,.4);border-radius:6px;cursor:pointer;text-align:center;transition:all .3s;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.8rem,1.9vw,.95rem);color:#e8dcc8;line-height:1.5}
+.st-choice:hover{background:rgba(224,176,96,.1);border-color:#e0b060;box-shadow:0 0 30px rgba(224,176,96,.3);color:#fff4d0}
+.st-choice:active{transform:scale(.98)}
+.st-choice .n{font-family:'Long Cang',cursive;font-size:1.05em;color:#f0d8a0;display:block;margin-bottom:.15rem}
+.st-choice .d{font-size:.88em;color:#c8a878;display:block}
 .st-hint{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.65rem,1.5vw,.85rem);color:#e0b060;letter-spacing:.2em;padding:.7rem 0;border-top:1px solid rgba(224,176,96,.2);border-bottom:1px solid rgba(224,176,96,.2);animation:hp 2.5s ease-in-out infinite}
 
 /* 得到玫瑰 */
@@ -329,16 +335,34 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .gain-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.6rem,1.4vw,.8rem);color:#c8a878;letter-spacing:.35em;text-transform:uppercase;margin-bottom:clamp(.8rem,2vw,1.2rem)}
 .gain-msg{font-family:'Long Cang',cursive;font-size:clamp(.9rem,2.4vw,1.2rem);line-height:1.8;color:#f4e4c8;margin-bottom:clamp(1rem,2.5vw,1.4rem)}
 .gain-msg .h{color:#e0b060}
-.q-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:clamp(.9rem,2.6vw,1.3rem);color:#e0b060;margin-bottom:.5rem}
-.q-title .a{color:#fff4d0}
-.q-text{font-family:'Long Cang',cursive;font-size:clamp(.8rem,2.2vw,1.1rem);line-height:1.8;color:#d8c8b0;margin-bottom:clamp(1rem,2.2vw,1.4rem)}
-.q-text .h{color:#e0b060}
-.q-choices{display:flex;flex-direction:column;gap:.6rem;width:100%}
-.q-choice{padding:clamp(.7rem,1.8vw,.95rem) clamp(.8rem,2.2vw,1.2rem);background:rgba(20,10,8,.6);border:1px solid rgba(224,176,96,.4);border-radius:6px;cursor:pointer;text-align:center;transition:all .3s}
-.q-choice:hover{background:rgba(224,176,96,.1);border-color:#e0b060;box-shadow:0 0 30px rgba(224,176,96,.3)}
-.q-choice:active{transform:scale(.98)}
-.q-choice .n{font-family:'Long Cang',cursive;font-size:clamp(.85rem,2vw,1rem);color:#f0d8a0;margin-bottom:.2rem}
-.q-choice .d{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.65rem,1.5vw,.8rem);color:#c8a878;line-height:1.4}
+.gain-btn{padding:clamp(.65rem,2vw,.9rem) clamp(1.6rem,4.5vw,2.4rem);background:rgba(20,10,8,.5);border:2px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.6vw,.9rem);letter-spacing:.5em;text-transform:uppercase;cursor:pointer;transition:all .4s}
+.gain-btn:hover{background:rgba(224,176,96,.12);border-color:#e0b060;color:#f4e4c8}
+
+/* ===== 关于第二朵玫瑰（独立页） ===== */
+#secondRoseScreen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:clamp(.8rem,3vw,1.5rem);opacity:0;pointer-events:none;transition:opacity .8s;background:rgba(5,3,6,.75);backdrop-filter:blur(3px)}
+#secondRoseScreen.active{opacity:1;pointer-events:auto}
+.second-rose-card{position:relative;width:100%;max-width:min(480px,90vw);max-height:90vh;overflow-y:auto;background:linear-gradient(165deg,rgba(30,18,12,.97),rgba(20,12,10,.98),rgba(12,8,6,.99));border:1px solid #8a6838;border-radius:6px;padding:clamp(1.6rem,4.5vw,2.6rem) clamp(1rem,3.5vw,2rem);text-align:center;box-shadow:0 40px 90px rgba(0,0,0,.9),inset 0 0 100px rgba(120,80,40,.15);scrollbar-width:thin;scrollbar-color:#8a6838 transparent}
+.second-rose-card::-webkit-scrollbar{width:4px}
+.second-rose-card::-webkit-scrollbar-thumb{background:#8a6838;border-radius:2px}
+.second-rose-card::before{content:'';position:absolute;inset:clamp(6px,1.2vw,12px);border:1px solid rgba(224,176,96,.45);border-radius:3px;pointer-events:none}
+.sr-eyebrow{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.6rem,1.4vw,.8rem);color:#e0b060;letter-spacing:.55em;text-transform:uppercase;margin-bottom:clamp(.8rem,2vw,1.2rem)}
+.sr-eyebrow::before,.sr-eyebrow::after{content:'✦';margin:0 .5rem;font-size:.6rem;vertical-align:middle}
+.sr-title{font-family:'Long Cang',cursive;font-size:clamp(1.5rem,4.5vw,2.4rem);color:#f4e4c8;margin-bottom:clamp(.6rem,1.5vw,1rem);line-height:1.35;text-shadow:0 0 30px rgba(255,200,140,.35)}
+.sr-title .a{color:#e0b060}
+.sr-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.7vw,.95rem);color:#c8a878;letter-spacing:.35em;text-transform:uppercase;margin-bottom:clamp(1rem,2.5vw,1.4rem)}
+.sr-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.95rem,2.4vw,1.2rem);line-height:2;color:#d8c8b0;margin-bottom:clamp(1rem,2.5vw,1.4rem)}
+.sr-text .rose{color:#c01838;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500;text-shadow:0 0 14px rgba(200,40,80,.6)}
+.sr-question{font-family:'Long Cang',cursive;font-size:clamp(1.1rem,3vw,1.5rem);color:#f0d8a0;margin-bottom:clamp(1rem,2.5vw,1.4rem);line-height:1.6}
+.sr-choices{display:flex;flex-direction:column;gap:.7rem;width:100%;margin-bottom:clamp(1rem,2.5vw,1.4rem)}
+.sr-choice{padding:clamp(.8rem,2vw,1.1rem) clamp(.9rem,2.4vw,1.3rem);background:rgba(20,10,8,.6);border:1px solid rgba(224,176,96,.4);border-radius:6px;cursor:pointer;text-align:center;transition:all .3s;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.85rem,2vw,1rem);color:#e8dcc8;line-height:1.5}
+.sr-choice:hover{background:rgba(224,176,96,.12);border-color:#e0b060;box-shadow:0 0 30px rgba(224,176,96,.35);color:#fff4d0}
+.sr-choice:active{transform:scale(.98)}
+.sr-choice .n{font-family:'Long Cang',cursive;font-size:1.1em;color:#f0d8a0;display:block;margin-bottom:.2rem}
+.sr-choice .d{font-size:.85em;color:#c8a878;display:block}
+.sr-result{font-family:'Long Cang',cursive;font-size:clamp(.9rem,2.4vw,1.15rem);line-height:1.9;color:#e0b060;margin-top:clamp(.6rem,2vw,1rem);min-height:2.5em;opacity:0;transition:opacity .5s}
+.sr-result.show{opacity:1}
+.sr-btn{padding:clamp(.65rem,2vw,.9rem) clamp(1.6rem,4.5vw,2.4rem);background:rgba(20,10,8,.5);border:2px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.6vw,.9rem);letter-spacing:.5em;text-transform:uppercase;cursor:pointer;transition:all .4s;margin-top:clamp(.6rem,1.5vw,1rem)}
+.sr-btn:hover{background:rgba(224,176,96,.12);border-color:#e0b060;color:#f4e4c8}
 
 /* 结局 */
 .end-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:clamp(.8rem,2.5vw,1.5rem);opacity:0;pointer-events:none;transition:opacity 1s}
@@ -375,7 +399,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   .stick:nth-child(5){--x:clamp(7px,2vw,12px)}
   .stick:nth-child(6){--x:clamp(16px,4.5vw,26px)}
   .stick:nth-child(7){--x:clamp(26px,7vw,38px)}
-  .fan{height:clamp(220px,42vh,320px)}
+  .fan{height:clamp(210px,40vh,300px)}
   .cr-orn{letter-spacing:.3em}
   .cr-lbl{letter-spacing:.3em}
   .cr-actions{flex-direction:column;align-items:center}
@@ -393,13 +417,13 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   .signup-title{font-size:clamp(1.8rem,6vw,2.6rem)}
   .signup-sub{margin-bottom:.8rem}
   .name-input{margin-bottom:.8rem}
-  .fan{height:clamp(190px,40vh,280px)}
-  .stick{height:clamp(170px,38vh,240px)}
+  .fan{height:clamp(180px,38vh,260px)}
+  .stick{height:clamp(160px,36vh,230px)}
   .card-content{max-height:92vh}
-  .story-card,.gain-card,.end-card{max-height:92vh}
+  .story-card,.gain-card,.end-card,.second-rose-card{max-height:92vh}
   .rule-letter,.first-rose-card{padding:1rem .8rem}
   .letter-out{padding:.8rem;gap:.5rem}
-  .draw-header{margin-bottom:1rem}
+  .draw-header{margin-bottom:.5rem}
 }
 </style>
 </head>
@@ -469,7 +493,6 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
         </div>
       </div>
       <div class="seal-hint" id="sealHint">选择一个火漆</div>
-      <!-- 取出的信件 -->
       <div class="letter-out" id="letterOut">
         <div class="letter-preview-title">舞会规则</div>
         <div class="letter-preview-sub">— the rules —</div>
@@ -517,7 +540,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   </div>
 </div>
 
-<!-- 4. 抽签（文字居上 + 下方行间距 + 签与文字边缘对齐） -->
+<!-- 4. 抽签（签紧随文字下方） -->
 <div class="draw-screen" id="drawScreen">
   <div class="draw-header">
     <div class="draw-title">选择你的假面公主<span class="orn">— click the red mark —</span></div>
@@ -560,14 +583,14 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   </div>
 </div>
 
-<!-- 故事 -->
+<!-- ===== 舞会开始：互动故事 ===== -->
 <div class="story-stage" id="storyStage">
   <div class="story-card">
-    <div class="st-eyebrow" id="stEyebrow"></div>
-    <div class="st-title" id="stTitle"></div>
-    <div class="st-sub" id="stSub">— from ball to ball's end —</div>
+    <div class="st-eyebrow" id="stEyebrow">The Ball · Begins</div>
+    <div class="st-title" id="stTitle">舞会 <span class="a">开始</span></div>
+    <div class="st-sub" id="stSub">— make your first move —</div>
     <div class="st-text" id="stText"></div>
-    <div class="st-hint">✦ 点击故事中标红的物品，得到第一朵玫瑰 ✦</div>
+    <div class="st-choices" id="stChoices"></div>
   </div>
 </div>
 
@@ -586,10 +609,39 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
     </div>
     <div class="gain-title">你得到了 <span class="a">第一朵玫瑰</span></div>
     <div class="gain-sub">— the first rose —</div>
-    <div class="gain-msg">你的舞伴，<br>在一个 <span class="h">你还没去过的地方</span> 等你。</div>
-    <div class="q-title" id="qTitle"></div>
-    <div class="q-text" id="qText"></div>
-    <div class="q-choices" id="qChoices"></div>
+    <div class="gain-msg" id="gainMsg">你的舞伴，在一个 <span class="h">你还没去过的地方</span> 等你。</div>
+    <button class="gain-btn" id="gainBtn">继续 · 关于第二朵玫瑰</button>
+  </div>
+</div>
+
+<!-- ===== 关于第二朵玫瑰（独立页） ===== -->
+<div id="secondRoseScreen">
+  <div class="second-rose-card">
+    <div class="sr-eyebrow">About The Second Rose</div>
+    <div class="sr-title">关于 <span class="a">第二朵玫瑰</span></div>
+    <div class="sr-sub">— where could it be —</div>
+    <div class="sr-text">
+      第一朵玫瑰，是你的舞伴。<br>
+      而第二朵玫瑰，藏在舞会的某个角落。<br>
+      它不在你手里，它在 <span class="rose">等你去找</span>。
+    </div>
+    <div class="sr-question">你觉得它在舞会的哪个地方？</div>
+    <div class="sr-choices" id="srChoices">
+      <div class="sr-choice" data-place="露台">
+        <span class="n">露台</span>
+        <span class="d">夜风吹过的地方，也许有香气</span>
+      </div>
+      <div class="sr-choice" data-place="酒窖">
+        <span class="n">酒窖</span>
+        <span class="d">最暗的角落，藏着最醇的秘密</span>
+      </div>
+      <div class="sr-choice" data-place="镜厅">
+        <span class="n">镜厅</span>
+        <span class="d">倒影里，也许不止一个你</span>
+      </div>
+    </div>
+    <div class="sr-result" id="srResult"></div>
+    <button class="sr-btn" id="srBtn">继续寻找第二朵玫瑰</button>
   </div>
 </div>
 
@@ -626,7 +678,6 @@ for(let i=0;i<40;i++){
   letterNodes.push({el:s,baseX:parseFloat(s.style.left),phase:Math.random()*Math.PI*2});
 }
 
-/* 晃动交互 */
 let shakeTiltX=0, shakeTiltY=0, targetTiltX=0, targetTiltY=0;
 let rafLetter=null;
 
@@ -795,95 +846,159 @@ document.getElementById('redrawBtn').addEventListener('click',()=>{
   },700);
 });
 
-/* 进入舞会 → 故事 */
+/* ===== 进入舞会 → 舞会开始互动故事 ===== */
 document.getElementById('enterBtn').addEventListener('click',()=>{
   document.getElementById('cardStage').classList.remove('show');
   document.getElementById('gift').classList.remove('show');
   setTimeout(()=>{
     document.getElementById('cardStage').style.display='none';
-    showStory(drawnIdx);
+    showBallStart(drawnIdx);
   },700);
 });
 
-/* 故事数据 */
-const stories=[
-  {e:'The Ball · Bad Woman',t:'一场 <span class="a">错过的舞</span>',x:'舞会开始，她站在人群中央，却没有走向你。<br>音乐响起，你发现自己的<span class="st-item">酒杯</span>被人碰了一下。<br>你回头，她已经走远。<br>舞会结束时，你才明白——<br>她一直在等你先开口。'},
-  {e:'The Ball · Sister',t:'一场 <span class="a">温柔的舞</span>',x:'舞会开始，她递给你一杯香槟。<br>你喝了一口，发现她一直看着你。<br>你低头，看见<span class="st-item">餐巾</span>上写着一行字。<br>舞会结束时，你才明白——<br>她不是不敢说，是怕你不敢听。'},
-  {e:'The Ball · Amber',t:'一场 <span class="a">未完成的舞</span>',x:'舞会开始，她站在最暗的角落。<br>你走过去，她问：你信不信我。<br>你没有回答。<br>舞会结束时，你发现<span class="st-item">座位</span>上多了一样东西。<br>是她的面具，背面刻着你的名字。'},
-  {e:'The Ball · Mad Dog',t:'一场 <span class="a">追逐的舞</span>',x:'舞会开始，她一直跟在你身后。<br>你不回头，她不靠近。<br>你停在<span class="st-item">楼梯</span>口，她终于追上来。<br>舞会结束时，你才明白——<br>她不是粘人，是怕你走丢。'},
-  {e:'The Ball · Mommy',t:'一场 <span class="a">试探的舞</span>',x:'舞会开始，她端着两杯酒走过来。<br>她说：我看见你在想什么。<br>你没听懂。<br>舞会结束时，你发现<span class="st-item">杯底</span>刻着一个名字。<br>是她的，也是你的。'},
-  {e:'The Ball · Wife',t:'一场 <span class="a">安静的舞</span>',x:'舞会开始，她坐在最角落的位置。<br>你走过去，她说：你来了。<br>你们什么都没说。<br>舞会结束时，你发现<span class="st-item">手帕</span>上绣着一朵玫瑰。<br>她说：这是我今天唯一一朵，没舍得送出去的。'},
-  {e:'The Ball · A Promise',t:'一场 <span class="a">注定的舞</span>',x:'舞会开始，她站在舞池的另一头。<br>你追，她躲。<br>你停下，她也停下。<br>舞会结束时，她伸出手，说：<span class="st-item">手心</span>是空的。<br>你握住，才发现——玫瑰一直就在那里。'}
+/* 舞会开始互动：每位舞伴的互动文案与选项 */
+const ballStarts=[
+  {
+    text:'舞会开始了。<br>她站在人群中央，却没有走向你。<br>音乐响起，你发现自己的<span class="hl">酒杯</span>被人碰了一下。<br>你抬头，她正看着你，嘴角带着笑。<br>接下来，你会——',
+    choices:[
+      {n:'举起酒杯，回敬她',d:'让她知道，你也在看她',gain:'你举起酒杯，她笑了。她走过来，把一朵玫瑰放在你的杯口。「第一朵玫瑰，是你的了。」'},
+      {n:'放下酒杯，走向她',d:'主动一点，也许更好',gain:'你放下酒杯，走向她。她没有躲，只是把玫瑰递到你手里。「第一朵玫瑰，追到了。」'},
+      {n:'假装没看见，继续跳舞',d:'让她来找你',gain:'你继续跳舞，她果然来了。她把玫瑰别在你的衣领上。「第一朵玫瑰，是我主动的。」'}
+    ]
+  },
+  {
+    text:'舞会开始了。<br>她递给你一杯香槟，指尖擦过你的手。<br>你喝了一口，发现她一直看着你。<br>你低头，看见<span class="hl">餐巾</span>上写着一行字。<br>你会——',
+    choices:[
+      {n:'把餐巾收进口袋',d:'先不让她知道',gain:'你把餐巾收好，她看见了，笑得更深。她递来一朵玫瑰。「第一朵玫瑰，你收好了。」'},
+      {n:'把餐巾推回她面前',d:'让她知道你看懂了',gain:'你把餐巾推回去，她愣了一下，然后笑了。她把玫瑰放在餐巾上。「第一朵玫瑰，你赢了。」'},
+      {n:'假装没看见，继续喝酒',d:'看她会怎么做',gain:'你继续喝酒，她坐到你身边，把玫瑰放进你的酒杯。「第一朵玫瑰，别装傻。」'}
+    ]
+  },
+  {
+    text:'舞会开始了。<br>她站在最暗的角落，面具下的眼睛看着你。<br>你走过去，她问：你信不信我。<br>你没有回答。<br>她伸出手，掌心是空的。<br>你会——',
+    choices:[
+      {n:'握住她的手',d:'信她一次',gain:'你握住她的手，她笑了。掌心翻转，一朵玫瑰出现在她手里。「第一朵玫瑰，你信对了。」'},
+      {n:'后退一步',d:'再想想',gain:'你后退一步，她却跟上来，把玫瑰塞进你手里。「第一朵玫瑰，你跑不掉的。」'},
+      {n:'问她为什么',d:'先问清楚',gain:'你问她为什么，她歪头笑了。「因为第一朵玫瑰，只能是你。」'}
+    ]
+  },
+  {
+    text:'舞会开始了。<br>她一直跟在你身后，不远不近。<br>你停在<span class="hl">楼梯</span>口，她终于追上来。<br>她从背后靠近，声音很低：「别走丢。」<br>你会——',
+    choices:[
+      {n:'转身，面对她',d:'让她看到你的表情',gain:'你转过身，她愣了一下，然后笑了。她把玫瑰别在你胸前。「第一朵玫瑰，抓到了。」'},
+      {n:'继续上楼',d:'看她会不会跟上来',gain:'你继续上楼，她果然跟上来，在拐角处把玫瑰递给你。「第一朵玫瑰，我说了别走丢。」'},
+      {n:'停下，等她说话',d:'给她一个机会',gain:'你停下，她走到你面前，把玫瑰放在你手心。「第一朵玫瑰，你终于肯等了。」'}
+    ]
+  },
+  {
+    text:'舞会开始了。<br>她端着两杯酒走过来，在你身边坐下。<br>「我看见你在想什么。」她说。<br>你没听懂。<br>她把其中一杯推到你面前，<span class="hl">杯底</span>刻着一个名字。<br>你会——',
+    choices:[
+      {n:'拿起杯子，看杯底',d:'看看是谁的名字',gain:'你拿起杯子，杯底是她的名字。她笑了。「第一朵玫瑰，你看到了。」'},
+      {n:'把杯子推回去',d:'让她自己说',gain:'你把杯子推回去，她挑了挑眉，把玫瑰放在杯口。「第一朵玫瑰，你有点难搞。」'},
+      {n:'问她是什么意思',d:'直接问',gain:'你问她，她凑近了一点。「意思是，第一朵玫瑰，我想给你。」'}
+    ]
+  },
+  {
+    text:'舞会开始了。<br>她坐在最角落的位置，看着舞池。<br>你走过去，她说：你来了。<br>你们什么都没说。<br>你发现她的<span class="hl">手帕</span>上绣着一朵玫瑰。<br>你会——',
+    choices:[
+      {n:'指着那朵玫瑰',d:'问她是不是绣的',gain:'她低头看了看手帕，笑了。「是第一朵玫瑰，我绣了很久。」她把玫瑰递给你。'},
+      {n:'在她旁边坐下',d:'什么都不说',gain:'你坐下，她靠在你肩上。过了一会儿，她把玫瑰放在你手里。「第一朵玫瑰，安静地给你。」'},
+      {n:'拿起手帕，还给她',d:'帮她收好',gain:'你拿起手帕还给她，她愣了一下，然后笑了。「第一朵玫瑰，你比我还会照顾人。」'}
+    ]
+  },
+  {
+    text:'舞会开始了。<br>她站在舞池的另一头，远远看着你。<br>你追，她躲。<br>你停下，她也停下。<br>她伸出手，说：<span class="hl">手心</span>是空的。<br>你会——',
+    choices:[
+      {n:'走过去，握住她的手',d:'看看是不是真的空的',gain:'你握住她的手，掌心翻转，一朵玫瑰出现。「第一朵玫瑰，我一直在等你来拿。」'},
+      {n:'站在原地，等她过来',d:'让她主动',gain:'你站在原地，她叹了口气，走过来把玫瑰递给你。「第一朵玫瑰，还是我输了。」'},
+      {n:'笑着摇头',d:'逗逗她',gain:'你笑着摇头，她愣了一下，然后也笑了。「第一朵玫瑰，你居然敢逗我。」她把玫瑰扔给你。'}
+    ]
+  }
 ];
 
-function showStory(idx){
-  const data=stories[idx];
-  document.getElementById('stEyebrow').textContent=data.e;
-  document.getElementById('stTitle').innerHTML=data.t;
-  document.getElementById('stText').innerHTML=data.x;
-  document.getElementById('storyStage').style.display='flex';
-  document.getElementById('storyStage').classList.add('show');
-  setTimeout(()=>{
-    const item=document.querySelector('.st-item');
-    if(item){
-      item.addEventListener('click',()=>{
-        if(item.classList.contains('chosen'))return;
-        item.classList.add('chosen');
-        setTimeout(()=>{
-          document.getElementById('storyStage').classList.remove('show');
-          setTimeout(()=>{
-            document.getElementById('storyStage').style.display='none';
-            showGain(idx);
-          },700);
-        },800);
-      });
-    }
-  },600);
-}
-
-/* 无厘头问题 */
-const questions=[
-  {t:'如果你是一张牌，<br>你希望自己是<span class="h">哪一张</span>？',c:[{n:'黑桃A',d:'唯一的那一张',next:'你选了黑桃A。她说：那我们就不玩牌了。'},{n:'红心7',d:'藏着的那一张',next:'你选了红心7。她说：好，我在第7支曲子等你。'},{n:'大王',d:'最大的那一张',next:'你选了大王。她说：那你就得负责赢。'}]},
-  {t:'如果明天就是世界末日，<br>你希望<span class="h">最后一杯酒</span>是什么？',c:[{n:'香槟',d:'庆祝的那一杯',next:'你选了香槟。她说：那我们就庆祝吧。'},{n:'红酒',d:'沉默的那一杯',next:'你选了红酒。她说：那我们就不说话。'},{n:'白水',d:'清醒的那一杯',next:'你选了白水。她说：那正好，我也没醉。'}]},
-  {t:'如果只能留下一样东西，<br>你会留下<span class="h">什么</span>？',c:[{n:'面具',d:'藏住的那一张脸',next:'你选了面具。她说：那我就不摘了。'},{n:'玫瑰',d:'会凋谢的那一朵',next:'你选了玫瑰。她说：那我就再送你一朵。'},{n:'影子',d:'看不见的那一个',next:'你选了影子。她说：那我们就永远在一起。'}]},
-  {t:'如果你可以变成一种动物，<br>你希望是<span class="h">什么</span>？',c:[{n:'猫',d:'粘人的那种',next:'你选了猫。她说：那我就不放你走了。'},{n:'狼',d:'独行的那种',next:'你选了狼。她说：那我陪你独行。'},{n:'鸟',d:'会飞的那种',next:'你选了鸟。她说：那我就不关窗。'}]},
-  {t:'如果非要选一个季节，<br>你喜欢<span class="h">哪一个</span>？',c:[{n:'春',d:'刚开花的那一季',next:'你选了春。她说：那我再等一季。'},{n:'夏',d:'最热的那一季',next:'你选了夏。她说：那我们就热着。'},{n:'冬',d:'最冷的那一季',next:'你选了冬。她说：那我们就抱在一起。'}]},
-  {t:'如果你能记住一件事，<br>你希望记住<span class="h">什么</span>？',c:[{n:'她的名字',d:'最重要的那一个',next:'你选了她的名字。她说：那我就不改名了。'},{n:'今天的舞会',d:'最热闹的那一晚',next:'你选了今天。她说：那我们今晚不散。'},{n:'一朵玫瑰',d:'会凋谢的那一朵',next:'你选了玫瑰。她说：那我再送你一朵。'}]},
-  {t:'如果只能往前走一步，<br>你会走向<span class="h">哪里</span>？',c:[{n:'她',d:'站在那里的人',next:'你选了她。她说：那正好，我也没动。'},{n:'门外',d:'还没去过的地方',next:'你选了门外。她说：那我陪你出去。'},{n:'原地',d:'不动的地方',next:'你选了原地。她说：那我们就留在这里。'}]}
-];
-
-function showGain(idx){
-  const q=questions[idx];
-  document.getElementById('qTitle').innerHTML='一个 <span class="a">无厘头的问题</span>';
-  document.getElementById('qText').innerHTML=q.t;
-  const box=document.getElementById('qChoices');
+function showBallStart(idx){
+  const data=ballStarts[idx];
+  document.getElementById('stText').innerHTML=data.text;
+  const box=document.getElementById('stChoices');
   box.innerHTML='';
-  q.c.forEach(c=>{
+  data.choices.forEach(c=>{
     const b=document.createElement('div');
-    b.className='q-choice';
-    b.innerHTML='<div class="n">'+c.n+'</div><div class="d">'+c.d+'</div>';
-    b.addEventListener('click',()=>showEnd(c.next));
+    b.className='st-choice';
+    b.innerHTML='<span class="n">'+c.n+'</span><span class="d">'+c.d+'</span>';
+    b.addEventListener('click',()=>{
+      /* 互动后 → 得到第一朵玫瑰 */
+      box.innerHTML='';
+      document.getElementById('stText').innerHTML=c.gain;
+      document.getElementById('stText').style.textAlign='center';
+      document.getElementById('stSub').textContent='— the first rose —';
+      setTimeout(()=>{
+        document.getElementById('storyStage').classList.remove('show');
+        setTimeout(()=>{
+          document.getElementById('storyStage').style.display='none';
+          showGain(c.gain,idx);
+        },600);
+      },1400);
+    });
     box.appendChild(b);
   });
+  document.getElementById('storyStage').style.display='flex';
+  document.getElementById('storyStage').classList.add('show');
+}
+
+/* 得到第一朵玫瑰 */
+function showGain(gainText,idx){
+  const p=partners[idx];
+  document.getElementById('gainMsg').innerHTML='「第一朵玫瑰，是你的了。」<br>—— '+p.n;
   document.getElementById('gainStage').style.display='flex';
   document.getElementById('gainStage').classList.add('show');
 }
 
-/* 结局 */
-function showEnd(text){
+/* 得到玫瑰 → 关于第二朵玫瑰 */
+document.getElementById('gainBtn').addEventListener('click',()=>{
   document.getElementById('gainStage').classList.remove('show');
   setTimeout(()=>{
     document.getElementById('gainStage').style.display='none';
-    document.getElementById('endText').innerHTML=text+'<br><br>第一朵玫瑰，已经在你手里。';
+    document.getElementById('secondRoseScreen').classList.add('active');
+  },600);
+});
+
+/* ===== 关于第二朵玫瑰：地点选择互动 ===== */
+const srChoices=document.querySelectorAll('#srChoices .sr-choice');
+const srResult=document.getElementById('srResult');
+let srPicked=false;
+srChoices.forEach(choice=>{
+  choice.addEventListener('click',()=>{
+    if(srPicked)return;
+    srPicked=true;
+    const place=choice.dataset.place;
+    srChoices.forEach(c=>c.style.opacity='.35');
+    choice.style.opacity='1';
+    choice.style.borderColor='#e0b060';
+    choice.style.boxShadow='0 0 40px rgba(224,176,96,.5)';
+    let msg='';
+    if(place==='露台') msg='你选了露台。她说：「第二朵玫瑰，喜欢夜风。」<br>——也许，它就在露台的栏杆边。';
+    else if(place==='酒窖') msg='你选了酒窖。她说：「第二朵玫瑰，藏在最暗的地方。」<br>——也许，它就在酒窖的最深处。';
+    else msg='你选了镜厅。她说：「第二朵玫瑰，会在倒影里等你。」<br>——也许，它就在镜厅的某面镜子里。';
+    srResult.innerHTML=msg;
+    srResult.classList.add('show');
+  });
+});
+
+/* 关于第二朵玫瑰 → 结局 */
+document.getElementById('srBtn').addEventListener('click',()=>{
+  document.getElementById('secondRoseScreen').classList.remove('active');
+  setTimeout(()=>{
+    document.getElementById('endText').innerHTML='第一朵玫瑰，已经在你手里。<br>第二朵玫瑰的位置，你已经猜到了。<br>舞会还没有结束——<br><span class="h">下一场舞，等你继续。</span>';
     document.getElementById('endStage').style.display='flex';
     document.getElementById('endStage').classList.add('show');
-  },700);
-}
+  },600);
+});
 
+/* 结局按钮 */
 document.getElementById('endBtn').addEventListener('click',()=>{
   document.getElementById('endStage').classList.remove('show');
   setTimeout(()=>{
-    alert('第一朵玫瑰已收集 ·\n第二朵玫瑰（一场舞结束之后）将在后续实现');
+    alert('第一朵玫瑰已收集 ·\n第二朵玫瑰将在下一场舞会中继续寻找');
   },500);
 });
 
