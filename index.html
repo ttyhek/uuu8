@@ -63,9 +63,10 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .inv-top{text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.85rem,1.8vw,1rem);color:#e0b060;letter-spacing:.6em;text-transform:uppercase;margin-bottom:clamp(1rem,2.5vw,1.4rem);margin-top:clamp(1.4rem,3.5vw,2.2rem)}
 .inv-top::before,.inv-top::after{content:'✦';margin:0 .6rem;font-size:.7rem;vertical-align:middle}
 .inv-main{text-align:center;font-family:'Long Cang',cursive;font-size:clamp(1.3rem,3.4vw,2.2rem);line-height:2;color:#f4e4c8;margin-bottom:clamp(1rem,2.5vw,1.6rem)}
-.inv-main .name{color:#e0b060;font-size:1.15em;padding:0 .3em}
-.inv-main .place{color:#f0d8a0;border-bottom:2px dashed rgba(224,176,96,.6);padding-bottom:.15em}
 .inv-main .from{color:#e0b060;font-style:italic;font-family:'Cormorant Garamond',serif;font-size:.75em}
+.inv-main .amber-name{display:block;margin:.3rem 0;font-family:'Long Cang',cursive;font-size:1.25em;color:#e0b060;text-shadow:0 0 20px rgba(224,176,96,.5);letter-spacing:.05em}
+.inv-main .user-name{display:block;margin:.3rem 0;font-family:'Long Cang',cursive;font-size:1.25em;color:#f4e4c8;text-shadow:0 0 20px rgba(255,220,160,.5);letter-spacing:.05em}
+.inv-main .place{color:#f0d8a0;border-bottom:2px dashed rgba(224,176,96,.6);padding-bottom:.15em}
 .divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:clamp(1rem,2.5vw,1.6rem) auto;max-width:min(320px,85%)}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#a08050,transparent)}
 .divider span{color:#e0b060;font-size:.8rem}
@@ -148,13 +149,31 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.9rem,2vw,1.15rem);color:#c8a878;letter-spacing:.35em;text-transform:uppercase;white-space:nowrap;
   animation:hp 2.5s ease-in-out infinite;transition:opacity .5s,transform .5s}
 
-.letter-out{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.6);width:82%;height:78%;background:linear-gradient(170deg,#f8eed8,#ecdcc0 50%,#e0ccaa);border-radius:3px;box-shadow:0 20px 50px rgba(0,0,0,.5),inset 0 0 40px rgba(180,140,90,.15);z-index:10;opacity:0;pointer-events:none;transition:transform 1.2s cubic-bezier(.34,1.56,.64,1),opacity .8s .3s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;padding:1.4rem}
-.letter-out::before{content:'';position:absolute;inset:8px;border:1px solid rgba(140,100,60,.3);border-radius:2px;pointer-events:none}
+.letter-out{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.6);width:82%;height:78%;background:linear-gradient(170deg,#f8eed8,#ecdcc0 50%,#e0ccaa);border-radius:3px;box-shadow:0 20px 50px rgba(0,0,0,.5),inset 0 0 40px rgba(180,140,90,.15);z-index:10;opacity:0;pointer-events:none;transition:transform 1.2s cubic-bezier(.34,1.56,.64,1),opacity .8s .3s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;padding:1.4rem;overflow:hidden}
+.letter-out::before{content:'';position:absolute;inset:8px;border:1px solid rgba(140,100,60,.3);border-radius:2px;pointer-events:none;z-index:2}
+.letter-watermark{position:absolute;inset:0;overflow:hidden;z-index:1;pointer-events:none;opacity:.5;border-radius:3px}
+.letter-watermark .wm-line{
+  position:absolute;
+  white-space:nowrap;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  color:rgba(140,90,50,.28);
+  letter-spacing:.12em;
+  will-change:transform;
+  animation:wmSlide linear infinite;
+}
+@keyframes wmSlide{
+  0%{transform:translateX(-120%) translateY(0) rotate(var(--r,0deg));opacity:0}
+  10%{opacity:.6}
+  50%{transform:translateX(40%) translateY(var(--dy,0px)) rotate(var(--r,0deg));opacity:.6}
+  90%{opacity:.5}
+  100%{transform:translateX(160%) translateY(0) rotate(var(--r,0deg));opacity:0}
+}
 .env.letter-revealed .letter-out{transform:translate(-50%,-85%) scale(1);opacity:1;pointer-events:auto}
 .env.letter-revealed .env-q{opacity:0}
-.letter-preview-title{font-family:'Long Cang',cursive;font-size:clamp(1.3rem,2.8vw,1.8rem);color:#6a4a28;letter-spacing:.1em}
-.letter-preview-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.8rem,1.7vw,1rem);color:#a08050;letter-spacing:.3em;text-transform:uppercase}
-.letter-read-btn{padding:clamp(.65rem,2vw,.9rem) clamp(1.6rem,4.5vw,2.4rem);background:rgba(90,60,30,.12);border:1.5px solid #8a6838;border-radius:30px;color:#6a4a28;font-family:'Noto Serif SC',serif;font-size:clamp(.8rem,1.7vw,.95rem);letter-spacing:.35em;cursor:pointer;transition:all .4s;margin-top:.4rem}
+.letter-preview-title{font-family:'Long Cang',cursive;font-size:clamp(1.3rem,2.8vw,1.8rem);color:#6a4a28;letter-spacing:.1em;position:relative;z-index:3;text-shadow:0 0 8px rgba(248,238,216,.9)}
+.letter-preview-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.8rem,1.7vw,1rem);color:#a08050;letter-spacing:.3em;text-transform:uppercase;position:relative;z-index:3;text-shadow:0 0 8px rgba(248,238,216,.9)}
+.letter-read-btn{padding:clamp(.65rem,2vw,.9rem) clamp(1.6rem,4.5vw,2.4rem);background:rgba(90,60,30,.12);border:1.5px solid #8a6838;border-radius:30px;color:#6a4a28;font-family:'Noto Serif SC',serif;font-size:clamp(.8rem,1.7vw,.95rem);letter-spacing:.35em;cursor:pointer;transition:all .4s;margin-top:.4rem;position:relative;z-index:3}
 .letter-read-btn:hover{background:rgba(140,100,60,.2);border-color:#a08050;color:#4a3018}
 
 /* ===== 弹窗 ===== */
@@ -178,11 +197,15 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .letter-eyebrow::before,.letter-eyebrow::after{content:'✦';margin:0 .5rem;font-size:.6rem;vertical-align:middle;color:#c0a070}
 .letter-title{font-family:'Long Cang',cursive;font-size:clamp(1.8rem,5vw,2.8rem);color:#5a3a18;margin-bottom:clamp(1rem,2.5vw,1.4rem);line-height:1.35;letter-spacing:.08em}
 .letter-title .a{color:#8a6030}
-.letter-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.05rem,2.6vw,1.3rem);line-height:2.1;color:#6a4a28;margin-bottom:clamp(1.4rem,3.5vw,2rem)}
+.letter-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.05rem,2.6vw,1.3rem);line-height:2.1;color:#6a4a28;margin-bottom:clamp(1.4rem,3.5vw,2rem);width:100%}
+.letter-text .rule-line{display:block;opacity:0;transform:translateY(12px);transition:opacity .7s ease,transform .7s ease;margin-bottom:.15rem}
+.letter-text .rule-line.show{opacity:1;transform:translateY(0)}
 .letter-text .rose{color:#a03050;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500}
 .letter-text .h{color:#8a6030;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500}
-.letter-divider{width:min(220px,60%);height:1px;background:linear-gradient(90deg,transparent,#c0a070,transparent);margin-bottom:clamp(1.4rem,3.5vw,1.8rem)}
-.letter-btn{padding:clamp(.8rem,2.4vw,1rem) clamp(1.8rem,5vw,2.8rem);background:rgba(90,60,30,.1);border:1.5px solid #8a6838;border-radius:30px;color:#6a4a28;font-family:'Noto Serif SC',serif;font-size:clamp(.85rem,1.8vw,1rem);letter-spacing:.4em;cursor:pointer;transition:all .4s}
+.letter-divider{width:min(220px,60%);height:1px;background:linear-gradient(90deg,transparent,#c0a070,transparent);margin-bottom:clamp(1.4rem,3.5vw,1.8rem);opacity:0;transition:opacity .6s}
+.letter-divider.show{opacity:1}
+.letter-btn{padding:clamp(.8rem,2.4vw,1rem) clamp(1.8rem,5vw,2.8rem);background:rgba(90,60,30,.1);border:1.5px solid #8a6838;border-radius:30px;color:#6a4a28;font-family:'Noto Serif SC',serif;font-size:clamp(.85rem,1.8vw,1rem);letter-spacing:.4em;cursor:pointer;transition:all .4s;opacity:0}
+.letter-btn.show{opacity:1}
 .letter-btn:hover{background:rgba(140,100,60,.2);border-color:#a08050;color:#4a3018}
 
 /* ===== 第一朵玫瑰介绍页 ===== */
@@ -202,7 +225,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .fr-btn:hover{background:rgba(224,176,96,.14);border-color:#e0b060;color:#f4e4c8}
 
 /* ===== 抽签区 ===== */
-.draw-screen{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(1.4rem,4vw,2.4rem) clamp(1rem,3vw,2rem) clamp(1rem,2.5vw,1.5rem);opacity:0;pointer-events:none;transition:opacity .8s}
+.draw-screen{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(1.4rem,4vw,2.4rem) clamp(1rem,3vw,2rem) 0;opacity:0;pointer-events:none;transition:opacity .8s}
 .draw-screen.active{opacity:1;pointer-events:auto}
 .draw-header{width:100%;max-width:min(640px,92vw);text-align:center;margin-bottom:clamp(.6rem,1.5vw,1rem)}
 .draw-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(1.3rem,3.8vw,2.2rem);color:#f4e4c8;margin-bottom:clamp(.8rem,2vw,1.2rem);text-align:center;line-height:1.4}
@@ -215,7 +238,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   position:relative;
   width:100%;
   max-width:min(640px,92vw);
-  height:clamp(260px,48vh,420px);
+  height:clamp(230px,42vh,370px);
   display:flex;
   justify-content:center;
   align-items:flex-end;
@@ -226,7 +249,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   position:absolute;
   bottom:0;
   width:clamp(38px,6.5vw,56px);
-  height:clamp(220px,46vh,370px);
+  height:clamp(200px,40vh,330px);
   cursor:pointer;
   transform-origin:bottom center;
   transition:transform .55s cubic-bezier(.34,1.56,.64,1),filter .4s,opacity .4s;
@@ -256,6 +279,110 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .stick.drawn{z-index:30}
 .stick.drawn .stick-inner{transform:rotate(0) translateX(0) translateY(-60px) scale(1.3) rotateY(180deg);transform-origin:center}
 .stick.drawn.gone{opacity:0;transition:opacity .6s .8s;pointer-events:none}
+
+/* ===== 骰子碰撞区 ===== */
+.dice-zone{
+  position:relative;
+  width:100%;
+  max-width:min(640px,92vw);
+  height:clamp(70px,10vh,100px);
+  margin-top:clamp(.6rem,1.5vw,1rem);
+  overflow:hidden;
+  border-radius:12px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(224,176,96,.06),transparent 70%);
+  border-top:1px solid rgba(224,176,96,.15);
+  border-bottom:1px solid rgba(224,176,96,.15);
+}
+.dice-zone .die{
+  position:absolute;
+  width:clamp(34px,5.5vw,46px);
+  height:clamp(34px,5.5vw,46px);
+  border-radius:clamp(7px,1.4vw,10px);
+  background:linear-gradient(160deg,rgba(40,24,14,.95),rgba(20,12,8,.98));
+  border:1px solid #a08050;
+  box-shadow:0 6px 16px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,220,160,.25),inset 0 0 14px rgba(224,176,96,.15);
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  padding:clamp(4px,.8vw,7px);
+  gap:2px;
+  will-change:transform;
+}
+.dice-zone .pip{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#ffe9b8,#c89a50 60%,#7a5a24);
+  box-shadow:0 0 6px rgba(224,176,96,.7);
+  opacity:0;
+}
+.dice-zone .die[data-n="1"] .pip:nth-child(5){opacity:1}
+.dice-zone .die[data-n="2"] .pip:nth-child(1),.dice-zone .die[data-n="2"] .pip:nth-child(9){opacity:1}
+.dice-zone .die[data-n="3"] .pip:nth-child(1),.dice-zone .die[data-n="3"] .pip:nth-child(5),.dice-zone .die[data-n="3"] .pip:nth-child(9){opacity:1}
+.dice-zone .die[data-n="4"] .pip:nth-child(1),.dice-zone .die[data-n="4"] .pip:nth-child(3),.dice-zone .die[data-n="4"] .pip:nth-child(7),.dice-zone .die[data-n="4"] .pip:nth-child(9){opacity:1}
+.dice-zone .die[data-n="5"] .pip:nth-child(1),.dice-zone .die[data-n="5"] .pip:nth-child(3),.dice-zone .die[data-n="5"] .pip:nth-child(5),.dice-zone .die[data-n="5"] .pip:nth-child(7),.dice-zone .die[data-n="5"] .pip:nth-child(9){opacity:1}
+.dice-zone .die[data-n="6"] .pip:nth-child(1),.dice-zone .die[data-n="6"] .pip:nth-child(3),.dice-zone .die[data-n="6"] .pip:nth-child(4),.dice-zone .die[data-n="6"] .pip:nth-child(6),.dice-zone .die[data-n="6"] .pip:nth-child(7),.dice-zone .die[data-n="6"] .pip:nth-child(9){opacity:1}
+
+/* ===== 玫瑰收集进度条 ===== */
+.rose-progress{
+  position:fixed;
+  left:50%;
+  bottom:clamp(.6rem,2vw,1.2rem);
+  transform:translateX(-50%);
+  z-index:50;
+  display:flex;
+  align-items:center;
+  gap:clamp(.6rem,2vw,1rem);
+  padding:clamp(.4rem,1.2vw,.6rem) clamp(.8rem,2.4vw,1.4rem);
+  background:rgba(10,6,4,.85);
+  border:1px solid rgba(224,176,96,.45);
+  border-radius:40px;
+  box-shadow:0 8px 28px rgba(0,0,0,.7),inset 0 0 22px rgba(224,176,96,.1);
+  backdrop-filter:blur(6px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .6s ease;
+}
+.rose-progress.show{opacity:1;pointer-events:auto}
+.rose-progress .rp-label{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(.65rem,1.5vw,.8rem);
+  color:#c8a878;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.rose-progress .rp-roses{
+  display:flex;
+  align-items:center;
+  gap:clamp(.3rem,1vw,.55rem);
+}
+.rp-rose{
+  width:clamp(22px,3.6vw,30px);
+  height:clamp(22px,3.6vw,30px);
+  position:relative;
+  opacity:.28;
+  filter:grayscale(1) brightness(.7);
+  transition:opacity .5s,filter .5s,transform .5s;
+}
+.rp-rose.collected{
+  opacity:1;
+  filter:none;
+  transform:scale(1.05);
+}
+.rp-rose svg{width:100%;height:100%;display:block}
+.rp-rose.collected svg{filter:drop-shadow(0 0 8px rgba(200,40,80,.8)) drop-shadow(0 0 16px rgba(224,176,96,.5))}
+.rp-count{
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-weight:700;
+  font-size:clamp(.75rem,1.7vw,.95rem);
+  color:#e0b060;
+  letter-spacing:.1em;
+  white-space:nowrap;
+}
+.rp-count .cur{color:#fff4d0}
 
 /* ===== 结果卡 ===== */
 .card-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:clamp(1rem,3vw,2rem);opacity:0;pointer-events:none;transition:opacity 1s}
@@ -316,7 +443,25 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .st-choice:active{transform:scale(.98)}
 .st-choice .n{font-family:'Long Cang',cursive;font-size:1.1em;color:#f0d8a0;display:block;margin-bottom:.2rem}
 .st-choice .d{font-size:.88em;color:#c8a878;display:block}
-.st-hint{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.7vw,.9rem);color:#e0b060;letter-spacing:.2em;padding:.8rem 0;border-top:1px solid rgba(224,176,96,.2);border-bottom:1px solid rgba(224,176,96,.2);animation:hp 2.5s ease-in-out infinite}
+.st-continue{
+  margin-top:clamp(1rem,2.5vw,1.4rem);
+  padding:clamp(.8rem,2.4vw,1rem) clamp(1.8rem,5vw,2.8rem);
+  background:linear-gradient(180deg,rgba(60,40,20,.95),rgba(30,20,10,.98));
+  border:2px solid #e0b060;
+  color:#fff4d0;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(.85rem,1.8vw,1rem);
+  letter-spacing:.5em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all .4s;
+  opacity:0;
+  transform:translateY(10px);
+  pointer-events:none;
+}
+.st-continue.show{opacity:1;transform:translateY(0);pointer-events:auto}
+.st-continue:hover{background:linear-gradient(180deg,rgba(90,60,30,.98),rgba(45,30,15,1));box-shadow:0 0 40px rgba(224,176,96,.3)}
 
 /* 得到玫瑰 */
 .gain-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:clamp(1rem,3vw,2rem);opacity:0;pointer-events:none;transition:opacity 1s}
@@ -351,21 +496,59 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .sr-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.05rem,2.6vw,1.3rem);line-height:2.1;color:#d8c8b0;margin-bottom:clamp(1.2rem,3vw,1.6rem)}
 .sr-text .rose{color:#c01838;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500;text-shadow:0 0 14px rgba(200,40,80,.6)}
 .sr-question{font-family:'Long Cang',cursive;font-size:clamp(1.2rem,3.2vw,1.7rem);color:#f0d8a0;margin-bottom:clamp(1.2rem,3vw,1.6rem);line-height:1.7}
-.sr-choices{display:flex;flex-direction:column;gap:.8rem;width:100%;margin-bottom:clamp(1.2rem,3vw,1.6rem)}
+.sr-choices{display:flex;flex-direction:column;gap:.8rem;width:100%}
 .sr-choice{padding:clamp(.9rem,2.2vw,1.2rem) clamp(1rem,2.6vw,1.4rem);background:rgba(20,10,8,.6);border:1px solid rgba(224,176,96,.4);border-radius:6px;cursor:pointer;text-align:center;transition:all .3s;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.95rem,2.2vw,1.1rem);color:#e8dcc8;line-height:1.6}
 .sr-choice:hover{background:rgba(224,176,96,.12);border-color:#e0b060;box-shadow:0 0 30px rgba(224,176,96,.35);color:#fff4d0}
 .sr-choice:active{transform:scale(.98)}
 .sr-choice .n{font-family:'Long Cang',cursive;font-size:1.1em;color:#f0d8a0;display:block;margin-bottom:.2rem}
 .sr-choice .d{font-size:.85em;color:#c8a878;display:block}
-.sr-result{font-family:'Long Cang',cursive;font-size:clamp(1rem,2.6vw,1.25rem);line-height:2;color:#e0b060;margin-top:clamp(.8rem,2.5vw,1.2rem);min-height:3em;opacity:0;transition:opacity .5s}
-.sr-result.show{opacity:1}
-.sr-btn{padding:clamp(.8rem,2.4vw,1rem) clamp(1.8rem,5vw,2.8rem);background:rgba(20,10,8,.5);border:2px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.85rem,1.8vw,1rem);letter-spacing:.5em;text-transform:uppercase;cursor:pointer;transition:all .4s;margin-top:clamp(.8rem,2vw,1.2rem)}
-.sr-btn:hover{background:rgba(224,176,96,.14);border-color:#e0b060;color:#f4e4c8}
 
-/* 结局 */
+/* ===== 第二朵玫瑰结果弹窗 ===== */
+.second-result-modal{position:fixed;inset:0;z-index:210;background:rgba(5,3,6,.93);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:clamp(1rem,4vw,2rem);opacity:0;pointer-events:none;transition:opacity .6s}
+.second-result-modal.show{opacity:1;pointer-events:auto}
+.second-result-card{position:relative;max-width:min(420px,90vw);width:100%;background:linear-gradient(160deg,rgba(30,18,12,.98),rgba(20,12,10,.99));border:1px solid #8a6838;border-radius:8px;padding:clamp(2rem,5vw,3rem) clamp(1.2rem,4vw,2rem) clamp(1.8rem,4vw,2.4rem);text-align:center;box-shadow:0 40px 100px rgba(0,0,0,.95),0 0 80px rgba(224,176,96,.2)}
+.second-result-card::before{content:'';position:absolute;inset:clamp(8px,1.5vw,12px);border:1px solid rgba(224,176,96,.45);pointer-events:none;border-radius:3px}
+.srm-eyebrow{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.7rem,1.6vw,.9rem);color:#e0b060;letter-spacing:.55em;text-transform:uppercase;margin-bottom:clamp(1rem,2.5vw,1.4rem)}
+.srm-eyebrow::before,.srm-eyebrow::after{content:'✦';margin:0 .5rem;font-size:.6rem;vertical-align:middle}
+.srm-title{font-family:'Long Cang',cursive;font-size:clamp(1.8rem,5vw,2.6rem);color:#f4e4c8;margin-bottom:clamp(1rem,2.5vw,1.4rem);line-height:1.4;text-shadow:0 0 30px rgba(255,200,140,.4)}
+.srm-title .a{color:#e0b060}
+.srm-rose{width:clamp(64px,11vw,90px);height:clamp(64px,11vw,90px);margin:0 auto clamp(1rem,2.5vw,1.4rem);filter:drop-shadow(0 0 34px rgba(224,176,96,.9));animation:rg 2s ease-in-out infinite alternate}
+.srm-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.05rem,2.6vw,1.25rem);line-height:2;color:#d8c8b0;margin-bottom:clamp(1.4rem,3.5vw,1.8rem)}
+.srm-text .h{color:#e0b060;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500}
+.srm-text .rose{color:#c01838;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500;text-shadow:0 0 14px rgba(200,40,80,.6)}
+.srm-btn{padding:clamp(.8rem,2.4vw,1rem) clamp(1.8rem,5vw,2.8rem);background:linear-gradient(180deg,rgba(60,40,20,.95),rgba(30,20,10,.98));border:2px solid #e0b060;color:#fff4d0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.85rem,1.8vw,1rem);letter-spacing:.5em;text-transform:uppercase;cursor:pointer;transition:all .4s}
+.srm-btn:hover{background:linear-gradient(180deg,rgba(90,60,30,.98),rgba(45,30,15,1));box-shadow:0 0 40px rgba(224,176,96,.3)}
+
+/* ===== 关于第三朵玫瑰 ===== */
+#thirdRoseScreen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:clamp(1rem,4vw,2rem);opacity:0;pointer-events:none;transition:opacity .8s;background:rgba(5,3,6,.78);backdrop-filter:blur(4px)}
+#thirdRoseScreen.active{opacity:1;pointer-events:auto}
+.third-rose-card{position:relative;width:100%;max-width:min(560px,92vw);max-height:90vh;overflow-y:auto;background:linear-gradient(165deg,rgba(30,18,12,.97),rgba(20,12,10,.98),rgba(12,8,6,.99));border:1px solid #8a6838;border-radius:8px;padding:clamp(1.8rem,5vw,2.8rem) clamp(1.2rem,4vw,2.2rem);text-align:center;box-shadow:0 40px 90px rgba(0,0,0,.9),inset 0 0 100px rgba(120,80,40,.15);scrollbar-width:thin;scrollbar-color:#8a6838 transparent}
+.third-rose-card::-webkit-scrollbar{width:4px}
+.third-rose-card::-webkit-scrollbar-thumb{background:#8a6838;border-radius:2px}
+.third-rose-card::before{content:'';position:absolute;inset:clamp(8px,1.5vw,12px);border:1px solid rgba(224,176,96,.45);border-radius:3px;pointer-events:none}
+.tr-eyebrow{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.7rem,1.6vw,.9rem);color:#e0b060;letter-spacing:.55em;text-transform:uppercase;margin-bottom:clamp(1rem,2.5vw,1.4rem)}
+.tr-eyebrow::before,.tr-eyebrow::after{content:'✦';margin:0 .5rem;font-size:.6rem;vertical-align:middle}
+.tr-title{font-family:'Long Cang',cursive;font-size:clamp(1.8rem,5vw,2.8rem);color:#f4e4c8;margin-bottom:clamp(.8rem,2vw,1.2rem);line-height:1.4;text-shadow:0 0 30px rgba(255,200,140,.35)}
+.tr-title .a{color:#e0b060}
+.tr-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.85rem,1.8vw,1rem);color:#c8a878;letter-spacing:.35em;text-transform:uppercase;margin-bottom:clamp(1.2rem,3vw,1.6rem)}
+.tr-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.05rem,2.6vw,1.3rem);line-height:2.1;color:#d8c8b0;margin-bottom:clamp(1.2rem,3vw,1.6rem);text-align:left}
+.tr-text .h{color:#e0b060;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500}
+.tr-text .rose{color:#c01838;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500;text-shadow:0 0 14px rgba(200,40,80,.6)}
+.tr-riddle{font-family:'Long Cang',cursive;font-size:clamp(1.15rem,3vw,1.55rem);color:#f0d8a0;line-height:1.9;margin:clamp(1rem,2.5vw,1.4rem) 0;padding:clamp(1rem,2.5vw,1.4rem);background:rgba(224,176,96,.05);border-top:1px solid rgba(224,176,96,.3);border-bottom:1px solid rgba(224,176,96,.3)}
+.tr-riddle .hl{color:#e0b060}
+.tr-choices{display:flex;flex-direction:column;gap:.8rem;width:100%;margin-bottom:clamp(1.2rem,3vw,1.6rem)}
+.tr-choice{padding:clamp(.9rem,2.2vw,1.2rem) clamp(1rem,2.6vw,1.4rem);background:rgba(20,10,8,.6);border:1px solid rgba(224,176,96,.4);border-radius:6px;cursor:pointer;text-align:center;transition:all .3s;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.95rem,2.2vw,1.1rem);color:#e8dcc8;line-height:1.6}
+.tr-choice:hover{background:rgba(224,176,96,.12);border-color:#e0b060;box-shadow:0 0 30px rgba(224,176,96,.35);color:#fff4d0}
+.tr-choice:active{transform:scale(.98)}
+.tr-choice .n{font-family:'Long Cang',cursive;font-size:1.1em;color:#f0d8a0;display:block;margin-bottom:.2rem}
+.tr-choice .d{font-size:.85em;color:#c8a878;display:block}
+.tr-result{font-family:'Long Cang',cursive;font-size:clamp(1rem,2.6vw,1.25rem);line-height:2;color:#e0b060;margin-top:clamp(.8rem,2.5vw,1.2rem);min-height:3em;opacity:0;transition:opacity .5s}
+.tr-result.show{opacity:1}
+
+/* ===== 结局页（三朵玫瑰详情） ===== */
 .end-stage{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:clamp(1rem,3vw,2rem);opacity:0;pointer-events:none;transition:opacity 1s}
 .end-stage.show{opacity:1;pointer-events:auto}
-.end-card{position:relative;width:100%;max-width:min(480px,90vw);max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#1a1008,#0e0806 50%,#050303);border:1px solid rgba(224,176,96,.5);border-radius:10px;padding:clamp(1.6rem,4vw,2.4rem) clamp(1.2rem,3vw,2rem);text-align:center;scrollbar-width:thin;scrollbar-color:#8a6838 transparent}
+.end-card{position:relative;width:100%;max-width:min(520px,90vw);max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#1a1008,#0e0806 50%,#050303);border:1px solid rgba(224,176,96,.5);border-radius:10px;padding:clamp(1.6rem,4vw,2.4rem) clamp(1.2rem,3vw,2rem);text-align:center;scrollbar-width:thin;scrollbar-color:#8a6838 transparent}
 .end-card::-webkit-scrollbar{width:4px}
 .end-card::-webkit-scrollbar-thumb{background:#8a6838;border-radius:2px}
 .end-card::before{content:'';position:absolute;inset:clamp(8px,1.5vw,12px);border:1px solid rgba(224,176,96,.35);border-radius:8px;pointer-events:none}
@@ -375,8 +558,52 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .end-title .a{color:#fff4d0}
 .end-text{font-family:'Cormorant Garamond',serif;font-size:clamp(.9rem,2vw,1.05rem);line-height:2;color:#d8c8b0;font-style:italic;margin-bottom:clamp(1.2rem,3vw,1.6rem);text-align:left}
 .end-text .h{color:#e0b060;font-style:normal;font-family:'Noto Serif SC',serif}
+
+/* 三朵玫瑰详情列表 */
+.rose-detail-list{display:flex;flex-direction:column;gap:clamp(.8rem,2vw,1.1rem);margin-bottom:clamp(1.2rem,3vw,1.6rem);text-align:left}
+.rose-detail-item{
+  display:flex;align-items:center;gap:clamp(.8rem,2vw,1.1rem);
+  padding:clamp(.8rem,2vw,1.1rem) clamp(1rem,2.4vw,1.3rem);
+  background:rgba(224,176,96,.06);
+  border:1px solid rgba(224,176,96,.35);
+  border-radius:8px;
+  cursor:pointer;
+  transition:all .3s;
+}
+.rose-detail-item:hover{background:rgba(224,176,96,.13);border-color:#e0b060;box-shadow:0 0 28px rgba(224,176,96,.3);transform:translateY(-2px)}
+.rose-detail-item:active{transform:translateY(0) scale(.99)}
+.rdi-icon{width:clamp(34px,6vw,44px);height:clamp(34px,6vw,44px);flex-shrink:0;filter:drop-shadow(0 0 10px rgba(200,40,80,.7))}
+.rdi-icon svg{width:100%;height:100%;display:block}
+.rdi-body{flex:1;min-width:0}
+.rdi-title{font-family:'Long Cang',cursive;font-size:clamp(1.05rem,2.4vw,1.3rem);color:#f0d8a0;margin-bottom:.15rem;letter-spacing:.05em}
+.rdi-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.6vw,.9rem);color:#c8a878;letter-spacing:.12em;line-height:1.5}
+.rdi-arrow{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2.2vw,1.25rem);color:#e0b060;flex-shrink:0;transition:transform .3s}
+.rose-detail-item:hover .rdi-arrow{transform:translateX(4px)}
+
 .end-btn{padding:clamp(.8rem,2.4vw,1rem) clamp(1.8rem,5vw,2.8rem);background:linear-gradient(180deg,rgba(60,40,20,.95),rgba(30,20,10,.98));border:2px solid #e0b060;color:#fff4d0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.85rem,1.8vw,1rem);letter-spacing:.45em;text-transform:uppercase;cursor:pointer;transition:all .4s}
 .end-btn:hover{background:linear-gradient(180deg,rgba(90,60,30,.98),rgba(45,30,15,1));box-shadow:0 0 40px rgba(224,176,96,.3)}
+
+/* ===== 玫瑰故事详情弹窗 ===== */
+.rose-story-modal{position:fixed;inset:0;z-index:220;background:rgba(5,3,6,.94);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:clamp(1rem,4vw,2rem);opacity:0;pointer-events:none;transition:opacity .5s}
+.rose-story-modal.show{opacity:1;pointer-events:auto}
+.rose-story-card{position:relative;width:100%;max-width:min(460px,90vw);max-height:88vh;overflow-y:auto;background:linear-gradient(165deg,rgba(30,18,12,.98),rgba(20,12,10,.99));border:1px solid #8a6838;border-radius:10px;padding:clamp(1.8rem,5vw,2.8rem) clamp(1.2rem,4vw,2.2rem);text-align:center;box-shadow:0 40px 100px rgba(0,0,0,.95),0 0 90px rgba(224,176,96,.2);scrollbar-width:thin;scrollbar-color:#8a6838 transparent}
+.rose-story-card::-webkit-scrollbar{width:4px}
+.rose-story-card::-webkit-scrollbar-thumb{background:#8a6838;border-radius:2px}
+.rose-story-card::before{content:'';position:absolute;inset:clamp(8px,1.5vw,12px);border:1px solid rgba(224,176,96,.45);pointer-events:none;border-radius:4px}
+.rsm-eyebrow{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.7rem,1.6vw,.9rem);color:#e0b060;letter-spacing:.55em;text-transform:uppercase;margin-bottom:clamp(.8rem,2vw,1.2rem)}
+.rsm-eyebrow::before,.rsm-eyebrow::after{content:'✦';margin:0 .5rem;font-size:.6rem;vertical-align:middle}
+.rsm-icon{width:clamp(60px,10vw,84px);height:clamp(60px,10vw,84px);margin:0 auto clamp(.8rem,2vw,1.2rem);filter:drop-shadow(0 0 30px rgba(224,176,96,.9));animation:rg 2s ease-in-out infinite alternate}
+.rsm-icon svg{width:100%;height:100%;display:block}
+.rsm-title{font-family:'Long Cang',cursive;font-size:clamp(1.6rem,4.4vw,2.3rem);color:#f4e4c8;margin-bottom:clamp(.4rem,1vw,.6rem);line-height:1.35;text-shadow:0 0 30px rgba(255,200,140,.35)}
+.rsm-title .a{color:#e0b060}
+.rsm-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.7vw,.95rem);color:#c8a878;letter-spacing:.35em;text-transform:uppercase;margin-bottom:clamp(1rem,2.5vw,1.4rem)}
+.rsm-divider{width:min(180px,55%);height:1px;background:linear-gradient(90deg,transparent,#c0a070,transparent);margin:0 auto clamp(1rem,2.5vw,1.4rem)}
+.rsm-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.95rem,2.2vw,1.1rem);line-height:2.05;color:#d8c8b0;margin-bottom:clamp(1.2rem,3vw,1.6rem);text-align:left}
+.rsm-text .hl{color:#e0b060;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500}
+.rsm-text .rose{color:#c01838;font-style:normal;font-family:'Noto Serif SC',serif;font-weight:500;text-shadow:0 0 12px rgba(200,40,80,.6)}
+.rsm-quote{font-family:'Long Cang',cursive;font-size:clamp(1rem,2.6vw,1.3rem);color:#e0b060;line-height:1.9;padding:clamp(.9rem,2.2vw,1.2rem);background:rgba(224,176,96,.05);border-top:1px solid rgba(224,176,96,.25);border-bottom:1px solid rgba(224,176,96,.25);margin-bottom:clamp(1.2rem,3vw,1.6rem)}
+.rsm-btn{padding:clamp(.75rem,2.2vw,.95rem) clamp(1.6rem,4.5vw,2.4rem);background:rgba(20,10,8,.5);border:2px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.8rem,1.7vw,.95rem);letter-spacing:.45em;text-transform:uppercase;cursor:pointer;transition:all .4s}
+.rsm-btn:hover{background:rgba(224,176,96,.14);border-color:#e0b060;color:#f4e4c8}
 
 /* ===== 手机端微调 ===== */
 @media (max-width: 480px) {
@@ -389,7 +616,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   .seal-hint{bottom:clamp(-76px,-15vw,-98px);font-size:clamp(.8rem,2.2vw,1rem)}
   .seal-wrap{width:clamp(70px,17vw,100px);height:clamp(70px,17vw,100px)}
   .imprint{font-size:clamp(1rem,3.4vw,1.5rem)}
-  .stick{width:clamp(30px,6vw,42px);height:clamp(190px,42vh,300px)}
+  .stick{width:clamp(30px,6vw,42px);height:clamp(180px,40vh,280px)}
   .stick:nth-child(1){--x:calc(-1 * clamp(28px,7.5vw,40px))}
   .stick:nth-child(2){--x:calc(-1 * clamp(17px,4.8vw,27px))}
   .stick:nth-child(3){--x:calc(-1 * clamp(8px,2.2vw,13px))}
@@ -397,13 +624,15 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   .stick:nth-child(5){--x:clamp(8px,2.2vw,13px)}
   .stick:nth-child(6){--x:clamp(17px,4.8vw,27px)}
   .stick:nth-child(7){--x:clamp(28px,7.5vw,40px)}
-  .fan{height:clamp(220px,42vh,320px)}
+  .fan{height:clamp(200px,38vh,290px)}
   .cr-actions{flex-direction:column;align-items:center}
   .cr-btn{width:100%;max-width:260px}
   .env-q{font-size:clamp(1.1rem,3.6vw,1.4rem)}
   .env-q .line2{font-size:1.08em}
   .env-name{font-size:clamp(1.4rem,4.4vw,2rem)}
   .draw-header{max-width:94vw}
+  .dice-zone{max-width:94vw}
+  .rose-progress{gap:clamp(.4rem,1.5vw,.7rem);padding:clamp(.35rem,1vw,.5rem) clamp(.7rem,2vw,1.1rem)}
 }
 
 @media (max-height: 650px) {
@@ -413,13 +642,14 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   .signup-title{font-size:clamp(1.9rem,6.5vw,2.8rem)}
   .signup-sub{margin-bottom:1rem}
   .name-input{margin-bottom:1rem}
-  .fan{height:clamp(190px,40vh,270px)}
-  .stick{height:clamp(170px,38vh,240px)}
+  .fan{height:clamp(170px,36vh,250px)}
+  .stick{height:clamp(155px,34vh,220px)}
   .card-content{max-height:92vh}
-  .story-card,.gain-card,.end-card,.second-rose-card{max-height:92vh}
+  .story-card,.gain-card,.end-card,.second-rose-card,.third-rose-card,.rose-story-card{max-height:92vh}
   .rule-letter,.first-rose-card{padding:1.2rem .9rem}
   .letter-out{padding:.9rem;gap:.6rem}
   .draw-header{margin-bottom:.6rem}
+  .dice-zone{height:clamp(60px,9vh,80px)}
 }
 </style>
 </head>
@@ -429,6 +659,13 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 <div class="glow"></div>
 <div class="dust" id="dust"></div>
 <div class="letterfall" id="letterfall"></div>
+
+<!-- 玫瑰收集进度条 -->
+<div class="rose-progress" id="roseProgress">
+  <span class="rp-label">已收集</span>
+  <div class="rp-roses" id="rpRoses"></div>
+  <span class="rp-count"><span class="cur" id="rpCur">0</span> / 3</span>
+</div>
 
 <!-- 1. 报名 -->
 <section class="screen active" id="s1">
@@ -489,6 +726,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
       </div>
       <div class="seal-hint" id="sealHint">选择一个火漆</div>
       <div class="letter-out" id="letterOut">
+        <div class="letter-watermark" id="letterWatermark"></div>
         <div class="letter-preview-title">舞会规则</div>
         <div class="letter-preview-sub">— the rules —</div>
         <button class="letter-read-btn" id="letterReadBtn">点击阅读</button>
@@ -510,12 +748,12 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   <div class="rule-letter">
     <div class="letter-eyebrow">The Rules · Of The Ball</div>
     <div class="letter-title">舞会 <span class="a">规则</span></div>
-    <div class="letter-text">
-      这场舞会，你只需要找到 <span class="rose">三朵玫瑰</span>。<br>
-      每一朵玫瑰，都会带你走进一段故事。<br>
-      集齐三朵，舞会的大门，才会真正为你打开。
+    <div class="letter-text" id="letterText">
+      <span class="rule-line" data-idx="0">这场舞会，你只需要找到 <span class="rose">三朵玫瑰</span>。</span>
+      <span class="rule-line" data-idx="1">每一朵玫瑰，都会带你走进一段故事。</span>
+      <span class="rule-line" data-idx="2">集齐三朵，舞会的大门，才会真正为你打开。</span>
     </div>
-    <div class="letter-divider"></div>
+    <div class="letter-divider" id="letterDivider"></div>
     <button class="letter-btn" id="ruleBtn">开始寻找</button>
   </div>
 </div>
@@ -531,7 +769,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
       有一个人，正戴着面具等你。<br>
       她，就是你的 <span class="rose">第一朵玫瑰</span>。
     </div>
-    <button class="fr-btn" id="frBtn">去抽签</button>
+    <button class="fr-btn" id="frBtn">靠近她</button>
   </div>
 </div>
 
@@ -543,6 +781,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
     <div class="hint-top">↓ 点击任意一支签顶端的红色标记 ↓</div>
   </div>
   <div class="fan" id="fan"></div>
+  <div class="dice-zone" id="diceZone"></div>
 </div>
 
 <!-- 结果卡 -->
@@ -586,6 +825,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
     <div class="st-sub" id="stSub">— make your first move —</div>
     <div class="st-text" id="stText"></div>
     <div class="st-choices" id="stChoices"></div>
+    <button class="st-continue" id="stContinue">继续</button>
   </div>
 </div>
 
@@ -635,18 +875,164 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
         <span class="d">倒影里，也许不止一个你</span>
       </div>
     </div>
-    <div class="sr-result" id="srResult"></div>
-    <button class="sr-btn" id="srBtn">继续寻找第二朵玫瑰</button>
   </div>
 </div>
 
-<!-- 结局 -->
+<!-- ===== 第二朵玫瑰结果弹窗 ===== -->
+<div class="second-result-modal" id="secondResultModal">
+  <div class="second-result-card">
+    <div class="srm-eyebrow">The Second Rose</div>
+    <div class="srm-title">恭喜你<br><span class="a">找到了第二朵</span></div>
+    <div class="srm-rose">
+      <svg viewBox="0 0 60 60">
+        <circle cx="30" cy="24" r="12" fill="none" stroke="#e0b060" stroke-width="2"/>
+        <circle cx="30" cy="24" r="7" fill="none" stroke="#e0b060" stroke-width="1.5"/>
+        <circle cx="30" cy="24" r="3" fill="#c01838"/>
+        <line x1="30" y1="36" x2="30" y2="54" stroke="#e0b060" stroke-width="2"/>
+        <path d="M30 44 Q24 42 20 46" stroke="#e0b060" stroke-width="1.5" fill="none"/>
+        <path d="M30 48 Q36 46 40 50" stroke="#e0b060" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+    <div class="srm-text" id="srmText"></div>
+    <button class="srm-btn" id="srmBtn">继续 · 关于第三朵玫瑰</button>
+  </div>
+</div>
+
+<!-- ===== 关于第三朵玫瑰 ===== -->
+<div id="thirdRoseScreen">
+  <div class="third-rose-card">
+    <div class="tr-eyebrow">About The Third Rose</div>
+    <div class="tr-title">关于 <span class="a">第三朵玫瑰</span></div>
+    <div class="tr-sub">— the last secret —</div>
+    <div class="tr-text">
+      第二朵玫瑰，你已经找到了。<br>
+      而第三朵玫瑰，不在舞会的任何角落——<br>
+      它在 <span class="rose">你心里</span>。
+    </div>
+    <div class="tr-riddle">
+      舞会结束前，琥珀小姐会问你一个问题。<br>
+      你的回答，就是第三朵玫瑰。<br>
+      <span class="hl">「如果舞会结束了，你还会记得我吗？」</span>
+    </div>
+    <div class="tr-choices" id="trChoices">
+      <div class="tr-choice" data-answer="always">
+        <span class="n">会，永远记得</span>
+        <span class="d">把她放进记忆最深处</span>
+      </div>
+      <div class="tr-choice" data-answer="stay">
+        <span class="n">不会结束，我留下来</span>
+        <span class="d">让舞会一直继续下去</span>
+      </div>
+      <div class="tr-choice" data-answer="next">
+        <span class="n">下一场舞，再见</span>
+        <span class="d">相信还会重逢</span>
+      </div>
+    </div>
+    <div class="tr-result" id="trResult"></div>
+  </div>
+</div>
+
+<!-- ===== 结局页（三朵玫瑰详情） ===== -->
 <div class="end-stage" id="endStage">
   <div class="end-card">
-    <div class="end-eyebrow">The End · I</div>
-    <div class="end-title">故事 <span class="a">继续</span></div>
-    <div class="end-text" id="endText"></div>
-    <button class="end-btn" id="endBtn">继续 · 寻找第二朵玫瑰</button>
+    <div class="end-eyebrow">The End · III</div>
+    <div class="end-title">三朵玫瑰 <span class="a">已集齐</span></div>
+    <div class="end-text" id="endText">
+      第一朵玫瑰，是你的舞伴。<br>
+      第二朵玫瑰，是舞会的角落。<br>
+      第三朵玫瑰，是你的回答。<br><br>
+      <span class="h">三朵玫瑰，已经在你手里。</span><br>
+      舞会落幕了，但故事还没有结束。
+    </div>
+    <div class="rose-detail-list" id="roseDetailList">
+      <div class="rose-detail-item" data-rose="1">
+        <div class="rdi-icon">
+          <svg viewBox="0 0 40 40">
+            <defs>
+              <radialGradient id="rdi1" cx="50%" cy="45%" r="55%">
+                <stop offset="0%" stop-color="#ff8aa8"/>
+                <stop offset="45%" stop-color="#c01838"/>
+                <stop offset="100%" stop-color="#5a0a1c"/>
+              </radialGradient>
+            </defs>
+            <path d="M20 22 Q19 30 20 37" stroke="#5a7a30" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M20 30 Q14 28 11 31 Q15 33 20 31 Z" fill="#5a7a30"/>
+            <path d="M20 33 Q26 31 29 34 Q25 36 20 34 Z" fill="#4a6a28"/>
+            <ellipse cx="20" cy="17" rx="11" ry="9" fill="url(#rdi1)"/>
+            <path d="M20 11 Q25 13 25 17 Q25 21 20 23 Q15 21 15 17 Q15 13 20 11 Z" fill="none" stroke="#ff9ab8" stroke-width="0.8" opacity="0.7"/>
+            <circle cx="20" cy="17" r="1.6" fill="#ffd0dc" opacity="0.9"/>
+          </svg>
+        </div>
+        <div class="rdi-body">
+          <div class="rdi-title">第一朵玫瑰 · 你的舞伴</div>
+          <div class="rdi-sub">相遇在舞池中央</div>
+        </div>
+        <div class="rdi-arrow">›</div>
+      </div>
+      <div class="rose-detail-item" data-rose="2">
+        <div class="rdi-icon">
+          <svg viewBox="0 0 40 40">
+            <defs>
+              <radialGradient id="rdi2" cx="50%" cy="45%" r="55%">
+                <stop offset="0%" stop-color="#ff8aa8"/>
+                <stop offset="45%" stop-color="#c01838"/>
+                <stop offset="100%" stop-color="#5a0a1c"/>
+              </radialGradient>
+            </defs>
+            <path d="M20 22 Q19 30 20 37" stroke="#5a7a30" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M20 30 Q14 28 11 31 Q15 33 20 31 Z" fill="#5a7a30"/>
+            <path d="M20 33 Q26 31 29 34 Q25 36 20 34 Z" fill="#4a6a28"/>
+            <ellipse cx="20" cy="17" rx="11" ry="9" fill="url(#rdi2)"/>
+            <path d="M20 11 Q25 13 25 17 Q25 21 20 23 Q15 21 15 17 Q15 13 20 11 Z" fill="none" stroke="#ff9ab8" stroke-width="0.8" opacity="0.7"/>
+            <circle cx="20" cy="17" r="1.6" fill="#ffd0dc" opacity="0.9"/>
+          </svg>
+        </div>
+        <div class="rdi-body">
+          <div class="rdi-title">第二朵玫瑰 · 舞会的角落</div>
+          <div class="rdi-sub">藏在你选择的地方</div>
+        </div>
+        <div class="rdi-arrow">›</div>
+      </div>
+      <div class="rose-detail-item" data-rose="3">
+        <div class="rdi-icon">
+          <svg viewBox="0 0 40 40">
+            <defs>
+              <radialGradient id="rdi3" cx="50%" cy="45%" r="55%">
+                <stop offset="0%" stop-color="#ff8aa8"/>
+                <stop offset="45%" stop-color="#c01838"/>
+                <stop offset="100%" stop-color="#5a0a1c"/>
+              </radialGradient>
+            </defs>
+            <path d="M20 22 Q19 30 20 37" stroke="#5a7a30" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M20 30 Q14 28 11 31 Q15 33 20 31 Z" fill="#5a7a30"/>
+            <path d="M20 33 Q26 31 29 34 Q25 36 20 34 Z" fill="#4a6a28"/>
+            <ellipse cx="20" cy="17" rx="11" ry="9" fill="url(#rdi3)"/>
+            <path d="M20 11 Q25 13 25 17 Q25 21 20 23 Q15 21 15 17 Q15 13 20 11 Z" fill="none" stroke="#ff9ab8" stroke-width="0.8" opacity="0.7"/>
+            <circle cx="20" cy="17" r="1.6" fill="#ffd0dc" opacity="0.9"/>
+          </svg>
+        </div>
+        <div class="rdi-body">
+          <div class="rdi-title">第三朵玫瑰 · 你的回答</div>
+          <div class="rdi-sub">留在了她心里</div>
+        </div>
+        <div class="rdi-arrow">›</div>
+      </div>
+    </div>
+    <button class="end-btn" id="endBtn">舞会落幕</button>
+  </div>
+</div>
+
+<!-- ===== 玫瑰故事详情弹窗 ===== -->
+<div class="rose-story-modal" id="roseStoryModal">
+  <div class="rose-story-card">
+    <div class="rsm-eyebrow" id="rsmEyebrow">The First Rose</div>
+    <div class="rsm-icon" id="rsmIcon"></div>
+    <div class="rsm-title" id="rsmTitle"></div>
+    <div class="rsm-sub" id="rsmSub"></div>
+    <div class="rsm-divider"></div>
+    <div class="rsm-text" id="rsmText"></div>
+    <div class="rsm-quote" id="rsmQuote"></div>
+    <button class="rsm-btn" id="rsmBtn">合上这页</button>
   </div>
 </div>
 
@@ -655,7 +1041,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 const dust=document.getElementById('dust');
 for(let i=0;i<30;i++){const s=document.createElement('span');const z=Math.random()*3+1;s.style.width=z+'px';s.style.height=z+'px';s.style.left=Math.random()*100+'%';s.style.animationDuration=(Math.random()*20+15)+'s';s.style.animationDelay=(Math.random()*20)+'s';dust.appendChild(s)}
 
-/* ===== 英文字符掉落（先快后慢 + 摇动交互） ===== */
+/* ===== 英文字符掉落 ===== */
 const letterfall=document.getElementById('letterfall');
 const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const letterNodes=[];
@@ -675,7 +1061,6 @@ for(let i=0;i<40;i++){
 
 let shakeTiltX=0, shakeTiltY=0, targetTiltX=0, targetTiltY=0;
 let rafLetter=null;
-
 function updateLetterShake(){
   shakeTiltX+=(targetTiltX-shakeTiltX)*0.12;
   shakeTiltY+=(targetTiltY-shakeTiltY)*0.12;
@@ -686,17 +1071,13 @@ function updateLetterShake(){
   });
   if(Math.abs(targetTiltX-shakeTiltX)>0.002||Math.abs(targetTiltY-shakeTiltY)>0.002){
     rafLetter=requestAnimationFrame(updateLetterShake);
-  }else{
-    rafLetter=null;
-  }
+  }else{rafLetter=null;}
 }
-
 function triggerShake(tx,ty){
   targetTiltX=Math.max(-1,Math.min(1,tx));
   targetTiltY=Math.max(-1,Math.min(1,ty));
   if(!rafLetter) rafLetter=requestAnimationFrame(updateLetterShake);
 }
-
 if(window.DeviceMotionEvent){
   window.addEventListener('devicemotion',(e)=>{
     const acc=e.accelerationIncludingGravity;
@@ -704,7 +1085,6 @@ if(window.DeviceMotionEvent){
     triggerShake((acc.x||0)/12,(acc.y||0)/12);
   });
 }
-
 let lastMoveX=0,lastMoveY=0;
 function handlePointerMove(x,y){
   const dx=(x-lastMoveX)/60;
@@ -726,20 +1106,103 @@ window.addEventListener('deviceorientation',(e)=>{
 const screens=document.querySelectorAll('.screen');
 function show(id){screens.forEach(s=>s.classList.remove('active'));const t=document.getElementById(id);if(t)t.classList.add('active')}
 
-/* 报名 */
+/* ===== 玫瑰收集进度 ===== */
+const ROSE_SVG = `
+<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="roseGrad" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#ff8aa8"/>
+      <stop offset="45%" stop-color="#c01838"/>
+      <stop offset="100%" stop-color="#5a0a1c"/>
+    </radialGradient>
+    <linearGradient id="stemGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7a9a50"/>
+      <stop offset="100%" stop-color="#3a5520"/>
+    </linearGradient>
+  </defs>
+  <path d="M20 22 Q19 30 20 37" stroke="url(#stemGrad)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M20 30 Q14 28 11 31 Q15 33 20 31 Z" fill="#5a7a30"/>
+  <path d="M20 33 Q26 31 29 34 Q25 36 20 34 Z" fill="#4a6a28"/>
+  <ellipse cx="20" cy="17" rx="11" ry="9" fill="url(#roseGrad)"/>
+  <path d="M20 8 Q27 10 28 17 Q27 23 20 26 Q13 23 12 17 Q13 10 20 8 Z" fill="none" stroke="#8a1030" stroke-width="0.8" opacity="0.6"/>
+  <path d="M20 11 Q25 13 25 17 Q25 21 20 23 Q15 21 15 17 Q15 13 20 11 Z" fill="none" stroke="#ff9ab8" stroke-width="0.8" opacity="0.7"/>
+  <path d="M20 14 Q23 15 23 17 Q23 19 20 20 Q17 19 17 17 Q17 15 20 14 Z" fill="none" stroke="#8a1030" stroke-width="0.6" opacity="0.7"/>
+  <circle cx="20" cy="17" r="1.6" fill="#ffd0dc" opacity="0.9"/>
+</svg>`;
+
+function buildRoseProgress(){
+  const box=document.getElementById('rpRoses');
+  box.innerHTML='';
+  for(let i=0;i<3;i++){
+    const d=document.createElement('div');
+    d.className='rp-rose';
+    d.innerHTML=ROSE_SVG;
+    box.appendChild(d);
+  }
+}
+buildRoseProgress();
+
+let roseCount=0;
+function updateRoseProgress(){
+  const roses=document.querySelectorAll('#rpRoses .rp-rose');
+  roses.forEach((r,i)=>{
+    if(i<roseCount){r.classList.add('collected');}
+    else{r.classList.remove('collected');}
+  });
+  document.getElementById('rpCur').textContent=roseCount;
+  const bar=document.getElementById('roseProgress');
+  if(roseCount>0){bar.classList.add('show');}
+}
+
+/* ===== 信纸水印 ===== */
+const WM_PHRASES = [
+  'hold me closer','one more dance','don\'t let go','kiss me slowly',
+  'you are mine','stay with me','come closer','dance with me',
+  'just tonight','stay a little longer','i want you','never let me go',
+  'look at me','tell me a secret','a little closer','taste of wine'
+];
+function buildLetterWatermark(){
+  const box=document.getElementById('letterWatermark');
+  if(!box)return;
+  box.innerHTML='';
+  for(let i=0;i<14;i++){
+    const line=document.createElement('div');
+    line.className='wm-line';
+    line.textContent=WM_PHRASES[Math.floor(Math.random()*WM_PHRASES.length)];
+    const size=Math.random()*1.1+0.75;
+    line.style.fontSize='clamp('+(size*0.9)+'rem,'+(size*2.6)+'vw,'+(size*1.4)+'rem)';
+    line.style.top=(Math.random()*92)+'%';
+    line.style.left='0';
+    const dur=Math.random()*14+10;
+    line.style.animationDuration=dur+'s';
+    line.style.animationDelay=(-Math.random()*dur)+'s';
+    const rot=(Math.random()*16-8).toFixed(1);
+    line.style.setProperty('--r',rot+'deg');
+    const dy=(Math.random()*40-20).toFixed(0);
+    line.style.setProperty('--dy',dy+'px');
+    line.style.color='rgba(140,90,50,'+(Math.random()*0.18+0.16).toFixed(2)+')';
+    box.appendChild(line);
+  }
+}
+
+/* ===== 报名 ===== */
 let userName='';
 const nameInput=document.getElementById('nameInput'),signupBtn=document.getElementById('signupBtn'),invMain=document.getElementById('invMain'),envName=document.getElementById('envName');
 nameInput.addEventListener('input',()=>{userName=nameInput.value.trim();signupBtn.disabled=userName.length===0});
 nameInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&userName)signupBtn.click()});
 signupBtn.addEventListener('click',()=>{
   if(!userName)return;
-  invMain.innerHTML='一位来自 <span class="from">勃艮第红酒庄园</span> 的琥珀小姐，<br>邀请善良又美丽的 <span class="name">「'+userName+'」</span><br>前往 <span class="place">幽暗城堡</span> 参加神秘舞会。';
+  invMain.innerHTML='一位来自 <span class="from">勃艮第红酒庄园</span> 的<br>'
+    +'<span class="amber-name">琥珀小姐</span>'
+    +'邀请善良又美丽的<br>'
+    +'<span class="user-name">「'+userName+'」佳人</span>'
+    +'前往 <span class="place">幽暗城堡</span> 参加神秘舞会。';
   show('s2');
 });
 
 /* 邀请 */
 document.getElementById('invBtn').addEventListener('click',()=>{
-  envName.textContent='致 '+userName;
+  envName.textContent='致 '+userName+' 佳人';
   show('s3');
   setTimeout(()=>envName.classList.add('show'),500);
   setTimeout(()=>{document.getElementById('envLine1').classList.add('show');},800);
@@ -758,13 +1221,26 @@ sealStay.addEventListener('click',e=>{
   sealStay.style.transform='translateY(-15px) scale(1.15)';
   sealRun.classList.add('faded');
   setTimeout(()=>env.classList.add('opening'),400);
-  setTimeout(()=>env.classList.add('letter-revealed'),1600);
+  setTimeout(()=>{
+    env.classList.add('letter-revealed');
+    buildLetterWatermark();
+  },1600);
 });
 
-/* 点击阅读 → 信纸规则页 + 信封消失 */
+/* 点击阅读 → 规则页 */
 document.getElementById('letterReadBtn').addEventListener('click',()=>{
   env.classList.add('hidden');
-  setTimeout(()=>{document.getElementById('ruleScreen').classList.add('active');},400);
+  setTimeout(()=>{
+    document.getElementById('ruleScreen').classList.add('active');
+    const lines=document.querySelectorAll('#letterText .rule-line');
+    lines.forEach(l=>l.classList.remove('show'));
+    document.getElementById('letterDivider').classList.remove('show');
+    document.getElementById('ruleBtn').classList.remove('show');
+    lines.forEach((l,i)=>{setTimeout(()=>{l.classList.add('show');},400+i*550);});
+    const totalDelay=400+lines.length*550;
+    setTimeout(()=>{document.getElementById('letterDivider').classList.add('show');},totalDelay);
+    setTimeout(()=>{document.getElementById('ruleBtn').classList.add('show');},totalDelay+400);
+  },400);
 });
 
 /* 规则页 → 第一朵玫瑰介绍页 */
@@ -776,10 +1252,14 @@ document.getElementById('ruleBtn').addEventListener('click',()=>{
 /* 第一朵玫瑰介绍页 → 抽签页 */
 document.getElementById('frBtn').addEventListener('click',()=>{
   document.getElementById('firstRoseScreen').classList.remove('active');
-  setTimeout(()=>{document.getElementById('drawScreen').classList.add('active');initFan();},500);
+  setTimeout(()=>{
+    document.getElementById('drawScreen').classList.add('active');
+    initFan();
+    startDicePhysics();
+  },500);
 });
 
-/* 抽签数据 */
+/* ===== 抽签数据 ===== */
 const partners=[
   {n:'扑朔迷离的坏女人',num:'I',lbl:'BAD WOMAN',q:'读懂喜欢的人的心思不是应该的吗。',d:'她会在舞池里突然靠近你，问你信不信她。你说信，她说不信；你说不信，她说那就进来看看。',t:['坏女人特辑','钓系暧昧','恶趣调戏','醋意爆发']},
   {n:'温柔的年上姐姐',num:'II',lbl:'SISTER',q:'小心这杯酒，很烈。',d:'她会在舞会中途把你拉进角落，问你今晚要不要私会。你说太直接了，她说那窝在沙发上看书我看你。',t:['温柔姐姐','善解人意','爱如潮水','一见钟情']},
@@ -790,7 +1270,7 @@ const partners=[
   {n:'命中注定的crush',num:'VII',lbl:'A PROMISE',q:'其实我真的缺你很久了。',d:'她会在舞会最后一支曲子响起时，向你伸出手。你说好，她说那说好，我们一言为定。',t:['魂牵梦绕','醉生梦死','契合灵魂','缘分使然']}
 ];
 
-/* 生成签架 */
+/* ===== 生成签架 ===== */
 function initFan(){
   const fan=document.getElementById('fan');
   if(fan.children.length)return;
@@ -808,10 +1288,81 @@ function initFan(){
   });
 }
 
-/* 抽卡 */
+/* ===== 5 个自由滚动碰撞的骰子 ===== */
+const diceState=[];
+let diceRaf=null;
+let diceZoneEl=null;
+function startDicePhysics(){
+  diceZoneEl=document.getElementById('diceZone');
+  if(!diceZoneEl)return;
+  if(diceState.length)return;
+  const zoneW=diceZoneEl.clientWidth;
+  const zoneH=diceZoneEl.clientHeight;
+  const dieSize=Math.min(46,Math.max(34,zoneW*0.055));
+  for(let i=0;i<5;i++){
+    const d=document.createElement('div');
+    d.className='die';
+    let pips='';
+    for(let k=0;k<9;k++){pips+='<span class="pip"></span>';}
+    d.innerHTML=pips;
+    d.dataset.n=Math.floor(Math.random()*6)+1;
+    diceZoneEl.appendChild(d);
+    diceState.push({
+      el:d,
+      x:Math.random()*(zoneW-dieSize),
+      y:Math.random()*(zoneH-dieSize),
+      vx:(Math.random()*2-1)*1.6,
+      vy:(Math.random()*2-1)*1.4,
+      size:dieSize,
+      rot:Math.random()*360,
+      rotSpeed:(Math.random()*2-1)*1.2
+    });
+  }
+  diceRaf=requestAnimationFrame(stepDice);
+}
+function stepDice(){
+  if(!diceZoneEl)return;
+  const zoneW=diceZoneEl.clientWidth;
+  const zoneH=diceZoneEl.clientHeight;
+  const N=diceState.length;
+  for(let i=0;i<N;i++){
+    const a=diceState[i];
+    a.x+=a.vx; a.y+=a.vy; a.rot+=a.rotSpeed;
+    if(a.x<0){a.x=0;a.vx*=-1;a.rotSpeed*=-1;}
+    if(a.x>zoneW-a.size){a.x=zoneW-a.size;a.vx*=-1;a.rotSpeed*=-1;}
+    if(a.y<0){a.y=0;a.vy*=-1;a.rotSpeed*=-1;}
+    if(a.y>zoneH-a.size){a.y=zoneH-a.size;a.vy*=-1;a.rotSpeed*=-1;}
+    for(let j=i+1;j<N;j++){
+      const b=diceState[j];
+      const dx=(b.x+b.size/2)-(a.x+a.size/2);
+      const dy=(b.y+b.size/2)-(a.y+a.size/2);
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      const minDist=(a.size+b.size)/2;
+      if(dist<minDist&&dist>0){
+        const nx=dx/dist, ny=dy/dist;
+        const overlap=minDist-dist;
+        a.x-=nx*overlap*0.5; a.y-=ny*overlap*0.5;
+        b.x+=nx*overlap*0.5; b.y+=ny*overlap*0.5;
+        const p=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+        if(p>0){
+          a.vx-=p*nx; a.vy-=p*ny;
+          b.vx+=p*nx; b.vy+=p*ny;
+        }
+        a.rotSpeed+=(Math.random()*2-1)*0.2;
+        b.rotSpeed+=(Math.random()*2-1)*0.2;
+      }
+    }
+    a.el.style.transform='translate('+a.x+'px,'+a.y+'px) rotate('+a.rot+'deg)';
+  }
+  diceRaf=requestAnimationFrame(stepDice);
+}
+
+/* ===== 抽卡 ===== */
 let drawnIdx=-1;
+let chosenPartner=null;
 function drawCard(idx,stick){
   drawnIdx=idx;
+  chosenPartner=partners[idx];
   stick.classList.add('drawn');
   document.querySelectorAll('.stick').forEach(s=>{if(s!==stick)s.classList.add('faded')});
   const p=partners[idx];
@@ -851,7 +1402,7 @@ document.getElementById('enterBtn').addEventListener('click',()=>{
   },700);
 });
 
-/* 舞会开始互动：每位舞伴的互动文案与选项 */
+/* 舞会开始互动 */
 const ballStarts=[
   {
     text:'舞会开始了。<br>她站在人群中央，却没有走向你。<br>音乐响起，你发现自己的<span class="hl">酒杯</span>被人碰了一下。<br>你抬头，她正看着你，嘴角带着笑。<br>接下来，你会——',
@@ -911,11 +1462,17 @@ const ballStarts=[
   }
 ];
 
+let pendingGainText='';
+let pendingIdx=-1;
+
 function showBallStart(idx){
   const data=ballStarts[idx];
+  pendingIdx=idx;
   document.getElementById('stText').innerHTML=data.text;
   document.getElementById('stText').style.textAlign='left';
   document.getElementById('stSub').textContent='— make your first move —';
+  const cont=document.getElementById('stContinue');
+  cont.classList.remove('show');
   const box=document.getElementById('stChoices');
   box.innerHTML='';
   data.choices.forEach(c=>{
@@ -927,13 +1484,8 @@ function showBallStart(idx){
       document.getElementById('stText').innerHTML=c.gain;
       document.getElementById('stText').style.textAlign='center';
       document.getElementById('stSub').textContent='— the first rose —';
-      setTimeout(()=>{
-        document.getElementById('storyStage').classList.remove('show');
-        setTimeout(()=>{
-          document.getElementById('storyStage').style.display='none';
-          showGain(c.gain,idx);
-        },600);
-      },1400);
+      pendingGainText=c.gain;
+      setTimeout(()=>{cont.classList.add('show');},600);
     });
     box.appendChild(b);
   });
@@ -941,12 +1493,26 @@ function showBallStart(idx){
   document.getElementById('storyStage').classList.add('show');
 }
 
+document.getElementById('stContinue').addEventListener('click',()=>{
+  const cont=document.getElementById('stContinue');
+  cont.classList.remove('show');
+  setTimeout(()=>{
+    document.getElementById('storyStage').classList.remove('show');
+    setTimeout(()=>{
+      document.getElementById('storyStage').style.display='none';
+      showGain(pendingGainText,pendingIdx);
+    },600);
+  },300);
+});
+
 /* 得到第一朵玫瑰 */
 function showGain(gainText,idx){
   const p=partners[idx];
   document.getElementById('gainMsg').innerHTML='「第一朵玫瑰，是你的了。」<br>—— '+p.n;
   document.getElementById('gainStage').style.display='flex';
   document.getElementById('gainStage').classList.add('show');
+  roseCount=1;
+  updateRoseProgress();
 }
 
 /* 得到玫瑰 → 关于第二朵玫瑰 */
@@ -958,15 +1524,16 @@ document.getElementById('gainBtn').addEventListener('click',()=>{
   },600);
 });
 
-/* ===== 关于第二朵玫瑰：地点选择互动 ===== */
+/* ===== 关于第二朵玫瑰：点击选项 → 弹窗 ===== */
+let secondPlace='';
 const srChoices=document.querySelectorAll('#srChoices .sr-choice');
-const srResult=document.getElementById('srResult');
 let srPicked=false;
 srChoices.forEach(choice=>{
   choice.addEventListener('click',()=>{
     if(srPicked)return;
     srPicked=true;
     const place=choice.dataset.place;
+    secondPlace=place;
     srChoices.forEach(c=>c.style.opacity='.35');
     choice.style.opacity='1';
     choice.style.borderColor='#e0b060';
@@ -975,26 +1542,161 @@ srChoices.forEach(choice=>{
     if(place==='露台') msg='你选了露台。她说：「第二朵玫瑰，喜欢夜风。」<br>——也许，它就在露台的栏杆边。';
     else if(place==='酒窖') msg='你选了酒窖。她说：「第二朵玫瑰，藏在最暗的地方。」<br>——也许，它就在酒窖的最深处。';
     else msg='你选了镜厅。她说：「第二朵玫瑰，会在倒影里等你。」<br>——也许，它就在镜厅的某面镜子里。';
-    srResult.innerHTML=msg;
-    srResult.classList.add('show');
+    document.getElementById('srmText').innerHTML=msg+'<br><br>第二朵玫瑰，已经在你手里。';
+    roseCount=2;
+    updateRoseProgress();
+    setTimeout(()=>{
+      document.getElementById('secondResultModal').classList.add('show');
+    },600);
   });
 });
 
-/* 关于第二朵玫瑰 → 结局 */
-document.getElementById('srBtn').addEventListener('click',()=>{
+/* 第二朵玫瑰弹窗 → 关于第三朵玫瑰 */
+document.getElementById('srmBtn').addEventListener('click',()=>{
+  document.getElementById('secondResultModal').classList.remove('show');
   document.getElementById('secondRoseScreen').classList.remove('active');
   setTimeout(()=>{
-    document.getElementById('endText').innerHTML='第一朵玫瑰，已经在你手里。<br>第二朵玫瑰的位置，你已经猜到了。<br>舞会还没有结束——<br><span class="h">下一场舞，等你继续。</span>';
-    document.getElementById('endStage').style.display='flex';
-    document.getElementById('endStage').classList.add('show');
+    document.getElementById('thirdRoseScreen').classList.add('active');
   },600);
+});
+
+/* ===== 关于第三朵玫瑰：回答 → 第三朵玫瑰 ===== */
+let thirdAnswer='';
+const trChoices=document.querySelectorAll('#trChoices .tr-choice');
+const trResult=document.getElementById('trResult');
+let trPicked=false;
+trChoices.forEach(choice=>{
+  choice.addEventListener('click',()=>{
+    if(trPicked)return;
+    trPicked=true;
+    const answer=choice.dataset.answer;
+    thirdAnswer=answer;
+    trChoices.forEach(c=>c.style.opacity='.35');
+    choice.style.opacity='1';
+    choice.style.borderColor='#e0b060';
+    choice.style.boxShadow='0 0 40px rgba(224,176,96,.5)';
+    let msg='';
+    if(answer==='always') msg='你说：会，永远记得。<br>她笑了，把第三朵玫瑰放在你手心。<br>「那这朵玫瑰，是给你的记忆。」';
+    else if(answer==='stay') msg='你说：不会结束，我留下来。<br>她愣了一下，然后笑得更深。<br>「那这朵玫瑰，是给你的留白。」';
+    else msg='你说：下一场舞，再见。<br>她点点头，把第三朵玫瑰递给你。<br>「那这朵玫瑰，是给我们的约定。」';
+    trResult.innerHTML=msg;
+    trResult.classList.add('show');
+    roseCount=3;
+    updateRoseProgress();
+    setTimeout(()=>{
+      document.getElementById('thirdRoseScreen').classList.remove('active');
+      setTimeout(()=>{
+        document.getElementById('endStage').style.display='flex';
+        document.getElementById('endStage').classList.add('show');
+      },600);
+    },2200);
+  });
+});
+
+/* ===== 三朵玫瑰详情：点击查看故事 ===== */
+const ROSE_STORIES = {
+  1: {
+    eyebrow: 'The First Rose',
+    title: '第一朵玫瑰<br><span class="a">你的舞伴</span>',
+    sub: '相遇在舞池中央',
+    text: function(){
+      const p = chosenPartner || partners[0];
+      return '那晚的舞池灯火昏黄。<br>'
+        + '她站在人群里，没有先开口。<br>'
+        + '你走近时，她抬起头，问你信不信她。<br><br>'
+        + '你没有回答，只是伸出了手。<br>'
+        + '她把一朵玫瑰放进你的掌心，笑了。<br><br>'
+        + '<span class="hl">她是「' + p.n + '」。</span><br>'
+        + '这是你们第一次，也是唯一一次，<br>'
+        + '在幽暗城堡里的相遇。';
+    },
+    quote: function(){
+      const p = chosenPartner || partners[0];
+      return '「' + p.q + '」';
+    }
+  },
+  2: {
+    eyebrow: 'The Second Rose',
+    title: '第二朵玫瑰<br><span class="a">舞会的角落</span>',
+    sub: '藏在你选择的地方',
+    text: function(){
+      let placeDesc = '';
+      if(secondPlace === '露台') placeDesc = '露台的栏杆边，夜风吹过。';
+      else if(secondPlace === '酒窖') placeDesc = '酒窖的最深处，最暗的角落。';
+      else if(secondPlace === '镜厅') placeDesc = '镜厅的某面镜子里，倒影重重。';
+      else placeDesc = '舞会的某个角落。';
+      return '第二朵玫瑰不在你手里，<br>它在舞会的某个角落等你。<br>'
+        + '你找到了 <span class="hl">' + (secondPlace || '那个地方') + '</span>。<br><br>'
+        + placeDesc + '<br>'
+        + '你伸出手，玫瑰就在那里。<br><br>'
+        + '原来有些东西，<br>'
+        + '不是你追来的，是它一直在等你。';
+    },
+    quote: function(){
+      return '「第二朵玫瑰，藏在你愿意去找的地方。」';
+    }
+  },
+  3: {
+    eyebrow: 'The Third Rose',
+    title: '第三朵玫瑰<br><span class="a">你的回答</span>',
+    sub: '留在了她心里',
+    text: function(){
+      let answerText = '';
+      if(thirdAnswer === 'always') answerText = '你说，会，永远记得。<br>她笑了，把玫瑰放进你手心。';
+      else if(thirdAnswer === 'stay') answerText = '你说，不会结束，我留下来。<br>她愣了一下，然后笑得更深。';
+      else if(thirdAnswer === 'next') answerText = '你说，下一场舞，再见。<br>她点点头，把玫瑰递给你。';
+      else answerText = '你给出了你的回答。<br>她把玫瑰放在你手里。';
+      return '第三朵玫瑰不在舞会里，<br>它在你的心里。<br><br>'
+        + answerText + '<br><br>'
+        + '「如果舞会结束了，<br>你还会记得我吗？」<br><br>'
+        + '你的回答，就是第三朵玫瑰。<br>'
+        + '它不会凋谢，因为它住在记忆里。';
+    },
+    quote: function(){
+      return '「第三朵玫瑰，是你留给我的答案。」';
+    }
+  }
+};
+
+const roseStoryModal = document.getElementById('roseStoryModal');
+
+document.querySelectorAll('.rose-detail-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    const rose = item.dataset.rose;
+    const data = ROSE_STORIES[rose];
+    if(!data) return;
+    document.getElementById('rsmEyebrow').textContent = data.eyebrow;
+    document.getElementById('rsmTitle').innerHTML = data.title;
+    document.getElementById('rsmSub').textContent = data.sub;
+    /* 图标 */
+    const iconSvg = (rose==='1') ? document.getElementById('rdi1') : null;
+    document.getElementById('rsmIcon').innerHTML = '<svg viewBox="0 0 60 60">'
+      + '<defs><radialGradient id="rsmG'+rose+'" cx="50%" cy="45%" r="55%">'
+      + '<stop offset="0%" stop-color="#ff8aa8"/><stop offset="45%" stop-color="#c01838"/><stop offset="100%" stop-color="#5a0a1c"/>'
+      + '</radialGradient></defs>'
+      + '<path d="M30 30 Q28 42 30 54" stroke="#5a7a30" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
+      + '<path d="M30 42 Q21 39 17 44 Q23 47 30 44 Z" fill="#5a7a30"/>'
+      + '<path d="M30 47 Q39 44 43 49 Q37 52 30 49 Z" fill="#4a6a28"/>'
+      + '<ellipse cx="30" cy="24" rx="14" ry="11.5" fill="url(#rsmG'+rose+')"/>'
+      + '<path d="M30 14 Q37 17 38 24 Q37 31 30 34 Q23 31 22 24 Q23 17 30 14 Z" fill="none" stroke="#8a1030" stroke-width="1" opacity="0.55"/>'
+      + '<path d="M30 18 Q34 20 34 24 Q34 28 30 30 Q26 28 26 24 Q26 20 30 18 Z" fill="none" stroke="#ff9ab8" stroke-width="1" opacity="0.7"/>'
+      + '<circle cx="30" cy="24" r="2.2" fill="#ffd0dc" opacity="0.9"/>'
+      + '</svg>';
+    document.getElementById('rsmText').innerHTML = data.text();
+    document.getElementById('rsmQuote').innerHTML = data.quote();
+    roseStoryModal.classList.add('show');
+  });
+});
+
+document.getElementById('rsmBtn').addEventListener('click',()=>{
+  roseStoryModal.classList.remove('show');
 });
 
 /* 结局按钮 */
 document.getElementById('endBtn').addEventListener('click',()=>{
   document.getElementById('endStage').classList.remove('show');
   setTimeout(()=>{
-    alert('第一朵玫瑰已收集 ·\n第二朵玫瑰将在下一场舞会中继续寻找');
+    alert('三朵玫瑰已集齐 ·\n幽暗城堡的舞会，暂时落幕了。');
   },500);
 });
 
