@@ -82,12 +82,10 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .inv-continue-btn{padding:clamp(.7rem,2.2vw,.9rem) clamp(1.8rem,5vw,2.6rem);background:rgba(20,10,8,.5);border:2px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.6vw,.9rem);letter-spacing:.5em;text-transform:uppercase;cursor:pointer;transition:all .4s}
 .inv-continue-btn:hover{background:rgba(224,176,96,.12);border-color:#e0b060;color:#f4e4c8}
 
-/* ===== 第三页：信封（更逼真 + 火漆更大 + 提示） ===== */
+/* ===== 第三页：信封 ===== */
 .env-stage{position:relative;width:min(540px,84vw);perspective:1400px}
 .env{position:relative;width:100%;aspect-ratio:1.6/1;transition:transform .6s,opacity .6s;transform-style:preserve-3d}
 .env.hidden{opacity:0;pointer-events:none;transform:scale(.9)}
-
-/* 信封主体：纸质感 + 折边层次 */
 .env-body{position:absolute;inset:0;border-radius:6px;overflow:hidden;transform-origin:center;transition:transform 1s;
   background:
     linear-gradient(145deg,rgba(255,255,255,.35),transparent 40%),
@@ -98,14 +96,12 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
     inset 0 0 90px rgba(160,120,70,.22),
     inset 0 2px 0 rgba(255,255,255,.5);
 }
-/* 信封正面的折痕（左右下三边向中心折的三角） */
 .env-body::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
     linear-gradient(115deg,rgba(120,88,50,.16) 0%,transparent 22%),
     linear-gradient(245deg,rgba(120,88,50,.16) 0%,transparent 22%),
     linear-gradient(0deg,rgba(120,88,50,.18) 0%,transparent 26%);
 }
-/* 信封盖：更立体，带厚度与折角阴影 */
 .env-body::before{content:'';position:absolute;top:0;left:0;right:0;height:62%;z-index:2;transform-origin:top center;
   background:
     linear-gradient(180deg,rgba(255,252,244,.55),transparent 26%),
@@ -119,18 +115,15 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .watermark{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.2;background:repeating-linear-gradient(45deg,transparent 0 14px,rgba(140,100,60,.08) 14px 15px)}
 .watermark-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-18deg);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.8rem,5.5vw,4rem);color:rgba(140,90,50,.12);letter-spacing:.35em;white-space:nowrap;font-weight:300}
 
-/* 信封文字逐条展示（去逗号） */
 .env-q{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Long Cang',cursive;font-size:clamp(1.15rem,2.9vw,1.8rem);color:#5a3a28;z-index:4;width:100%;text-align:center;line-height:1.75;padding:0 .8rem;display:flex;flex-direction:column;gap:.15rem;transition:opacity .5s}
 .env-q .line{opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s ease}
 .env-q .line.show{opacity:1;transform:translateY(0)}
 .env-q .line1{display:block}
 .env-q .line2{display:block;font-size:1.1em;color:#8a2040;letter-spacing:.06em}
 
-/* “致 xxx” 字体偏大 */
 .env-name{position:absolute;top:8%;left:50%;transform:translateX(-50%);font-family:'Long Cang',cursive;font-size:clamp(1.5rem,3.4vw,2.4rem);color:#8a2040;z-index:4;opacity:0;transition:opacity 1s;width:100%;text-align:center;text-shadow:0 1px 0 rgba(255,245,225,.5)}
 .env-name.show{opacity:1}
 
-/* 火漆：整体放大 */
 .seals{position:absolute;bottom:clamp(-52px,-9vw,-64px);left:50%;transform:translateX(-50%);display:flex;gap:clamp(1.6rem,4vw,3rem);z-index:8;transition:opacity .5s,transform .5s}
 .env.hidden .seals,.env.hidden .seal-hint{opacity:0;transform:translateX(-50%) scale(.85)}
 .seal-wrap{position:relative;width:clamp(78px,13vw,120px);height:clamp(78px,13vw,120px);cursor:pointer;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
@@ -144,7 +137,6 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .seal-wrap.pd .wax{background:radial-gradient(circle at 35% 28%,#d04070,#a02850 30%,#701838 75%,#400a20);box-shadow:0 12px 30px rgba(120,20,60,.75),inset 0 -6px 14px rgba(60,0,25,.8),inset 0 4px 10px rgba(255,180,210,.35)}
 .seal-wrap.pd .wax::before{background:radial-gradient(circle at 40% 35%,rgba(255,180,210,.5),transparent 65%)}
 .seal-wrap.pd .wax::after{background:linear-gradient(180deg,#a02850,#701838)}
-/* 火漆内文字更大 */
 .imprint{position:absolute;inset:14%;border-radius:48% 52% 50% 50%/52% 48% 52% 48%;display:flex;align-items:center;justify-content:center;font-family:'Long Cang',cursive;font-size:clamp(1.1rem,2.4vw,1.7rem);z-index:3;font-weight:500;letter-spacing:.05em}
 .seal-wrap.pl .imprint{color:#fff0f5;text-shadow:0 1px 2px rgba(160,50,90,.7)}
 .seal-wrap.pd .imprint{color:#ffd8e5;text-shadow:0 1px 2px rgba(0,0,0,.75)}
@@ -152,12 +144,10 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .seal-wrap.faded{opacity:.2;transform:scale(.85);pointer-events:none;filter:blur(.5px)}
 .seal-wrap.disabled{cursor:not-allowed}
 
-/* “选择一个火漆”提示 */
 .seal-hint{position:absolute;bottom:clamp(-88px,-15vw,-104px);left:50%;transform:translateX(-50%);z-index:8;
   font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.8rem,1.8vw,1.05rem);color:#c8a878;letter-spacing:.35em;text-transform:uppercase;white-space:nowrap;
   animation:hp 2.5s ease-in-out infinite;transition:opacity .5s,transform .5s}
 
-/* 取出的信件 */
 .letter-out{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.6);width:82%;height:78%;background:linear-gradient(170deg,#f8eed8,#ecdcc0 50%,#e0ccaa);border-radius:3px;box-shadow:0 20px 50px rgba(0,0,0,.5),inset 0 0 40px rgba(180,140,90,.15);z-index:10;opacity:0;pointer-events:none;transition:transform 1.2s cubic-bezier(.34,1.56,.64,1),opacity .8s .3s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;padding:1.2rem}
 .letter-out::before{content:'';position:absolute;inset:8px;border:1px solid rgba(140,100,60,.3);border-radius:2px;pointer-events:none}
 .env.letter-revealed .letter-out{transform:translate(-50%,-85%) scale(1);opacity:1;pointer-events:auto}
@@ -211,31 +201,33 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
 .fr-btn{padding:clamp(.65rem,2vw,.9rem) clamp(1.6rem,4.5vw,2.4rem);background:rgba(20,10,8,.5);border:2px solid #a08050;color:#e0b060;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.6vw,.9rem);letter-spacing:.5em;text-transform:uppercase;cursor:pointer;transition:all .4s}
 .fr-btn:hover{background:rgba(224,176,96,.12);border-color:#e0b060;color:#f4e4c8}
 
-/* ===== 抽签区 ===== */
-.draw-screen{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(.8rem,2.5vw,1.5rem);opacity:0;pointer-events:none;transition:opacity .8s}
+/* ===== 抽签区（文字居上 + 下方行间距 + 签与文字边缘对齐） ===== */
+.draw-screen{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(1.2rem,4vw,2.4rem) clamp(1rem,3vw,2rem) clamp(.8rem,2.5vw,1.5rem);opacity:0;pointer-events:none;transition:opacity .8s}
 .draw-screen.active{opacity:1;pointer-events:auto}
-.draw-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(1.1rem,3.4vw,2rem);color:#f4e4c8;margin-bottom:.3rem;text-align:center;line-height:1.3}
-.draw-title .orn{display:block;font-size:.55em;color:#e0b060;margin-top:.4rem;letter-spacing:.35em;font-weight:400;font-style:italic}
-.draw-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.7rem,1.6vw,.9rem);color:#c8a878;letter-spacing:.3em;margin-bottom:.8rem;text-transform:uppercase;text-align:center}
-.hint-top{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.7rem,1.6vw,.9rem);color:#e0b060;letter-spacing:.25em;margin-bottom:clamp(.8rem,2.5vw,1.2rem);text-align:center;animation:hp 2.5s ease-in-out infinite}
+.draw-header{width:100%;max-width:min(600px,92vw);text-align:center;margin-bottom:clamp(1.2rem,3.5vw,2rem)}
+.draw-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(1.2rem,3.6vw,2.1rem);color:#f4e4c8;margin-bottom:clamp(.7rem,1.8vw,1.1rem);text-align:center;line-height:1.35}
+.draw-title .orn{display:block;font-size:.55em;color:#e0b060;margin-top:.45rem;letter-spacing:.35em;font-weight:400;font-style:italic}
+.draw-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.7vw,.95rem);color:#c8a878;letter-spacing:.3em;margin-bottom:clamp(.8rem,2vw,1.2rem);text-transform:uppercase;text-align:center;line-height:1.8}
+.hint-top{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.75rem,1.7vw,.95rem);color:#e0b060;letter-spacing:.25em;margin-bottom:clamp(.6rem,1.5vw,1rem);text-align:center;animation:hp 2.5s ease-in-out infinite;line-height:1.9}
 @keyframes hp{0%,100%{opacity:.5}50%{opacity:1}}
 
+/* 扇面：签架与文字边缘对齐（max-width 与 header 一致） */
 .fan{
   position:relative;
   width:100%;
-  max-width:min(480px,92vw);
-  height:clamp(240px,48vh,400px);
-  margin-bottom:.8rem;
+  max-width:min(600px,92vw);
+  height:clamp(260px,50vh,420px);
   display:flex;
   justify-content:center;
   align-items:flex-end;
   perspective:1400px;
+  margin-top:auto;
 }
 .stick{
   position:absolute;
   bottom:0;
   width:clamp(34px,6vw,50px);
-  height:clamp(200px,44vh,340px);
+  height:clamp(210px,46vh,350px);
   cursor:pointer;
   transform-origin:bottom center;
   transition:transform .55s cubic-bezier(.34,1.56,.64,1),filter .4s,opacity .4s;
@@ -391,6 +383,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   .env-q{font-size:clamp(1rem,3.4vw,1.3rem)}
   .env-q .line2{font-size:1.08em}
   .env-name{font-size:clamp(1.3rem,4vw,1.8rem)}
+  .draw-header{max-width:92vw}
 }
 
 @media (max-height: 600px) {
@@ -406,6 +399,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   .story-card,.gain-card,.end-card{max-height:92vh}
   .rule-letter,.first-rose-card{padding:1rem .8rem}
   .letter-out{padding:.8rem;gap:.5rem}
+  .draw-header{margin-bottom:1rem}
 }
 </style>
 </head>
@@ -453,7 +447,7 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   <div class="inv-continue"><button class="inv-continue-btn" id="invBtn">查看邀请</button></div>
 </section>
 
-<!-- 3. 信封（更逼真 + 火漆更大 + 提示） -->
+<!-- 3. 信封 -->
 <section class="screen" id="s3">
   <div class="env-stage">
     <div class="env" id="env">
@@ -523,11 +517,13 @@ html,body{width:100%;height:100%;overflow:hidden;position:fixed;background:#0503
   </div>
 </div>
 
-<!-- 4. 抽签 -->
+<!-- 4. 抽签（文字居上 + 下方行间距 + 签与文字边缘对齐） -->
 <div class="draw-screen" id="drawScreen">
-  <div class="draw-title">选择你的假面公主<span class="orn">— click the red mark —</span></div>
-  <div class="draw-sub">Seven tokens · One fate</div>
-  <div class="hint-top">↓ 点击任意一支签顶端的红色标记 ↓</div>
+  <div class="draw-header">
+    <div class="draw-title">选择你的假面公主<span class="orn">— click the red mark —</span></div>
+    <div class="draw-sub">Seven tokens · One fate</div>
+    <div class="hint-top">↓ 点击任意一支签顶端的红色标记 ↓</div>
+  </div>
   <div class="fan" id="fan"></div>
 </div>
 
