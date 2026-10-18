@@ -70,6 +70,7 @@ body{
 .prose .line:nth-child(4){animation-delay:2.3s}
 .prose .line:nth-child(5){animation-delay:3s}
 .prose .line:nth-child(6){animation-delay:3.7s}
+.prose .line:nth-child(7){animation-delay:4.4s}
 @keyframes lineIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .prose em{font-style:normal;color:var(--amber)}
 .whisper{font-size:13px;color:var(--dim);letter-spacing:.2em;line-height:2;text-align:center}
@@ -311,6 +312,30 @@ body.movie-on #lbT,body.movie-on #lbB{height:9vh}
 }
 @keyframes creepFlick{0%,88%,100%{opacity:.85}90%{opacity:.3}92%{opacity:.9}95%{opacity:.45}96%{opacity:.85}}
 .star-sep{text-align:center;color:var(--amber);opacity:.75;font-size:12px;margin:20px 0 4px;letter-spacing:.6em;text-indent:.6em;text-shadow:0 0 10px rgba(232,176,75,.6)}
+/* ---------- 点唱机（背景音乐） ---------- */
+#vinylBtn{position:fixed;right:14px;bottom:78px;width:54px;height:54px;z-index:57;cursor:pointer;display:none}
+#vinylBtn.show{display:block;animation:popIn .7s cubic-bezier(.3,1.4,.6,1) both}
+@keyframes popIn{from{transform:scale(0) rotate(-120deg);opacity:0}to{transform:none;opacity:1}}
+.vinyl-disc{width:100%;height:100%;border-radius:50%;position:relative;
+  background:repeating-radial-gradient(circle at 50% 50%, #191412 0 2px, #0e0a08 2px 5px);
+  box-shadow:0 0 0 2px rgba(232,176,75,.3), 0 8px 20px rgba(0,0,0,.6);
+  animation:spin 5s linear infinite;animation-play-state:paused}
+#vinylBtn.playing .vinyl-disc{animation-play-state:running}
+.vinyl-label{position:absolute;inset:31%;border-radius:50%;background:radial-gradient(circle,var(--red),var(--red-deep));display:flex;align-items:center;justify-content:center;color:var(--paper);font-size:13px}
+.vinyl-hole{position:absolute;inset:46.5%;border-radius:50%;background:#0a0807}
+.vinyl-note{position:absolute;top:-10px;right:-4px;color:var(--amber);font-size:14px;opacity:.9;animation:noteFloat 2.2s ease-in-out infinite}
+@keyframes noteFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(12deg)}}
+#musicPanel{position:fixed;right:14px;bottom:140px;width:320px;max-width:calc(100vw - 28px);z-index:58;
+  background:linear-gradient(165deg,#171210,#100c0a);border:1px solid rgba(232,176,75,.4);border-radius:12px;
+  box-shadow:0 16px 42px rgba(0,0,0,.65);padding:14px 14px 12px;display:none;color:var(--text)}
+#musicPanel.show{display:block;animation:lineIn .4s ease}
+.mp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.mp-title{font-size:10px;letter-spacing:.35em;color:var(--dim);font-family:Georgia,serif}
+.mp-close{cursor:pointer;color:var(--dim);font-size:13px;padding:2px 6px}
+.mp-close:hover{color:var(--amber)}
+.mp-song{font-size:17px;font-weight:700;letter-spacing:.15em;color:var(--amber-soft)}
+.mp-artist{font-size:11px;letter-spacing:.15em;color:var(--dim);margin:4px 0 10px}
+.mp-frame iframe{border-radius:6px;display:block}
 /* ---------- 擦雾开场 ---------- */
 #fogWrap{position:fixed;inset:0;z-index:47;transition:opacity 1.2s ease,transform 1.6s ease}
 #fogWrap.gone{opacity:0;transform:scale(1.06);pointer-events:none}
@@ -453,6 +478,8 @@ const ITEMS = {
 /* =============== 幕 0 · 封面 =============== */
 function scCover(){
   state.phase = 0; renderReel();
+  const vb = document.getElementById('vinylBtn');
+  if(vb) vb.classList.add('show');
   show(`
     <div class="act-tag">ACT Ⅰ · TONIGHT ONLY</div>
     <div class="title-zh title-flicker">午夜场</div>
@@ -464,6 +491,7 @@ function scCover(){
       <p class="line">全城只剩 <em>三张</em> 票</p>
       <p class="line" style="margin-top:16px;font-size:14px;color:var(--dim)">有人说，来过这里的人<br>后来都会再回来一次</p>
       <p class="line creepy" style="margin-top:8px;font-size:12px">—— 只是没有人说得清，是不是自愿的</p>
+      <p class="line whisper" style="margin-top:14px;font-size:11px">♪ 右下角的唱机里，藏着今夜的配乐</p>
     </div>
     <div class="btn-area soon"><button class="btn" onclick="goto(scTicket)">买 一 张 票</button></div>
   `);
@@ -1021,7 +1049,7 @@ function showModel(){
   document.getElementById('modal').classList.add('show');
 }
 
-/* =============== 琥珀的资料 · 数据与滑动 =============== */
+/* =============== 琥珀的板卡 · 数据与滑动 =============== */
 const BOARDS = [
   { title:"话术", en:"SCRIPT · 按心情取用", svg:`
     <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
@@ -1146,8 +1174,54 @@ function initDeco(){
   }
 }
 
+/* =============== 点唱机 · 背景音乐 =============== */
+const MUSIC = { id:'3382977884', title:'Plug Me In', artist:'SER' };
+function initMusic(){
+  const v = document.createElement('div');
+  v.id = 'vinylBtn';
+  v.innerHTML = `
+    <div class="vinyl-disc">
+      <div class="vinyl-label">♪</div>
+      <div class="vinyl-hole"></div>
+    </div>
+    <div class="vinyl-note">♪</div>`;
+  v.addEventListener('click', toggleMusic);
+  document.body.appendChild(v);
+}
+function toggleMusic(){
+  const btn = document.getElementById('vinylBtn');
+  let p = document.getElementById('musicPanel');
+  if(p && p.classList.contains('show')){
+    p.classList.remove('show');
+    btn.classList.remove('playing');
+    return;
+  }
+  if(!p){
+    p = document.createElement('div');
+    p.id = 'musicPanel';
+    p.innerHTML = `
+      <div class="mp-head">
+        <span class="mp-title">TONIGHT'S SCORE · 今夜配乐</span>
+        <span class="mp-close" onclick="toggleMusic()">✕</span>
+      </div>
+      <div class="mp-song">《${MUSIC.title}》</div>
+      <div class="mp-artist">${MUSIC.artist} · 网易云音乐 · 建议戴上耳机 🎧</div>
+      <div class="mp-frame" id="mpFrame"></div>`;
+    document.body.appendChild(p);
+  }
+  // 懒加载网易云外链播放器（首次点开才加载）
+  const frame = document.getElementById('mpFrame');
+  if(!frame.dataset.loaded){
+    frame.innerHTML = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" height="86" allow="autoplay; encrypted-media" src="https://music.163.com/outchain/player?type=2&id=${MUSIC.id}&auto=1&height=66"></iframe>`;
+    frame.dataset.loaded = '1';
+  }
+  p.classList.add('show');
+  btn.classList.add('playing');
+}
+
 /* 启动 */
 initDeco();
+initMusic();
 scFogIntro();
 </script>
 </body>
